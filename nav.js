@@ -10,6 +10,7 @@
     { cat: 'company', file: '香农芯创_300475_Serenity分析报告.html', title: '香农芯创 (300475)', subtitle: '深度分析' },
     { cat: 'company', file: '工业富联_601138_Serenity分析报告.html', title: '工业富联 (601138)', subtitle: '深度分析' },
     { cat: 'company', file: '快克智能_603203_Serenity分析报告.html', title: '快克智能 (603203)', subtitle: '深度分析' },
+    { cat: 'company', file: '东材科技_601208_Serenity分析报告.html', title: '东材科技 (601208)', subtitle: '高速电子树脂 · AI算力瓶颈' },
     { cat: 'industry', file: 'A股CPO深度调研-20260623.html', title: 'A股CPO深度调研', subtitle: '2026-06-23' },
     { cat: 'industry', file: 'AI服务器深度调研报告.html', title: 'AI 服务器深度调研报告', subtitle: '' },
     { cat: 'industry', file: 'MLCC深度研究报告.html', title: 'MLCC 产业链深度研究报告', subtitle: '' },

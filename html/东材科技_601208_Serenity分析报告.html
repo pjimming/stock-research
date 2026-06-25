@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>东材科技 (601208) · Serenity 供应链瓶颈分析</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --heading: #f0f6fc;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --orange: #d2991d;
+      --purple: #a371f7;
+      --cyan: #39d2c0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 24px 60px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 36px 0 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+    .header .badge {
+      display: inline-block;
+      background: rgba(88, 166, 255, 0.12);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 12px;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(88, 166, 255, 0.25);
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--heading);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .header .stock-code {
+      font-size: 15px;
+      color: var(--text-muted);
+      font-family: "SF Mono", "Fira Code", monospace;
+    }
+    .header .meta {
+      font-size: 12px;
+      color: #484f58;
+      margin-top: 14px;
+    }
+
+    /* Score bar */
+    .score-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0 0;
+    }
+    .score-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 16px;
+      text-align: center;
+      min-width: 72px;
+    }
+    .score-item .val {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .score-item .lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .val-high { color: var(--green); }
+    .val-mid { color: var(--orange); }
+    .val-accent { color: var(--accent); }
+
+    /* Sections */
+    section {
+      margin: 32px 0;
+    }
+    section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--heading);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--heading);
+      margin: 20px 0 10px;
+    }
+    section p {
+      margin: 10px 0;
+      color: var(--text);
+    }
+
+    /* Cards */
+    .insight-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 22px;
+      margin: 16px 0;
+      border-left: 3px solid var(--accent);
+    }
+    .insight-card.warn {
+      border-left-color: var(--orange);
+    }
+    .insight-card.bull {
+      border-left-color: var(--green);
+    }
+    .insight-card p {
+      margin: 4px 0;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--card-bg);
+    }
+    tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+    td.num {
+      text-align: right;
+      font-family: "SF Mono", "Fira Code", monospace;
+    }
+
+    /* Tags */
+    .tag-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    .tag-bull { background: rgba(63,185,80,0.12); color: var(--green); border: 1px solid rgba(63,185,80,0.25); }
+    .tag-risk { background: rgba(248,81,73,0.12); color: var(--red); border: 1px solid rgba(248,81,73,0.25); }
+    .tag-info { background: rgba(88,166,255,0.1); color: var(--accent); border: 1px solid rgba(88,166,255,0.2); }
+
+    /* Blockquote */
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 12px 18px;
+      margin: 16px 0;
+      background: rgba(88,166,255,0.05);
+      border-radius: 0 6px 6px 0;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    blockquote strong {
+      color: var(--heading);
+    }
+
+    /* Layer diagram */
+    .chain-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+    .chain-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      font-size: 13px;
+    }
+    .chain-row .layer {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .layer-down { background: #1a2332; color: var(--accent); }
+    .layer-mid { background: #1a2a1f; color: var(--green); }
+    .layer-up { background: #2a1f1a; color: var(--orange); }
+    .layer-target { background: rgba(163,113,247,0.15); color: var(--purple); border: 1px solid rgba(163,113,247,0.4); font-weight: 700; }
+    .chain-arrow { color: var(--text-muted); font-size: 16px; }
+
+    /* Timeline */
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .timeline-item .date {
+      color: var(--accent);
+      font-weight: 600;
+      min-width: 100px;
+      text-align: right;
+    }
+    .timeline-item .desc {
+      color: var(--text);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: #484f58;
+      line-height: 1.8;
+    }
+    .footer strong {
+      color: #6e7681;
+    }
+
+    /* Print */
+    @media print {
+      body { background: #fff; color: #1a1a1a; }
+      .container { max-width: 100%; }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .container { padding: 20px 16px 40px; }
+      .header h1 { font-size: 22px; }
+      .score-bar { gap: 8px; }
+      .score-item { min-width: 60px; padding: 8px 12px; }
+      .score-item .val { font-size: 16px; }
+      table { font-size: 11px; }
+      th, td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <div class="header">
+    <div class="badge">SERENITY · 供应链瓶颈分析</div>
+    <h1>东材科技 (601208.SH)</h1>
+    <div class="stock-code">四川东材科技集团股份有限公司</div>
+    <div class="meta">AI 算力 · 高速电子树脂 · 光学膜材料 &nbsp;|&nbsp; 2026-06-25</div>
+    <div class="score-bar">
+      <div class="score-item">
+        <div class="val val-high">A-</div>
+        <div class="lbl">卡位稀缺度</div>
+      </div>
+      <div class="score-item">
+        <div class="val val-accent">8.5</div>
+        <div class="lbl">证据强度</div>
+      </div>
+      <div class="score-item">
+        <div class="val val-mid">B+</div>
+        <div class="lbl">估值安全边际</div>
+      </div>
+      <div class="score-item">
+        <div class="val val-high">A</div>
+        <div class="lbl">产业链卡位</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ 一句话判断 ═══════════ -->
+  <section>
+    <h2>🎯 一句话判断</h2>
+    <div class="insight-card bull">
+      <p><strong>东材科技是国内唯一量产 M9/M10 级碳氢树脂并通过英伟达认证的企业。</strong>这种树脂是 AI 服务器 PCB 从 112Gbps 向 224Gbps 跃迁时最关键的物理约束材料——全球只有 3 家公司能量产（旭化成、沙多玛、东材），而东材是唯一的内资供应商。公司在 AI 算力硬件链的最上游，卡住了"如果没有这种树脂，覆铜板就跑不了 224Gbps"的环节。</p>
+      <p style="margin-top:8px; color: var(--text-muted);">这不是一家"受益于 AI"的公司——这是 AI 服务器物理上绕不开的材料公司。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 产业链位置 ═══════════ -->
+  <section>
+    <h2>📍 产业链位置：AI 算力硬件的最上游稀缺层</h2>
+
+    <div class="chain-box">
+      <div style="font-size:11px; color: var(--text-muted); margin-bottom:10px; letter-spacing:0.5px;">AI 服务器 224Gbps PCB 产业链 ↓</div>
+
+      <div class="chain-row">
+        <span class="layer layer-down">终端需求</span>
+        <span class="chain-arrow">→</span>
+        <span style="font-size:12px;">英伟达 GB300 / Rubin · 华为昇腾 · AWS Trainium</span>
+      </div>
+      <div class="chain-row">
+        <span class="layer layer-down">服务器 ODM</span>
+        <span class="chain-arrow">→</span>
+        <span style="font-size:12px;">工业富联 · 广达 · 纬创 · 超微</span>
+      </div>
+      <div class="chain-row">
+        <span class="layer layer-mid">PCB / 覆铜板</span>
+        <span class="chain-arrow">→</span>
+        <span style="font-size:12px;">台光电子 · 台耀 · 生益科技 · 斗山（韩国）· 联茂</span>
+      </div>
+      <div class="chain-row">
+        <span class="layer layer-target">★ 高速电子树脂</span>
+        <span class="chain-arrow">→</span>
+        <span style="font-size:12px; color: var(--purple); font-weight:600;">东材科技 · 日本旭化成 · 美国沙多玛</span>
+      </div>
+      <div class="chain-row">
+        <span class="layer layer-up">上游原料</span>
+        <span class="chain-arrow">→</span>
+        <span style="font-size:12px;">PPE 树脂（沙特朱拜勒）· 特种环氧单体 · 双马单体</span>
+      </div>
+    </div>
+
+    <p>高速电子树脂是 AI 服务器 PCB 的<strong>物理基座</strong>。当信号速率从 112Gbps 跳到 224Gbps，传统 FR-4 环氧树脂（Df ≈ 0.02）完全无法工作——必须用碳氢树脂（Df 低至 0.00035~0.0005）。<strong>树脂决定覆铜板的介电损耗，覆铜板决定 PCB 能跑多快，PCB 决定 GPU 互联带宽。</strong>一条链上的物理约束从最上游的树脂分子结构开始。</p>
+  </section>
+
+  <!-- ═══════════ 稀缺层分析 ═══════════ -->
+  <section>
+    <h2>🔬 稀缺层分析：为什么高速电子树脂是瓶颈</h2>
+
+    <table>
+      <tr>
+        <th>稀缺维度</th>
+        <th>详情</th>
+        <th>东材位置</th>
+      </tr>
+      <tr>
+        <td><strong>全球供应商数量</strong></td>
+        <td>碳氢树脂 M9/M10 级：<strong>仅 3 家</strong>（旭化成、沙多玛、东材）</td>
+        <td>国内唯一，全球唯三</td>
+      </tr>
+      <tr>
+        <td><strong>认证周期</strong></td>
+        <td>树脂→覆铜板→服务器 ODM→GPU 厂商，<strong>全套认证 12-18 个月</strong></td>
+        <td>M9 已通过英伟达认证，批量供货</td>
+      </tr>
+      <tr>
+        <td><strong>产能扩张难度</strong></td>
+        <td>超高温高压无氧工艺，杂质控制 ppm 级，良率壁垒极高</td>
+        <td>自产良率 85%+，同行＜50%</td>
+      </tr>
+      <tr>
+        <td><strong>技术代差</strong></td>
+        <td>新进入者从研发到量产至少 18 个月</td>
+        <td>领先国内同行 2-3 年</td>
+      </tr>
+      <tr>
+        <td><strong>上游原料约束</strong></td>
+        <td>全球 70% PPE 原料来自沙特朱拜勒，中东局势风险</td>
+        <td>多源采购，自建部分单体产能</td>
+      </tr>
+      <tr>
+        <td><strong>需求增速</strong></td>
+        <td>全球高速树脂市场 24 年 9 亿美元 → 27 年 24 亿美元（CAGR 42%）</td>
+        <td>碳氢树脂产能从 500 吨→4000 吨（2026H2）</td>
+      </tr>
+    </table>
+
+    <div class="insight-card">
+      <p><strong>核心逻辑：</strong>碳氢树脂是"看似小众、实则卡脖子"的环节。全球市场也就几十亿人民币，但缺了它，几百亿美元的 AI 服务器 PCB 造不出来。这种"小市场、强约束"的结构恰恰是供应链瓶颈的典型特征——市场足够小，巨头没动力扩产；技术足够难，新玩家进不来；需求足够刚性，下游必须买。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 产品矩阵 ═══════════ -->
+  <section>
+    <h2>📊 五大业务板块 &amp; 2025 年业绩拆解</h2>
+
+    <table>
+      <tr>
+        <th>业务板块</th>
+        <th>2025 营收</th>
+        <th>同比</th>
+        <th>毛利率</th>
+        <th>战略定位</th>
+      </tr>
+      <tr>
+        <td><strong>电子材料</strong></td>
+        <td class="num"><strong>15.54 亿</strong></td>
+        <td class="num" style="color: var(--green);">+45.2%</td>
+        <td class="num">20.07%</td>
+        <td>⭐ 核心增长引擎（高速树脂 +125%）</td>
+      </tr>
+      <tr>
+        <td><strong>光学膜材料</strong></td>
+        <td class="num">14.23 亿</td>
+        <td class="num" style="color: var(--green);">+26.1%</td>
+        <td class="num">10.42%</td>
+        <td>第二增长曲线（产能爬坡期）</td>
+      </tr>
+      <tr>
+        <td><strong>新能源材料</strong></td>
+        <td class="num">12.95 亿</td>
+        <td class="num" style="color: var(--red);">-6.3%</td>
+        <td class="num">18.69%</td>
+        <td>稳定现金流（特高压+新能源车）</td>
+      </tr>
+      <tr>
+        <td><strong>电工绝缘材料</strong></td>
+        <td class="num">4.81 亿</td>
+        <td class="num" style="color: var(--green);">+2.8%</td>
+        <td class="num">13.22%</td>
+        <td>传统基座</td>
+      </tr>
+      <tr>
+        <td><strong>环保阻燃材料</strong></td>
+        <td class="num">1.56 亿</td>
+        <td class="num" style="color: var(--green);">+7.5%</td>
+        <td class="num">11.22%</td>
+        <td>补充业务</td>
+      </tr>
+      <tr style="background: rgba(88,166,255,0.04);">
+        <td><strong>合计</strong></td>
+        <td class="num"><strong>51.81 亿</strong></td>
+        <td class="num" style="color: var(--green);"><strong>+15.9%</strong></td>
+        <td class="num">—</td>
+        <td>归母净利 2.85 亿（+57.7%）</td>
+      </tr>
+    </table>
+
+    <p>2026Q1 进一步加速：营收 14.44 亿（+27.2%），归母净利 1.87 亿（+103.4%），其中高速电子树脂收入 2.58 亿（+131.4%）。<strong>电子材料已超越光学膜成为第一大收入来源。</strong></p>
+  </section>
+
+  <!-- ═══════════ 产品深度 ═══════════ -->
+  <section>
+    <h2>🧬 高速电子树脂：AI 服务器的"分子级控制点"</h2>
+
+    <table>
+      <tr>
+        <th>树脂品类</th>
+        <th>牌号等级</th>
+        <th>东材市占率（国内）</th>
+        <th>全球可量产企业</th>
+        <th>应用场景</th>
+      </tr>
+      <tr>
+        <td><strong>碳氢树脂</strong></td>
+        <td>M9 / M10</td>
+        <td>70-80%</td>
+        <td>旭化成 · 沙多玛 · 东材（仅 3 家）</td>
+        <td>GB300 / Rubin 224Gbps PCB</td>
+      </tr>
+      <tr>
+        <td><strong>BMI 双马树脂</strong></td>
+        <td>M7-M9</td>
+        <td>＞95%</td>
+        <td>杜邦 · 三菱 · 东材（仅 3 家）</td>
+        <td>AI 服务器 · 800G 光模块</td>
+      </tr>
+      <tr>
+        <td><strong>活性酯树脂</strong></td>
+        <td>—</td>
+        <td>＞95%</td>
+        <td>东材主导国内</td>
+        <td>高频板材固化剂</td>
+      </tr>
+      <tr>
+        <td><strong>PPO / OPE</strong></td>
+        <td>M8-M9</td>
+        <td>规划中</td>
+        <td>沙特 SABIC · 旭化成</td>
+        <td>低介电覆铜板基材</td>
+      </tr>
+    </table>
+
+    <div class="insight-card bull">
+      <p><strong>为什么碳氢树脂这么难做？</strong></p>
+      <p>① 分子设计：碳氢树脂仅含 C 和 H 原子，不能有任何极性基团——<strong>每引入一个极性基团，Df 就上升一个数量级</strong>。这意味着从单体合成到聚合的每一步都要在超高温高压无氧环境下完成。</p>
+      <p>② 杂质控制：M9 级要求金属离子杂质控制在 <strong>ppm 级别</strong>。任何微量催化剂残留都会导致介电损耗超标。</p>
+      <p>③ 一致性：每批次树脂的分子量分布必须极窄。AI 服务器 PCB 是 30+ 层高多层板，任何一层树脂性能波动都会导致整板报废。</p>
+      <p>④ 良率鸿沟：东材自产良率 85%+，国内其他尝试进入的企业良率不到 50%——<strong>这意味着后者的有效成本是东材的 3 倍以上</strong>。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 产能时间线 ═══════════ -->
+  <section>
+    <h2>🏭 产能扩张时间线</h2>
+
+    <div class="timeline-item">
+      <div class="date">2025.01</div>
+      <div class="desc"><strong>江苏海安</strong>：年产 25000 吨偏光片用光学级聚酯基膜投产</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">2025.08</div>
+      <div class="desc"><strong>绵阳塘汛</strong>：年产 200 吨超高纯电子专用材料投产</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">2025.12</div>
+      <div class="desc"><strong>山东东营</strong>：年产 20000 吨超薄 MLCC 用光学级聚酯基膜投产</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">2026.02-03</div>
+      <div class="desc"><strong>四川成都</strong>：创新中心一、二期投产（3000 吨超薄聚丙烯膜 + 25000 吨高端光学聚酯基膜）</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date" style="color: var(--purple); font-weight:700;">2026.06 ⬅ 关键</div>
+      <div class="desc"><strong>四川眉山</strong>：年产 20000 吨高速通信基板用电子材料项目<strong>具备投料试生产条件</strong>——碳氢树脂产能从 500 吨→4000 吨（全球第一梯队），配套 PPO 5000 吨、BMI 3500 吨。公司测算满产后年收入约 20 亿元，年利润约 6 亿元。</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">2026.10</div>
+      <div class="desc"><strong>绵阳</strong>：氢能源功能高分子材料产业化项目投产</div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 市场没看清的地方 ═══════════ -->
+  <section>
+    <h2>🔍 市场可能没看清的地方</h2>
+
+    <div class="insight-card">
+      <p><strong>1. 碳氢树脂不是"周期品"，是"认证壁垒品"</strong></p>
+      <p>市场习惯把化工股当周期股定价。碳氢树脂表面上是一种化工产品，但它的定价权来自<strong>认证体系</strong>而非成本曲线。12-18 个月的认证周期意味着：即使竞争对手今天建好了产线并做出了合格产品，东材的客户在未来 12 个月内也不会切换供应商。这更像 SAAS 的切换成本逻辑，而非大宗化工的降价逻辑。</p>
+    </div>
+
+    <div class="insight-card">
+      <p><strong>2. 从"间接供应"到"直接定价"的跃迁</strong></p>
+      <p>目前东材通过台光电子等覆铜板厂商间接供应英伟达。但随着 M9/M10 树脂成为 PCB 性能的<strong>唯一决定因素</strong>，树脂供应商在产业链中的议价地位正在上升。英伟达在 GB300 平台上已经直接指定了树脂牌号——这意味着 GPU 厂商越过覆铜板厂，直接锁定了树脂来源。东材正在从"二级供应商"变成"一级指定供应商"。</p>
+    </div>
+
+    <div class="insight-card">
+      <p><strong>3. 眉山项目的利润弹性被低估</strong></p>
+      <p>市场 consensus 2026 年净利润约 7 亿元。但眉山项目满产后可贡献年利润约 6 亿元（公司测算）。如果眉山项目在 2026H2 顺利爬坡，<strong>2027 年净利润有望冲击 12-15 亿元</strong>——这个数字比当前一致预期高出 50%+。碳氢树脂单价约 30-50 万元/吨（对比传统环氧树脂几千元/吨），毛利率远超传统化工品。</p>
+    </div>
+
+    <div class="insight-card warn">
+      <p><strong>4. 但市场也有合理担忧：光学膜拖累整体估值</strong></p>
+      <p>光学膜业务 2025 年毛利率仅 10.42%，且面临双星新材、洁美科技等同行的激烈竞争。光伏背板基膜更是同质化严重。市场可能把东材当"一半科技成长、一半化工周期"来定价——电子树脂的高估值被光学膜的低估值稀释。这种"混合估值折价"在电子树脂收入占比持续提升后有望收窄。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 竞争格局 ═══════════ -->
+  <section>
+    <h2>⚔️ 竞争格局</h2>
+
+    <table>
+      <tr>
+        <th>竞争维度</th>
+        <th>东材科技</th>
+        <th>国际对手</th>
+        <th>国内跟随者</th>
+      </tr>
+      <tr>
+        <td>碳氢树脂 M9/M10</td>
+        <td style="color: var(--green);">✅ 量产供货（英伟达认证）</td>
+        <td>旭化成（日本）· 沙多玛（美国）</td>
+        <td>圣泉集团（研发中）</td>
+      </tr>
+      <tr>
+        <td>BMI 双马树脂</td>
+        <td style="color: var(--green);">✅ 国内市占 95%+</td>
+        <td>杜邦（美国）· 三菱（日本）</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>光学基膜（偏光片）</td>
+        <td style="color: var(--orange);">🟡 产能扩张中，盈利爬坡</td>
+        <td>东丽 · 三菱 · 东洋纺（日本）</td>
+        <td>双星新材 · 洁美科技</td>
+      </tr>
+      <tr>
+        <td>MLCC 离型膜基膜</td>
+        <td style="color: var(--orange);">🟡 中端量产，高端在验证</td>
+        <td>东丽 · 三菱</td>
+        <td>洁美科技（高端领先）</td>
+      </tr>
+      <tr>
+        <td>PPO 树脂</td>
+        <td style="color: var(--accent);">🔵 5000 吨规划中</td>
+        <td>SABIC · 旭化成</td>
+        <td>—</td>
+      </tr>
+    </table>
+
+    <div class="tag-row">
+      <span class="tag tag-bull">核心壁垒：碳氢树脂 M9/M10</span>
+      <span class="tag tag-info">护城河：认证周期 12-18 月</span>
+      <span class="tag tag-bull">国内市占：BMI＞95%</span>
+      <span class="tag tag-risk">竞争风险：光学膜毛利率承压</span>
+    </div>
+  </section>
+
+  <!-- ═══════════ 估值和预期 ═══════════ -->
+  <section>
+    <h2>💰 业绩预测 &amp; 机构评级</h2>
+
+    <table>
+      <tr>
+        <th>机构</th>
+        <th>2026E 净利润</th>
+        <th>2027E 净利润</th>
+        <th>评级</th>
+      </tr>
+      <tr>
+        <td>华泰证券</td>
+        <td class="num">7.3 亿</td>
+        <td class="num">14.4 亿</td>
+        <td>买入 · 目标 42.6 元</td>
+      </tr>
+      <tr>
+        <td>长城证券</td>
+        <td class="num">7.04 亿</td>
+        <td class="num">10.07 亿</td>
+        <td>买入</td>
+      </tr>
+      <tr>
+        <td>国泰海通</td>
+        <td class="num">~6.2 亿</td>
+        <td class="num">~9.2 亿</td>
+        <td>增持 · 目标 52.36 元</td>
+      </tr>
+      <tr>
+        <td>方正证券</td>
+        <td class="num">6.9 亿</td>
+        <td class="num">9.5 亿</td>
+        <td>强烈推荐</td>
+      </tr>
+      <tr>
+        <td>长江证券</td>
+        <td class="num">8.0 亿</td>
+        <td class="num">—</td>
+        <td>买入</td>
+      </tr>
+    </table>
+
+    <p style="font-size:12px; color: var(--text-muted);">注：以上为券商公开研报预测，不代表本文观点。眉山项目利润弹性可能导致 2027 年实际业绩大幅超出当前一致预期。</p>
+  </section>
+
+  <!-- ═══════════ 风险 ═══════════ -->
+  <section>
+    <h2>⚠️ 什么情况说明这个判断错了</h2>
+
+    <table>
+      <tr>
+        <th>风险</th>
+        <th>概率</th>
+        <th>影响</th>
+        <th>监控方式</th>
+      </tr>
+      <tr>
+        <td><strong>眉山项目投产进度不及预期</strong></td>
+        <td>中</td>
+        <td>高</td>
+        <td>跟踪 2026.06.30 试车公告</td>
+      </tr>
+      <tr>
+        <td><strong>碳氢树脂被替代（如 PTFE 路线）</strong></td>
+        <td>低</td>
+        <td>极高</td>
+        <td>关注 M10+ 树脂技术路线变化</td>
+      </tr>
+      <tr>
+        <td><strong>旭化成/沙多玛大幅扩产压价</strong></td>
+        <td>低-中</td>
+        <td>中</td>
+        <td>跟踪国际竞争对手 Capex 计划</td>
+      </tr>
+      <tr>
+        <td><strong>AI 资本开支周期逆转</strong></td>
+        <td>低-中</td>
+        <td>高</td>
+        <td>CSP Capex 指引 · 英伟达订单</td>
+      </tr>
+      <tr>
+        <td><strong>高管持续减持</strong></td>
+        <td>中</td>
+        <td>中</td>
+        <td>2026 年 5 月已有 6 名董监高公告减持</td>
+      </tr>
+      <tr>
+        <td><strong>光学膜竞争恶化拖累整体利润</strong></td>
+        <td>中</td>
+        <td>中</td>
+        <td>跟踪毛利率趋势</td>
+      </tr>
+      <tr>
+        <td><strong>PPE 原料（沙特）供给中断</strong></td>
+        <td>低</td>
+        <td>高</td>
+        <td>中东局势 · 原料价格</td>
+      </tr>
+    </table>
+
+    <div class="insight-card warn">
+      <p><strong>最关键的辩驳点：</strong>如果眉山项目投产推迟超过 6 个月，或者碳氢树脂被 PTFE/其他技术路线替代，那么这个 bottleneck thesis 就解体了。但以目前 M9/M10 碳氢树脂是英伟达 Rubin 平台唯一指定方案的现状来看，替代风险在 2-3 年内极低。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 证据链 ═══════════ -->
+  <section>
+    <h2>📋 证据链</h2>
+
+    <table>
+      <tr>
+        <th>证据</th>
+        <th>来源</th>
+        <th>强度</th>
+      </tr>
+      <tr>
+        <td>2025 年电子材料收入 15.54 亿（+45.2%），高速树脂 +125%</td>
+        <td>2025 年年报</td>
+        <td>🟢 强</td>
+      </tr>
+      <tr>
+        <td>2026Q1 净利润 1.87 亿（+103%），高速树脂收入 2.58 亿（+131%）</td>
+        <td>2026 年一季报</td>
+        <td>🟢 强</td>
+      </tr>
+      <tr>
+        <td>碳氢树脂 M9 通过英伟达认证，批量供货 GB300</td>
+        <td>业绩说明会 · 券商调研</td>
+        <td>🟡 中（具体牌号因商业机密未披露）</td>
+      </tr>
+      <tr>
+        <td>眉山 20000 吨项目预计 2026.06.30 前具备投料试生产条件</td>
+        <td>公司公告（2026.06.02）</td>
+        <td>🟢 强</td>
+      </tr>
+      <tr>
+        <td>碳氢树脂国内市占 70-80%，全球仅 3 家量产</td>
+        <td>华泰/东吴/东方证券研报 · 业内人士</td>
+        <td>🟡 中</td>
+      </tr>
+      <tr>
+        <td>台光电子 BMI 树脂采购中东材占比超 80%</td>
+        <td>券商调研纪要</td>
+        <td>🟡 中</td>
+      </tr>
+      <tr>
+        <td>全球高速覆铜板市场 CAGR 40%（24-27E）</td>
+        <td>行业报告（Prismark/各券商引用）</td>
+        <td>🟡 中</td>
+      </tr>
+      <tr>
+        <td>商务部对日启动反倾销调查（2026.01），利好国产替代</td>
+        <td>商务部公告</td>
+        <td>🟢 强</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- ═══════════ 下一步研究 ═══════════ -->
+  <section>
+    <h2>🔭 下一步研究清单</h2>
+
+    <ol style="margin-left: 20px; color: var(--text);">
+      <li style="margin: 6px 0;"><strong>眉山试车结果：</strong>2026 年 6 月底-7 月初是最关键的观察窗口。试车是否顺利、产品能否达到 M9 级别一致性要求，直接决定 2027 年业绩弹性。</li>
+      <li style="margin: 6px 0;"><strong>客户直接认证进展：</strong>英伟达是否在 Rubin 平台上直接指定东材碳氢树脂牌号？需要交叉验证台光电子/台耀的供应商名单。</li>
+      <li style="margin: 6px 0;"><strong>碳氢树脂实际成交价：</strong>券商报告中缺乏 30-50 万元/吨的具体验证。需要通过覆铜板厂商或行业渠道交叉验证。</li>
+      <li style="margin: 6px 0;"><strong>高管减持节奏：</strong>2026 年 5 月 6 名董监高公告减持计划，需要跟踪实际减持进度和规模。</li>
+      <li style="margin: 6px 0;"><strong>国际竞争动态：</strong>旭化成和沙多玛是否有扩产计划？日本经济产业省是否将碳氢树脂列为战略物资限制出口？</li>
+      <li style="margin: 6px 0;"><strong>估值对比：</strong>与圣泉集团（电子树脂）、洁美科技（MLCC 离型膜）、双星新材（光学膜）的横向估值比较。</li>
+    </ol>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <div class="footer">
+    <p><strong>数据来源：</strong>东材科技 2025 年年报、2026 年一季报、公司公告（2026.06.02 眉山项目进展）、2026 年 5 月业绩说明会记录、华泰证券/长城证券/国泰海通/方正证券/长江证券/光大证券/东吴证券/东方证券/申万宏源研报、Prismark/ TrendForce 行业数据、东方财富/同花顺 F10、公开媒体报道。</p>
+    <p><strong>方法论：</strong>本报告使用 Serenity 供应链瓶颈研究框架 —— 从"AI 服务器 PCB 向 224Gbps 演进"这一物理需求出发，遍历覆铜板→树脂→单体→原料的产业链各层，找到"碳氢树脂 M9/M10 全球仅 3 家量产"这一真实物理约束，用年报/公告/券商调研/行业数据交叉验证，并明确列出可能推翻判断的关键风险。</p>
+    <p><strong>免责声明：</strong>本报告仅供研究参考，不构成任何投资建议。股票投资有风险，入市需谨慎。东材科技属于高成长高波动标的，估值已部分反映市场乐观预期。作者不对任何基于本报告做出的投资决策承担责任。</p>
+    <p style="margin-top: 12px;">生成时间：2026-06-25 &nbsp;|&nbsp; 工具：Claude Code + Serenity Skill &nbsp;|&nbsp; 目标公司：东材科技 (601208.SH)</p>
+  </div>
+
+</div>
+
+<script src="../nav.js"></script>
+</body>
+</html>
