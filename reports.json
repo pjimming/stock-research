@@ -1,0 +1,79 @@
+[
+  {
+    "file": "东山精密_002384_Serenity分析报告.html",
+    "title": "东山精密 (002384)",
+    "category": "company",
+    "subtitle": "PCB / 精密制造 · 供应链瓶颈分析",
+    "tags": ["供应链瓶颈分析", "002384"]
+  },
+  {
+    "file": "永鼎股份_600105_Serenity分析报告.html",
+    "title": "永鼎股份 (600105)",
+    "category": "company",
+    "subtitle": "光通信 / 光纤光缆 · 供应链瓶颈分析",
+    "tags": ["供应链瓶颈分析", "600105"]
+  },
+  {
+    "file": "长高电新_Serenity分析报告.html",
+    "title": "长高电新 (002452)",
+    "category": "company",
+    "subtitle": "电力设备 · 供应链瓶颈分析",
+    "tags": ["供应链瓶颈分析", "002452"]
+  },
+  {
+    "file": "智立方_301312_Serenity分析报告.html",
+    "title": "智立方 (301312)",
+    "category": "company",
+    "subtitle": "自动化设备 · Serenity 深度分析",
+    "tags": ["深度分析", "301312"]
+  },
+  {
+    "file": "香农芯创_300475_Serenity分析报告.html",
+    "title": "香农芯创 (300475)",
+    "category": "company",
+    "subtitle": "半导体分销 · Serenity 深度分析",
+    "tags": ["深度分析", "300475"]
+  },
+  {
+    "file": "工业富联_601138_Serenity分析报告.html",
+    "title": "工业富联 (601138)",
+    "category": "company",
+    "subtitle": "AI 服务器 / 智能制造 · Serenity 深度分析",
+    "tags": ["深度分析", "601138"]
+  },
+  {
+    "file": "快克智能_603203_Serenity分析报告.html",
+    "title": "快克智能 (603203)",
+    "category": "company",
+    "subtitle": "精密焊接 · Serenity 深度分析",
+    "tags": ["深度分析", "603203"]
+  },
+  {
+    "file": "A股CPO深度调研-20260623.html",
+    "title": "A股CPO深度调研",
+    "category": "industry",
+    "subtitle": "共封装光学（CPO）产业链全景 · 2026年6月",
+    "tags": ["行业调研", "2026-06-23"]
+  },
+  {
+    "file": "AI服务器深度调研报告.html",
+    "title": "AI 服务器深度调研报告",
+    "category": "industry",
+    "subtitle": "AI 算力基础设施 · 全球产业链格局",
+    "tags": ["行业调研"]
+  },
+  {
+    "file": "MLCC深度研究报告.html",
+    "title": "MLCC 产业链深度研究报告",
+    "category": "industry",
+    "subtitle": "片式多层陶瓷电容器 · 产业链全景",
+    "tags": ["行业调研"]
+  },
+  {
+    "file": "存储芯片深度调研报告.html",
+    "title": "存储芯片深度调研报告",
+    "category": "industry",
+    "subtitle": "DRAM / NAND · 存储产业链全景",
+    "tags": ["行业调研", "2026年6月"]
+  }
+]
