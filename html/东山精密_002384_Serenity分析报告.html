@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东山精密 (002384) · Serenity 供应链瓶颈分析</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card-bg: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --orange: #d2991d;
+    --purple: #a371f7;
+    --cyan: #39d2c0;
+    --pink: #db61a2;
+    --headline: #f0f6fc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .header .badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+
+  .badge-serenity {
+    background: rgba(88,166,255,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(88,166,255,0.3);
+  }
+
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--headline);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .header .ticker {
+    font-size: 18px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .header .meta {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .header .price-tag {
+    display: inline-flex;
+    gap: 24px;
+    margin-top: 20px;
+    padding: 16px 28px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .price-tag .val {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--headline);
+  }
+
+  .price-tag .item {
+    text-align: center;
+  }
+
+  .price-tag .item .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--headline);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title .icon {
+    font-size: 24px;
+  }
+
+  .section-subtitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--headline);
+    margin: 28px 0 12px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+
+  .card-accent { border-left: 4px solid var(--accent); }
+  .card-green  { border-left: 4px solid var(--green); }
+  .card-red    { border-left: 4px solid var(--red); }
+  .card-orange { border-left: 4px solid var(--orange); }
+  .card-purple { border-left: 4px solid var(--purple); }
+  .card-cyan   { border-left: 4px solid var(--cyan); }
+
+  /* Judgment box */
+  .judgment {
+    background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(163,113,247,0.08));
+    border: 1px solid rgba(88,166,255,0.25);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+
+  .judgment .lead {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--headline);
+    margin-bottom: 12px;
+  }
+
+  .judgment .body {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+  }
+
+  thead th {
+    background: rgba(48,54,61,0.6);
+    color: var(--headline);
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tbody tr:hover {
+    background: rgba(88,166,255,0.04);
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-high   { background: rgba(248,81,73,0.15);  color: var(--red); }
+  .tag-mid    { background: rgba(210,153,29,0.15);  color: var(--orange); }
+  .tag-low    { background: rgba(63,185,80,0.15);   color: var(--green); }
+  .tag-info   { background: rgba(88,166,255,0.12);  color: var(--accent); }
+  .tag-purple { background: rgba(163,113,247,0.15); color: var(--purple); }
+  .tag-cyan   { background: rgba(57,210,192,0.12);  color: var(--cyan); }
+  .tag-gold   { background: rgba(210,153,29,0.2);   color: #f0c040; }
+
+  /* Chain flow */
+  .chain-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  .chain-node {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    text-align: center;
+    font-weight: 600;
+    color: var(--headline);
+  }
+
+  .chain-node.weak   { opacity: 0.5; }
+  .chain-node.strong { border-color: var(--accent);  background: rgba(88,166,255,0.08); }
+  .chain-node.critical { border-color: var(--green); background: rgba(63,185,80,0.08); }
+
+  .chain-arrow {
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  /* Evidence */
+  .evidence-item {
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: rgba(48,54,61,0.3);
+    border: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .evidence-item .src {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .evidence-item .strength {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* Risk grid */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .risk-grid { grid-template-columns: 1fr; }
+  }
+
+  .risk-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .risk-card .risk-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--headline);
+    margin-bottom: 8px;
+  }
+
+  /* KPI mini cards */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .kpi-card .kpi-val {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--headline);
+  }
+
+  .kpi-card .kpi-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .kpi-card .kpi-change { font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+  .up    { color: var(--green); }
+  .down  { color: var(--red); }
+  .warn  { color: var(--orange); }
+
+  /* Layer rank */
+  .layer-rank {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+  }
+
+  .layer-rank .rank-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .layer-rank .layer-info { flex: 1; }
+
+  .layer-rank .layer-name {
+    font-weight: 700;
+    color: var(--headline);
+    font-size: 15px;
+  }
+
+  .layer-rank .layer-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 10px 20px;
+    margin: 16px 0;
+    background: rgba(88,166,255,0.05);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* Flow diagram */
+  .position-map {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .position-map .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+
+  .position-map .box {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    min-width: 100px;
+  }
+
+  .box-owned {
+    background: rgba(63,185,80,0.12);
+    border: 2px solid var(--green);
+    color: var(--headline);
+  }
+
+  .box-strong {
+    background: rgba(88,166,255,0.1);
+    border: 1px solid var(--accent);
+  }
+
+  .box-normal {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .box-down {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .vert-arrow {
+    color: var(--text-muted);
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* Score bar */
+  .score-bar-wrap { margin: 8px 0; }
+
+  .score-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .score-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(48,54,61,0.6);
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .fill-red    { background: var(--red); }
+  .fill-orange { background: var(--orange); }
+  .fill-green  { background: var(--green); }
+  .fill-blue   { background: var(--accent); }
+  .fill-purple { background: var(--purple); }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .pill {
+    padding: 4px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    background: rgba(48,54,61,0.5);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  .footer strong { color: var(--text); }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  .vs-table td:first-child { font-weight: 700; color: var(--headline); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ====== HEADER ====== -->
+<div class="header">
+  <div class="badge badge-serenity">🔬 Serenity · 供应链瓶颈分析</div>
+  <h1>东山精密</h1>
+  <div class="ticker">002384.SZ · 深交所主板 &nbsp;|&nbsp; 全球PCB前三 · FPC第二 · 200G EML独供</div>
+  <div class="meta">报告日期：2026年6月25日 &nbsp;|&nbsp; 方法论：Serenity Bottleneck Hunter</div>
+  <div class="price-tag">
+    <div class="item"><div class="val">275.80</div><div class="label">股价 (元)</div></div>
+    <div class="item"><div class="val">5,052亿</div><div class="label">总市值</div></div>
+    <div class="item"><div class="val">114x</div><div class="label">动态PE</div></div>
+    <div class="item"><div class="val">22.3x</div><div class="label">市净率</div></div>
+    <div class="item"><div class="val">401亿</div><div class="label">2025年营收</div></div>
+  </div>
+</div>
+
+<!-- ====== 核心判断 ====== -->
+<div class="section">
+  <div class="judgment">
+    <div class="lead">🔑 核心判断：东山精密是 Serenity 框架下最经典的"向挖金矿的人卖铲子"案例。它控制着光模块产业链中最被需要、最难替代、扩产最慢的环节——200G EML 光芯片。</div>
+    <div class="body">
+      <strong>Serenity 的核心问题是"谁控制着不可绕过的卡点？"</strong><br><br>
+      在 AI 光通信链条中，最紧张的不是光模块组装（中际旭创、新易盛都能做），而是上游的 200G EML 光芯片。全球只有两家公司能稳定量产：Lumentum 和<strong>东山精密旗下的索尔思光电</strong>。<br><br>
+      于是出现了一个经典格局：<strong>中际旭创和新易盛（全球光模块前两名）的 200G EML 芯片，都要从东山精密买。</strong>这就像台积电和三星都要从 ASML 买光刻机——卡的是全行业的脖子。<br><br>
+      再加上东山本身是全球 FPC 第二、PCB 第三、边缘 AI PCB 全球第一，它在 AI 硬件供应链中的卡位<strong>纵深极深、覆盖极广</strong>。<br><br>
+      <strong style="color: var(--orange);">但 5,000 亿市值已经把这个故事定价得很满。114x PE 意味着市场预期未来 3 年的高增长几乎不能有任何闪失。现在的关键问题不是"这家公司好不好"，而是"好到什么程度才算符合这个价格"。</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 一、市场故事 → 系统变化 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📡</span>一、市场故事 → 系统变化 → 约束点识别</div>
+
+  <p style="margin-bottom:16px;">东山精密身上叠加了 AI 算力基础设施的<strong>三个结构性变化</strong>：</p>
+
+  <table>
+    <thead>
+      <tr><th style="width:18%">叙事</th><th style="width:32%">系统变化</th><th style="width:22%">物理约束</th><th style="width:28%">东山的位置</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AI 光模块爆发</strong></td>
+        <td>800G→1.6T→3.2T 光模块代际升级，单模块价值量翻倍；2026年全球光模块市场超 300 亿美元</td>
+        <td>200G EML 芯片供给缺口巨大，全球仅 2 家稳定量产；InP 外延+IDM 制造扩产需 2-3 年</td>
+        <td><span class="tag tag-high">卡点控制者</span> 索尔思光电，国内唯一 200G EML 大规模量产</td>
+      </tr>
+      <tr>
+        <td><strong>AI 服务器 PCB 升级</strong></td>
+        <td>GPU 算力密度提升 → PCB 层数从 40 层向 70-100 层升级，单台 AI 服务器 PCB 价值量从 $500 涨到 $3,000+</td>
+        <td>78 层以上 HDI/高多层 PCB 制造能力稀缺，全球仅 ~5 家具备量产能力</td>
+        <td><span class="tag tag-mid">重要参与者</span> Multek 78层能力，边缘AI PCB 全球第一（26.9%）</td>
+      </tr>
+      <tr>
+        <td><strong>端侧 AI + 新能源车</strong></td>
+        <td>AI 手机/折叠屏/机器人驱动 FPC 设计复杂度提升；新能源车电子架构升级，单车 PCB 价值量新增 ~4,000 元</td>
+        <td>高端 FPC 产能趋紧，设计难度和加工难度大幅提升</td>
+        <td><span class="tag tag-info">双寡头之一</span> FPC 全球第二（仅次于鹏鼎控股）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    三个叙事的时间维度不同：光芯片是当下最紧张、利润最厚的环节（2-3年窗口），AI PCB 是正在放量的结构性升级（3-5年），FPC/新能源车是提供稳定现金流的底座。东山精密恰好用后两个业务养着光芯片的产能扩张——这是一个自洽的增长飞轮。
+  </blockquote>
+</div>
+
+<!-- ====== 二、产业链地图 & 卡点分析 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🔗</span>二、产业链地图：东山精密到底卡在哪里？</div>
+
+  <p style="margin-bottom:12px; color:var(--text-muted);">东山精密横跨 AI 硬件供应链三层，每一层的卡点控制力截然不同：</p>
+
+  <!-- Chain 1: 光芯片 -->
+  <div class="card card-green">
+    <div class="section-subtitle" style="margin-top:0;">💡 产业链一：光芯片 → 光模块（东山是卡点本身）</div>
+    <div class="chain-flow">
+      <span class="chain-node">InP 衬底</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node critical">外延/晶圆<br><small style="font-weight:400;">★ 东山IDM</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node critical">200G EML 芯片<br><small style="font-weight:400;">★ 东山独供</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">光模块组装<br><small>中际旭创/新易盛</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">英伟达/微软/Meta</span>
+    </div>
+    <p style="font-size:14px; margin-top:12px;">
+      <strong>这是东山最强卡点。</strong>200G PAM4 EML 全球仅 Lumentum 和索尔思光电两家稳定量产。索尔思 6 英寸 InP IDM 产线、良率 85-90%、芯片自给率 99%+。已通过英伟达、Meta、微软、谷歌全部认证。订单排至 2028 年。<br>
+      <span style="color: var(--green);">▶ 中际旭创和新易盛——全球光模块前两名——的 200G EML 都高度依赖索尔思供货。</span>
+    </p>
+    <div class="layer-rank">
+      <div class="rank-num">#1</div>
+      <div class="layer-info">
+        <div class="layer-name">卡点控制力：极强 ★★★★★</div>
+        <div class="layer-detail">全球唯二、国内唯一的 200G EML 大规模量产能力。这是"不可绕过"的上游卡点。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chain 2: AI PCB -->
+  <div class="card card-accent">
+    <div class="section-subtitle" style="margin-top:0;">🔌 产业链二：AI 服务器 PCB（东山是重要参与者，但不是最大卡点）</div>
+    <div class="chain-flow">
+      <span class="chain-node">覆铜板 (CCL)</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node strong">高多层 PCB<br><small>胜宏/沪电/东山</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node strong">HDI 板<br><small>东山边缘AI第一</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">AI 服务器 OEM</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">云厂商 / 英伟达</span>
+    </div>
+    <p style="font-size:14px; margin-top:12px;">
+      <strong>AI 服务器 PCB 的核心卡点是 70 层以上的超高多层板制造能力。</strong>胜宏科技以 13.8% 份额居全球 AI 算力 PCB 第一，沪电股份是国内唯一通过英伟达 GB200 全认证的 PCB 厂商。<br>
+      东山精密（Multek）拥有 78 层板量产能力，但在 AI 服务器 PCB 的市场份额落后于胜宏和沪电。<strong>它真正的差异化在于边缘 AI PCB（全球第一，份额 26.9%）以及"PCB + 光模块 + 光芯片"的交叉协同。</strong>
+    </p>
+    <div class="layer-rank">
+      <div class="rank-num">#3</div>
+      <div class="layer-info">
+        <div class="layer-name">卡点控制力：中等 ★★★</div>
+        <div class="layer-detail">技术能力具备（78层），市场份额尚在追赶。但"PCB+光"的交叉协同是独特优势。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chain 3: FPC -->
+  <div class="card card-purple">
+    <div class="section-subtitle" style="margin-top:0;">📱 产业链三：消费电子 FPC（双寡头之一，现金流底座）</div>
+    <div class="chain-flow">
+      <span class="chain-node">PI/铜箔基材</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node strong">FPC 制造<br><small>鹏鼎/东山双寡头</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">模组组装</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">苹果/安卓/汽车</span>
+    </div>
+    <p style="font-size:14px; margin-top:12px;">
+      <strong>FPC 是东山的基本盘。</strong>全球第二，仅次于鹏鼎控股。苹果贡献约 42% 营收。AI 手机、折叠屏、AR/VR 推动高端 FPC 需求升级。这是成熟但稳定的业务，毛利率 17.6%，为公司提供现金流来养光芯片和 AI PCB 的扩张。<br>
+      卡点强度不如光芯片（充分竞争的双寡头格局，而非垄断），但它是<strong>不可或缺的"现金牛"底座</strong>。
+    </p>
+    <div class="layer-rank">
+      <div class="rank-num">#2</div>
+      <div class="layer-info">
+        <div class="layer-name">卡点控制力：中等偏强 ★★★☆</div>
+        <div class="layer-detail">双寡头格局稳定，苹果链粘性高。AI 终端趋势有利于高端 FPC 价值量提升。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 三、独特的纵向整合 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🏗️</span>三、最被低估的壁垒：全球唯一的"PCB + 光芯片 + 光模块"一体化</div>
+
+  <div class="position-map">
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom: 16px;">东山精密的纵向整合在 AI 硬件供应链中独一无二——从最底层的 PCB 基板到最上层的光模块，全部自研自产：</p>
+    <div class="row">
+      <span class="box box-strong">FPCAI 终端</span>
+      <span style="color:var(--text-muted);">+</span>
+      <span class="box box-strong">AI 服务器 PCB<br><small style="font-weight:400;">78层/Multek</small></span>
+      <span style="color:var(--text-muted);">+</span>
+      <span class="box box-strong">光芯片 IDM<br><small style="font-weight:400;">200G EML自研</small></span>
+      <span style="color:var(--text-muted);">+</span>
+      <span class="box box-strong">光模块<br><small style="font-weight:400;">100G-1.6T</small></span>
+    </div>
+    <div style="margin-top: 12px; font-size: 14px; color: var(--text);">
+      <strong>这意味着：</strong>客户（英伟达/微软/Meta）可以从东山精密一站式采购 AI 服务器所需的 PCB、光芯片和光模块。<br>
+      交叉销售 + 技术协同 + 成本优势三重叠加。全球没有第二家公司能做到这一点。
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>能力层</th><th>东山精密</th><th>中际旭创</th><th>鹏鼎控股</th><th>胜宏科技</th><th>源杰科技</th></tr></thead>
+    <tbody>
+      <tr><td>光模块</td><td>✅ 国内#3</td><td>✅ 全球#1</td><td>❌</td><td>❌</td><td>❌</td></tr>
+      <tr><td>光芯片 (200G EML)</td><td>✅ 国内唯一</td><td>❌ 外购</td><td>❌</td><td>❌</td><td>✅ 研发中</td></tr>
+      <tr><td>AI 服务器 PCB</td><td>✅ 78层</td><td>❌</td><td>⚠️ 起步</td><td>✅ 70层</td><td>❌</td></tr>
+      <tr><td>FPC (消费电子)</td><td>✅ 全球#2</td><td>❌</td><td>✅ 全球#1</td><td>❌</td><td>❌</td></tr>
+      <tr><td>新能源车结构件</td><td>✅</td><td>❌</td><td>⚠️</td><td>❌</td><td>❌</td></tr>
+      <tr style="background:rgba(88,166,255,0.06);"><td><strong>纵向整合深度</strong></td><td><strong>★★★★★</strong></td><td>★★</td><td>★★★</td><td>★★</td><td>★★</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ====== 四、Serenity 独有的竞争洞察 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🎯</span>四、Serenity 独有洞察：为什么光芯片卡点比看起来更牢固</div>
+
+  <div class="card card-cyan">
+    <div class="section-subtitle" style="margin-top:0;">"中际旭创和新易盛越成功，东山精密越受益"</div>
+    <p style="font-size:14px; line-height:1.9;">
+      这是 Serenity 框架下最值得关注的产业链关系：<strong>东山精密不是和中际旭创、新易盛在同一个层面竞争，它是它们的上游供应商。</strong><br><br>
+      中际旭创 2026Q1 净利润 57 亿（+262%），新易盛净利润 32-38 亿（+104-142%）。它们卖的每一颗含 200G EML 的光模块，芯片大概率来自索尔思。<br><br>
+      这就形成了一种"不对称受益"关系：<strong>光模块需求越旺，三家都赚钱；但光芯片供给越紧，东山的议价权越大。</strong>因为中际和新易盛没有自己的 200G EML 产能，而扩产 200G EML 需要 IDM 产线、2-3 年时间、数十亿投入——不是它们短期能追赶的。
+    </p>
+  </div>
+
+  <div class="card card-orange">
+    <div class="section-subtitle" style="margin-top:0;">反方视角：这个卡点能持续多久？</div>
+    <p style="font-size:14px; line-height:1.9;">
+      三种可能的威胁：<br>
+      ① <strong>硅光技术路线替代：</strong>如果硅光方案在未来 3 年内大规模替代 InP EML 方案，东山的 IDM 优势会被削弱。但目前硅光在单通道 200G 以上仍不如 EML 成熟。<br>
+      ② <strong>三安光电进入：</strong>三安光电预计 2026Q3 开始小批量 200G EML。但良率爬坡到量产级别通常需要 1-2 年。<br>
+      ③ <strong>行业同步扩产导致的 2027-2028 产能过剩：</strong>东山自己投了 81 亿扩产，Lumentum 也在扩。如果 AI 资本开支在 2027 年后放缓，供需可能逆转。
+    </p>
+  </div>
+</div>
+
+<!-- ====== 五、证据链条 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📋</span>五、关键证据链条</div>
+
+  <div class="section-subtitle">200G EML 光芯片（核心卡点）</div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>量产能力：</strong>200G PAM4 EML 已大规模量产，良率 85-90%。国内唯一。100G EML 千万颗级出货。400G EML 计划 2026Q4 量产。
+    <div class="src">来源：公司公告（2026.05.19）、互动易、投资者交流</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>客户认证：</strong>已通过英伟达、Meta、微软、谷歌全部认证。订单排至 2028 年。
+    <div class="src">来源：公司公告、券商研报（中原证券、方正证券 2026.06）</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>产能扩张：</strong>2026 年 6 月公告拟投资 12 亿美元（约 81 亿元）扩建光芯片及光模块产能，月产能从 900 万颗提升至 2,200 万颗。
+    <div class="src">来源：公司公告（2026.06.16）、上海证券报</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>供应链地位验证：</strong>中际旭创、新易盛的 200G EML 主供均为索尔思光电。华工科技的 200G EML 也部分来自索尔思。
+    <div class="src">来源：产业链调研、东方财富 2026.06.19</div>
+  </div>
+
+  <div class="section-subtitle">AI PCB</div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--orange);">[中等证据]</span>
+    <strong>技术能力：</strong>Multek 具备 78 层超高多层与 7 阶厚板 HDI 制造能力。边缘 AI PCB 全球份额第一（26.9%）。拟投 10 亿美元建 AI 高端 PCB 项目。
+    <div class="src">来源：公司年报、灼识咨询、券商研报</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--red);">[待验证]</span>
+    <strong>AI 服务器 PCB 市场份额：</strong>在 AI 服务器高多层 PCB 领域，份额落后于胜宏科技（13.8%）和沪电股份。珠海产能 2026Q3 释放是验证节点。
+    <div class="src">来源：Prismark 数据、产业链调研</div>
+  </div>
+
+  <div class="section-subtitle">财务兑现</div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>2026Q1 业绩爆发：</strong>营收 131.38 亿（+52.72%），净利润 11.10 亿（+143.47%）。索尔思光电贡献利润占比 52.92%——说明光芯片确实是利润增量的核心引擎。
+    <div class="src">来源：2026 年一季报</div>
+  </div>
+</div>
+
+<!-- ====== 六、财务质量 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">💰</span>六、财务质量检查</div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">401亿</div>
+      <div class="kpi-label">2025 年营收</div>
+      <div class="kpi-change up">+9.1% YoY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">13.86亿</div>
+      <div class="kpi-label">2025 年归母净利润</div>
+      <div class="kpi-change up">+27.7% YoY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">11.10亿</div>
+      <div class="kpi-label">2026Q1 归母净利润</div>
+      <div class="kpi-change up">+143.5% YoY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">19.3%</div>
+      <div class="kpi-label">2026Q1 毛利率</div>
+      <div class="kpi-change up">+5.2pp</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">58.8%</div>
+      <div class="kpi-label">资产负债率</div>
+      <div class="kpi-change warn">偏高</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">47.7亿</div>
+      <div class="kpi-label">商誉余额</div>
+      <div class="kpi-change warn">+125%</div>
+    </div>
+  </div>
+
+  <div class="card card-red">
+    <div class="section-subtitle" style="margin-top:0;">⚠ 财务结构性风险</div>
+    <table>
+      <thead><tr><th>风险指标</th><th>数值</th><th>行业参考</th><th>点评</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>资产负债率</td><td><strong style="color:var(--orange);">58.82%</strong></td><td>鹏鼎 ~30%</td><td>显著高于可比公司</td>
+        </tr>
+        <tr>
+          <td>商誉 / 净资产</td><td><strong style="color:var(--red);">27.1%</strong></td><td>&lt;20% 健康线</td><td>收购索尔思等带来商誉暴增</td>
+        </tr>
+        <tr>
+          <td>应收账款增速 vs 营收增速</td><td><strong style="color:var(--red);">27.8% vs 9.1%</strong></td><td>应收 &lt; 营收增速</td><td>回款质量下降</td>
+        </tr>
+        <tr>
+          <td>存货增速</td><td><strong style="color:var(--red);">+45.1%</strong></td><td>应匹配营收增速</td><td>显著高于营收和成本增速</td>
+        </tr>
+        <tr>
+          <td>流动比率</td><td><strong style="color:var(--orange);">1.01</strong></td><td>&gt;1.5 健康线</td><td>三年持续下降（1.26→1.18→1.01）</td>
+        </tr>
+        <tr>
+          <td>短期债务</td><td><strong style="color:var(--orange);">121亿</strong></td><td>货币资金 89亿</td><td>短债覆盖率不足</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px; color:var(--text-muted); margin-top:8px;">
+      东山精密的财务状况呈现典型的"高杠杆扩张"特征。高速增长背后是大量举债和并购。如果 AI 需求出现波动，高负债+高商誉的组合会放大下行风险。
+    </p>
+  </div>
+</div>
+
+<!-- ====== 七、估值压力测试 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">⚡</span>七、估值压力测试：5,000 亿市值在定价什么？</div>
+
+  <div class="card card-orange">
+    <p style="font-size:15px; margin-bottom:16px;">
+      机构对 2026 年净利润的预测分歧极大：华金证券预测 <strong>33 亿</strong>，中原/方正预测 <strong>72-75 亿</strong>，管理层指引 <strong>50-60 亿</strong>。<br>
+      以当前 5,052 亿市值计：
+    </p>
+    <table>
+      <thead><tr><th>情景</th><th>2026E 净利润</th><th>对应 PE</th><th>如果给 30x PE 的目标市值</th><th> vs 当前 5,052 亿</th></tr></thead>
+      <tbody>
+        <tr><td>保守（华金）</td><td>33 亿</td><td><strong style="color:var(--red);">153x</strong></td><td>990 亿</td><td class="down"><strong>-80%</strong></td></tr>
+        <tr><td>基准（管理层）</td><td>55 亿</td><td><strong style="color:var(--orange);">92x</strong></td><td>1,650 亿</td><td class="down"><strong>-67%</strong></td></tr>
+        <tr><td>乐观（机构一致）</td><td>72 亿</td><td><strong style="color:var(--orange);">70x</strong></td><td>2,160 亿</td><td class="down"><strong>-57%</strong></td></tr>
+        <tr style="background:rgba(210,153,29,0.06);"><td>极度乐观</td><td>100 亿</td><td>50x</td><td>3,000 亿</td><td class="down">-41%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:14px; margin-top:12px; color:var(--text-muted);">
+      <strong>即使按最乐观的机构一致预期 72 亿利润，当前价格对应的 2026E PE 仍然高达 70x。</strong><br>
+      要 justify 当前市值，需要 2027 年做到 130 亿利润（对应 ~39x PE），或 2028 年做到 225 亿利润（对应 ~22x PE）。<br><br>
+      问题是：2027 年的 130 亿和 2028 年的 225 亿，有多少是已经"锁定"的，有多少只是"假设"？
+    </p>
+  </div>
+
+  <div class="section-subtitle">未来利润来源拆解</div>
+  <table>
+    <thead><tr><th>利润引擎</th><th>2025 年实际</th><th>2026E</th><th>2027E</th><th>2028E</th><th>确定性</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>光模块+光芯片（索尔思）</td><td>~7.3亿（Q1贡献52.9%反推）</td><td>35-50亿</td><td>70-100亿</td><td>120-180亿</td><td><span class="tag tag-mid">中高</span></td>
+      </tr>
+      <tr>
+        <td>PCB/FPC（传统）</td><td>~4亿</td><td>8-12亿</td><td>12-18亿</td><td>15-22亿</td><td><span class="tag tag-info">较高</span></td>
+      </tr>
+      <tr>
+        <td>精密组件+显示</td><td>~2.5亿</td><td>5-8亿</td><td>8-12亿</td><td>10-15亿</td><td><span class="tag tag-info">较高</span></td>
+      </tr>
+      <tr style="background:rgba(88,166,255,0.06);">
+        <td><strong>合计</strong></td><td><strong>~13.9亿</strong></td><td><strong>48-70亿</strong></td><td><strong>90-130亿</strong></td><td><strong>145-217亿</strong></td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ====== 八、风险矩阵 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🛡️</span>八、什么情况说明这个判断错了</div>
+
+  <div class="risk-grid">
+    <div class="risk-card">
+      <div class="risk-title">🔴 第一大风险：估值极端，容错空间极窄</div>
+      <p style="font-size:14px; color:var(--text-muted);">114x 动态 PE / 22x PB。即使是机构一致预期下 70x 的 2026E PE 也不便宜。任何一个季度增速放缓都可能导致 40-50% 的回撤。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟠 第二大风险：2027 年行业产能集中释放</div>
+      <p style="font-size:14px; color:var(--text-muted);">东山投 81 亿扩产，Lumentum 同步扩产，三安光电等进入。如果 2027 年后 200G EML 从稀缺变为过剩，芯片价格和毛利率将快速下行。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟡 第三大风险：硅光技术路线切换</div>
+      <p style="font-size:14px; color:var(--text-muted);">如果硅光方案在 1.6T/3.2T 时代大规模替代 InP EML，东山在磷化铟 IDM 上的投资可能面临技术贬值。公司虽有硅光布局，但核心优势在 III-V 族。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟠 第四大风险：AI 资本开支周期逆转</div>
+      <p style="font-size:14px; color:var(--text-muted);">如果美股科技巨头缩减 AI 资本开支，光模块需求增速将放缓。东山高负债扩张的模式在经济下行期会加倍承压。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟡 第五大风险：高负债 + 高商誉"双高"隐患</div>
+      <p style="font-size:14px; color:var(--text-muted);">资产负债率 58.8%，商誉 47.7 亿（较期初 +125%），流动比率降至 1.01。如果业绩不达预期，商誉减值和流动性压力可能同时发作。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟢 第六大风险：传统业务拖累整体利润率</div>
+      <p style="font-size:14px; color:var(--text-muted);">2025 年综合净利率仅 3.47%。LED 显示仍在亏损。传统 PCB/FPC 毛利率远低于光芯片。如果光模块业务增速放缓，低利润底座会拉低整体估值。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 九、评分卡 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📊</span>九、Serenity 多维评分卡</div>
+
+  <table>
+    <thead><tr><th style="width:22%">维度</th><th style="width:8%">评分</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>产业链卡点强度</td>
+        <td><strong style="font-size:16px; color:var(--green);">9</strong></td>
+        <td>200G EML 全球唯二、国内唯一。这是全行业的上游瓶颈。光模块龙头中际旭创和新易盛都依赖东山供货。卡点极其牢固。</td>
+      </tr>
+      <tr>
+        <td>竞争壁垒 / 可替代性</td>
+        <td><strong style="font-size:16px; color:var(--green);">8</strong></td>
+        <td>InP IDM 产线 + 2-3 年扩产周期 + 客户认证壁垒极高。三安光电 2026Q3 才小批量，量产爬坡还需 1-2 年。短期内基本不可替代。</td>
+      </tr>
+      <tr>
+        <td>纵向整合独特性</td>
+        <td><strong style="font-size:16px; color:var(--green);">9</strong></td>
+        <td>全球唯一"PCB + 光芯片 + 光模块"一体化。这种纵深在 AI 硬件供应链中独一无二。交叉销售 + 成本协同是真实存在的。</td>
+      </tr>
+      <tr>
+        <td>盈利兑现证据</td>
+        <td><strong style="font-size:16px; color:var(--accent);">7</strong></td>
+        <td>2026Q1 利润 +143% 提供了强证据。但 2025 年全年利润仅 13.9 亿，2026 年能否兑现 60-70 亿还有待验证。索尔思 Q1 贡献 52.9% 利润说明增长引擎确实在光芯片。</td>
+      </tr>
+      <tr>
+        <td>财务安全性</td>
+        <td><strong style="font-size:16px; color:var(--red);">4</strong></td>
+        <td>高负债（58.8%）、高商誉（47.7亿）、应收账款和存货增速异常。流动比率降至 1.01。财务结构是高增长模式的脆弱面。</td>
+      </tr>
+      <tr>
+        <td>估值合理性</td>
+        <td><strong style="font-size:16px; color:var(--red);">3</strong></td>
+        <td>114x PE / 22x PB。即使用最乐观的 2026E 利润（72亿）计算仍是 70x PE。当前估值已将 2027-2028 年的高增长预期完全折现。</td>
+      </tr>
+      <tr>
+        <td>业务多元化质量</td>
+        <td><strong style="font-size:16px; color:var(--accent);">7</strong></td>
+        <td>FPC（全球#2）+ AI PCB + 光芯片 + 光模块 + 新能源车零部件。多元但不杂乱，各业务有内在逻辑（都是精密制造+电子电路）。</td>
+      </tr>
+      <tr style="background:rgba(88,166,255,0.06);">
+        <td><strong>综合评分</strong></td>
+        <td><strong style="font-size:20px; color:var(--accent);">6.7 / 10</strong></td>
+        <td><strong>卡点价值 9 分，财务和估值分别只有 4 分和 3 分。好公司不等于好价格。当前属于"高确信度 + 高估值"组合，需要极强的业绩兑现来消化估值。</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="score-bar-wrap" style="margin-top:20px;">
+    <div class="score-bar-label"><span>综合得分</span><span style="color:var(--accent); font-weight:700;">6.7 / 10</span></div>
+    <div class="score-bar"><div class="score-bar-fill fill-blue" style="width:67%;"></div></div>
+  </div>
+</div>
+
+<!-- ====== 十、与可比公司定位对比 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">⚔️</span>十、竞争格局：光合一的独特定位</div>
+
+  <table class="vs-table">
+    <thead>
+      <tr><th>维度</th><th>东山精密</th><th>中际旭创</th><th>鹏鼎控股</th><th>胜宏科技</th><th>深南电路</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>市值</td><td>5,052亿</td><td>~9,456亿</td><td>~2,400亿</td><td>~2,200亿</td><td>~1,500亿</td></tr>
+      <tr><td>动态 PE</td><td>114x</td><td>~40x</td><td>~20x</td><td>~25x</td><td>~30x</td></tr>
+      <tr><td>2026Q1 利润增速</td><td class="up">+143%</td><td class="up">+262%</td><td>—</td><td>—</td><td class="up">+73%</td></tr>
+      <tr><td>核心卡点</td><td>200G EML芯片</td><td>光模块全球#1</td><td>FPC 全球#1</td><td>AI算力PCB#1</td><td>ABF载板</td></tr>
+      <tr><td>卡点稀缺性</td><td><span class="tag tag-high">极高</span> 全球唯二</td><td><span class="tag tag-mid">中高</span> 规模化领先</td><td><span class="tag tag-mid">中</span> 双寡头</td><td><span class="tag tag-mid">中高</span> 英伟达独家</td><td><span class="tag tag-high">极高</span> ABF稀缺</td></tr>
+      <tr><td>纵向整合</td><td><span class="tag tag-gold">★★★★★</span></td><td>★★</td><td>★★★</td><td>★★</td><td>★★★</td></tr>
+      <tr><td>主要风险</td><td>估值+财务杠杆</td><td>芯片外购依赖</td><td>苹果单客依赖</td><td>单一赛道</td><td>扩产节奏</td></tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    <strong>Serenity 比较框架下的结论：</strong>东山精密的卡点质量（9分）在所有可比公司中是最高的——它卡住的是全行业而不是某一家客户。但它也是估值最贵的之一（仅优于部分极端概念股）。中际旭创的 40x PE + 262% 增速在赔率上更有吸引力。鹏鼎控股和胜宏科技的估值更合理但卡点强度不如东山。
+  </blockquote>
+</div>
+
+<!-- ====== 十一、下一步研究 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📝</span>十一、下一步优先研究行动</div>
+
+  <div class="card">
+    <ol style="padding-left:20px; font-size:15px; line-height:2.4;">
+      <li><strong>跟踪索尔思光电月度/季度出货数据。</strong>光芯片出货量是最领先的指标。如果 200G EML 月出货从百万级爬升到千万级，高估值的消化就有了实锤。</li>
+      <li><strong>验证 2026Q2 业绩。</strong>Q1 净利润 11.1 亿（+143%），Q2 能否保持这个增速？管理层指引全年 50-60 亿意味着 Q2-Q4 每季平均 13-16 亿。Q2 如果低于 13 亿，全年指引就面临压力。</li>
+      <li><strong>监控三安光电 200G EML 进展。</strong>三安光电 2026Q3 小批量是一个关键竞争变量。如果三安爬坡快于预期，东山的"独家"溢价将收窄。</li>
+      <li><strong>追踪硅光路线图。</strong>1.6T/3.2T 时代硅光 vs EML 的技术路线胜负将决定东山 InP IDM 资产的长期价值。关注英伟达、中际旭创等下游客户的技术选型。</li>
+      <li><strong>拆解索尔思光电的独立财务。</strong>索尔思已递交港股招股书（2026.05.19）。仔细分析其毛利率、净利率、客户集中度、产能利用率，验证"芯片自给率 99%"的真实成本优势。</li>
+      <li><strong>与中际旭创作交叉验证。</strong>中际旭创的 200G EML 采购是否确实以索尔思为主供？如果中际开始多元化供应商，东山的议价权将削弱。</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ====== 十二、总结 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🎯</span>十二、Serenity 视角总结</div>
+
+  <div class="judgment">
+    <div class="lead">东山精密是 A 股 AI 硬件供应链中卡点质量最高的公司之一——它控制着全行业都需要的 200G EML 光芯片，而且是全球唯二的供应商。但 5,000 亿的市值已经把未来 2-3 年的乐观情景大部分折现了。</div>
+    <div class="body">
+      <p style="margin-bottom:12px;"><strong>用 Serenity 的方法一层层拆开看：</strong></p>
+      <p style="margin-bottom:8px;">
+        1️⃣ <strong>先排产业链层级：</strong>光芯片（200G EML）&gt; AI 服务器 PCB &gt; FPC &gt; 精密组件。真正稀缺、不可替代、扩产最慢的是光芯片。东山在这个层级上拥有全球唯二、国内唯一的卡点控制力。
+      </p>
+      <p style="margin-bottom:8px;">
+        2️⃣ <strong>卡点质量极高：</strong>这是一个"挖金矿的人都要用我的铲子"的经典案例。中际旭创和新易盛越成功，对索尔思 200G EML 的需求越大。全球光模块市场扩容的每一分钱，东山都能分到上游最肥的那一口。
+      </p>
+      <p style="margin-bottom:8px;">
+        3️⃣ <strong>纵向整合独一无二：</strong>全球唯一"PCB + 光芯片 + 光模块"一体化的公司。这不是概念炒作——交叉销售和成本协同真实存在，客户（英伟达/微软/Meta）确实可以从东山一站式采购。
+      </p>
+      <p style="margin-bottom:8px;">
+        4️⃣ <strong>估值是最大的软肋：</strong>114x PE / 22x PB。即使按最乐观的 72 亿 2026E 利润，仍是 70x PE。如果按管理层指引的 50-60 亿，PE 接近 90-100x。安全边际几乎为零。
+      </p>
+      <p style="margin-bottom:8px;">
+        5️⃣ <strong>财务杠杆是隐藏风险：</strong>58.8% 负债率、47.7 亿商誉、流动比率降至 1.01。高增长 + 高杠杆的组合在经济上行期是放大器，在下行期是炸弹。
+      </p>
+      <p>
+        6️⃣ <strong>Serenity 建议：</strong>东山精密是值得长期跟踪的"真卡点"公司。但在当前估值下，<strong>赔率不站在长期投资者这边</strong>。研究优先级排在"核心关注，等待估值回调或业绩超预期兑现"。如果回调至 30-40x 2026E PE（对应 1,500-2,200 亿市值），且光芯片出货和利润增长趋势确认，才是更舒适的入场区间。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<div class="footer">
+  <p><strong>Serenity · Supply-Chain Bottleneck Hunter</strong></p>
+  <p>方法论：市场故事 → 系统变化 → 产业链层级 → 稀缺卡点 → 公开证据 → 市场可能没看清的地方 → 反方理由 → 下一步研究行动</p>
+  <p style="margin-top:8px;">
+    ⚠️ <strong>免责声明：</strong>本报告仅供研究参考，不构成任何投资建议。所有数据来源于公开信息（公司年报、公告、券商研报、Prismark/CRU 等行业数据、公开媒体报道）。<br>
+    投资决策请基于独立判断，风险自担。报告中的观点可能随时间变化而失效。
+  </p>
+  <p style="margin-top:12px;">生成时间：2026-06-25 &nbsp;|&nbsp; 工具：Claude Code + Serenity Skill &nbsp;|&nbsp; 目标公司：东山精密 (002384.SZ)</p>
+</div>
+
+</div>
+
+<script src="../nav.js"></script>
+</body>
+</html>

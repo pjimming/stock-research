@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>香农芯创 (300475) · Serenity 深度分析</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --orange: #d2991d;
+    --purple: #a371f7;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.7;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+  h1 { font-size: 2em; margin-bottom: 4px; }
+  h2 {
+    font-size: 1.35em; margin: 40px 0 16px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border); color: #f0f6fc;
+  }
+  h3 { font-size: 1.1em; margin: 24px 0 10px; color: #e6edf3; }
+  p { margin: 10px 0; }
+  .muted { color: var(--muted); font-size: 0.9em; }
+
+  .tag {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.82em; font-weight: 600; margin: 2px 4px 2px 0;
+  }
+  .tag-red { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-green { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-orange { background: rgba(210,153,29,0.15); color: var(--orange); }
+  .tag-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .tag-purple { background: rgba(163,113,247,0.15); color: var(--purple); }
+
+  .hero {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px 32px; margin: 16px 0 28px;
+  }
+  .hero .price { font-size: 2.4em; font-weight: 700; }
+  .hero .change { font-size: 1.1em; margin-left: 8px; }
+  .hero-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 12px; margin-top: 16px;
+  }
+  .hero-grid .item .label { font-size: 0.78em; color: var(--muted); }
+  .hero-grid .item .value { font-size: 1.05em; font-weight: 600; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px 24px; margin: 16px 0;
+  }
+  .card.warn { border-left: 3px solid var(--red); }
+  .card.info { border-left: 3px solid var(--accent); }
+  .card.good { border-left: 3px solid var(--green); }
+  .card.highlight { border-left: 3px solid var(--orange); }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.92em;
+  }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: 0.82em; text-transform: uppercase; }
+  tr:hover { background: rgba(255,255,255,0.02); }
+
+  .verdict-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(163,113,247,0.08));
+    border: 1px solid rgba(88,166,255,0.25); border-radius: 10px;
+    padding: 20px 24px; margin: 20px 0;
+  }
+  .verdict-box h3 { margin-top: 0; }
+
+  .chain-flow {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    margin: 16px 0; font-size: 0.88em;
+  }
+  .chain-flow .node {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 14px; text-align: center; white-space: nowrap;
+  }
+  .chain-flow .arrow { color: var(--muted); font-size: 1.2em; }
+  .chain-flow .node.highlight-node {
+    border: 2px solid var(--orange); background: rgba(210,153,29,0.1);
+  }
+
+  .score-bar {
+    height: 8px; border-radius: 4px; background: var(--border);
+    margin: 4px 0 8px; overflow: hidden;
+  }
+  .score-bar .fill { height: 100%; border-radius: 4px; }
+  .fill-green { background: var(--green); }
+  .fill-orange { background: var(--orange); }
+  .fill-red { background: var(--red); }
+  .fill-blue { background: var(--accent); }
+
+  .risk-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+
+  .evidence-item { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+  .evidence-item:last-child { border-bottom: none; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .footer {
+    margin-top: 48px; padding-top: 16px;
+    border-top: 1px solid var(--border); font-size: 0.82em; color: var(--muted);
+  }
+  .sig { font-style: italic; color: var(--accent); }
+
+  .big-number { font-size: 2.4em; font-weight: 700; color: #f0f6fc; }
+  .big-number-sub { font-size: 0.45em; color: var(--muted); font-weight: 400; }
+
+  .split-card {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  @media (max-width: 640px) { .split-card { grid-template-columns: 1fr; } }
+
+  ul { padding-left: 20px; margin: 8px 0; }
+  li { margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<h1>🔬 香农芯创 <span style="font-weight:400;color:var(--muted);">300475.SZ</span></h1>
+<p class="muted">Serenity 方法论深度分析 · 2026年6月24日 · 研究用途，不构成投资建议</p>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;">
+    <span class="price">¥283.51</span>
+    <span class="change" style="color:var(--red);">-1.49%</span>
+    <span class="tag tag-purple">创业板</span>
+    <span class="tag tag-blue">电子分销</span>
+    <span class="tag tag-orange">存储芯片</span>
+    <span class="tag tag-green">自研SSD/DDR5</span>
+  </div>
+  <div class="hero-grid">
+    <div class="item"><div class="label">总市值</div><div class="value">1,331 亿</div></div>
+    <div class="item"><div class="label">PE (动态)</div><div class="value" style="color:var(--green);">~25x</div></div>
+    <div class="item"><div class="label">PE (TTM)</div><div class="value">~72x</div></div>
+    <div class="item"><div class="label">PB</div><div class="value">27.1x</div></div>
+    <div class="item"><div class="label">2025营收</div><div class="value">352.5亿 <span style="color:var(--green);">+45%</span></div></div>
+    <div class="item"><div class="label">2025净利</div><div class="value">5.45亿 <span style="color:var(--green);">+106%</span></div></div>
+    <div class="item"><div class="label">Q1 2026营收</div><div class="value">237.7亿 <span style="color:var(--green);">+201%</span></div></div>
+    <div class="item"><div class="label">Q1 2026净利</div><div class="value" style="color:var(--green);">13.27亿 <strong>+7835%</strong></div></div>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 1: 一句话结论 ═══════════ -->
+<div class="verdict-box">
+  <h3>🎯 Serenity 一句话判断</h3>
+  <p style="font-size:1.1em;font-weight:600;">
+    香农芯创是A股最特殊的<strong style="color:var(--orange);">"周期+成长"复合体</strong>——外表是SK海力士存储芯片的分销商（赚周期的钱），内核是自研企业级存储品牌"海普存储"的孵化器（赚成长的钱）。
+  </p>
+  <p>
+    2026年Q1这个季度完美展示了这种双重属性：存储超级周期下分销业务量价齐升，海普存储单季营收接近40亿超越2025全年。13.27亿单季净利、<strong style="color:var(--green);">动态PE仅~25倍</strong>——在A股半导体/存储板块中几乎是最便宜的。
+  </p>
+
+  <p style="margin-bottom:0;">
+    <strong>但核心问题是：</strong>这个利润有多少是可持续的"成长"，有多少是一次性的"周期红利"？市场给分销商常年5-15倍PE，给产品公司30-60倍PE——<strong style="color:var(--orange);">香农芯创真正的估值博弈，就是市场愿意把多少权重放在海普存储上。</strong>
+  </p>
+</div>
+
+<!-- ═══════════ SECTION 2: 公司本质 ═══════════ -->
+<h2>1. 这家公司到底是什么？—— 双重身份拆解</h2>
+
+<div class="split-card">
+  <div class="card info">
+    <h3>🏷️ 身份一：SK海力士的"中国管道"</h3>
+    <p><strong>电子元器件分销商</strong>——赚的是<span style="color:var(--orange);">存储周期的钱</span></p>
+    <ul>
+      <li>SK海力士企业级存储（HBM/DDR5/NAND）在国内云服务商的核心代理商</li>
+      <li>下游客户：阿里、腾讯、字节跳动、百度、华为、超聚变</li>
+      <li>2025年分销收入 ~332亿，占总营收94%</li>
+      <li>常态毛利率仅3-5%，净利率<2%</li>
+      <li>周期上行时利润弹性极大（Q1 2026毛利率跳到9.1%）</li>
+    </ul>
+    <p class="muted">关键词：周期股、高周转、薄利、渠道壁垒</p>
+  </div>
+  <div class="card highlight">
+    <h3>🚀 身份二：国产企业级存储品牌</h3>
+    <p><strong>"海普存储"产品公司</strong>——赚的是<span style="color:var(--green);">国产替代+AI算力的钱</span></p>
+    <ul>
+      <li>企业级DDR4/DDR5内存条 + Gen4 eSSD固态硬盘</li>
+      <li>SK海力士颗粒 + 国产主控，已通过国内主流服务器平台认证</li>
+      <li>2025年收入16.58亿（+468%），首次年度盈利</li>
+      <li>Q1 2026单季近40亿，毛利率~20-28%（远高于分销）</li>
+      <li>无锡海普芯创——SK海力士在大陆<strong>唯一官方HBM封测与模组合作方</strong></li>
+    </ul>
+    <p class="muted">关键词：成长股、国产替代、高毛利、HBM封装</p>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 3: 产业链 ═══════════ -->
+<h2>2. 产业链地图：香农芯创卡在哪里？</h2>
+
+<div class="chain-flow">
+  <div class="node">存储原厂<br><span class="muted">SK海力士/三星/美光</span></div>
+  <div class="arrow">→</div>
+  <div class="node highlight-node">🔑 授权分销<br><span class="muted" style="font-weight:700;">香农芯创 ← 管道</span></div>
+  <div class="arrow">→</div>
+  <div class="node">云服务商<br><span class="muted">阿里/腾讯/字节/华为</span></div>
+  <div class="arrow">→</div>
+  <div class="node">AI算力<br><span class="muted">训练/推理集群</span></div>
+</div>
+
+<div class="chain-flow">
+  <div class="node">SK海力士颗粒<br><span class="muted">HBM/DDR5/NAND</span></div>
+  <div class="arrow">→</div>
+  <div class="node highlight-node">🔑 海普存储<br><span class="muted" style="font-weight:700;">香农芯创 ← 品牌</span></div>
+  <div class="arrow">→</div>
+  <div class="node">服务器厂商<br><span class="muted">浪潮/超聚变/新华三</span></div>
+  <div class="arrow">→</div>
+  <div class="node">数据中心<br><span class="muted">云计算/ AI 推理</span></div>
+</div>
+
+<div class="card highlight">
+  <h3>🔑 产业链卡点分析</h3>
+  <p>香农芯创在产业链里卡住了<strong>两个稀缺位置</strong>：</p>
+  <ol style="padding-left:20px;margin:8px 0;">
+    <li><strong>SK海力士企业级存储在中国云服务市场的独家渠道</strong>——这不是普通的"代理商"牌照。HBM全球只有SK海力士、三星、美光三家能做，SK海力士占HBM市场>50%。拿到它的企业级存储代理权，等于拿到了国内AI算力基础设施建设的"存储粮票"。换人代理的成本极高——原厂需要重新认证渠道、客户需要重建信任。</li>
+    <li><strong>SK海力士在大陆唯一的官方HBM封测与模组合作方（海普芯创）</strong>——这不只是贴牌，而是进入了HBM的本地化封装环节。HBM产能是当前AI芯片最大的物理瓶颈之一，本地化封测的牌照壁垒极高。</li>
+  </ol>
+</div>
+
+<!-- ═══════════ SECTION 4: 业绩拆解 ═══════════ -->
+<h2>3. 业绩拆解：多少是周期，多少是成长？</h2>
+
+<table>
+  <tr><th>指标</th><th>2024年</th><th>2025年</th><th>Q1 2026</th><th>趋势</th></tr>
+  <tr>
+    <td><strong>总营收</strong></td>
+    <td>242.7亿</td>
+    <td>352.5亿</td>
+    <td>237.7亿（单季）</td>
+    <td style="color:var(--green);">加速爆发</td>
+  </tr>
+  <tr>
+    <td><strong>分销收入</strong></td>
+    <td>~236亿</td>
+    <td>~332亿</td>
+    <td>~198亿（单季）</td>
+    <td style="color:var(--green);">量价齐升</td>
+  </tr>
+  <tr>
+    <td><strong>海普存储收入</strong></td>
+    <td>~2.9亿</td>
+    <td>16.58亿</td>
+    <td>~40亿（单季）</td>
+    <td style="color:var(--green);">爆发式增长</td>
+  </tr>
+  <tr>
+    <td><strong>归母净利润</strong></td>
+    <td>2.64亿</td>
+    <td>5.45亿</td>
+    <td>13.27亿（单季）</td>
+    <td style="color:var(--green);">跳升</td>
+  </tr>
+  <tr>
+    <td><strong>综合毛利率</strong></td>
+    <td>4.29%</td>
+    <td>3.97%</td>
+    <td>9.12%</td>
+    <td style="color:var(--green);">大幅改善</td>
+  </tr>
+  <tr>
+    <td><strong>净利率</strong></td>
+    <td>1.06%</td>
+    <td>1.97%</td>
+    <td>5.7%</td>
+    <td style="color:var(--green);">结构优化</td>
+  </tr>
+  <tr>
+    <td><strong>经营现金流</strong></td>
+    <td>~0.45亿</td>
+    <td>14.38亿</td>
+    <td>26.43亿（单季）</td>
+    <td style="color:var(--green);">现金流质量极高</td>
+  </tr>
+</table>
+
+<div class="card">
+  <h3>📊 业绩驱动力归因</h3>
+  <table>
+    <tr><th>驱动力</th><th>属性</th><th>对Q1利润贡献</th><th>可持续性</th></tr>
+    <tr>
+      <td>存储芯片涨价（DRAM合约价Q1+90%）</td>
+      <td><span class="tag tag-orange">周期</span></td>
+      <td>~60-70%</td>
+      <td>中低——存储周期通常持续6-8个季度，当前已在高位</td>
+    </tr>
+    <tr>
+      <td>AI算力拉动HBM/DDR5需求放量</td>
+      <td><span class="tag tag-green">结构性成长</span></td>
+      <td>~15-20%</td>
+      <td>中高——AI资本开支仍在扩张期</td>
+    </tr>
+    <tr>
+      <td>海普存储自有品牌规模扩张</td>
+      <td><span class="tag tag-green">成长</span></td>
+      <td>~10-15%</td>
+      <td>高——国产企业级存储渗透率尚在早期</td>
+    </tr>
+  </table>
+  <p class="muted">粗略估算：Q1的13.27亿利润中，约7-9亿来自存储涨价的"周期红利"，约2-3亿来自AI需求的结构性增长，约1.5-2亿来自海普存储的品牌溢价。当存储周期下行时，分销利润可能大幅回撤——这是香农芯创最核心的风险。</p>
+</div>
+
+<!-- ═══════════ SECTION 5: 估值 ═══════════ -->
+<h2>4. 估值：便宜还是贵？——取决于你怎么分类</h2>
+
+<div class="card">
+  <h3>不同估值框架下的结论完全不同</h3>
+  <table>
+    <tr><th>估值框架</th><th>PE倍数</th><th>判断</th><th>逻辑</th></tr>
+    <tr>
+      <td>按<strong>2025全年</strong>净利（5.45亿）</td>
+      <td style="color:var(--red);">~244x</td>
+      <td>极贵</td>
+      <td>静态PE，反映的是"旧香农"</td>
+    </tr>
+    <tr>
+      <td>按<strong>TTM</strong>净利（~18.5亿）</td>
+      <td style="color:var(--orange);">~72x</td>
+      <td>偏贵</td>
+      <td>包含了过去3个弱季度+1个爆炸季度</td>
+    </tr>
+    <tr>
+      <td>按<strong>Q1年化</strong>净利（~53亿）</td>
+      <td style="color:var(--green);">~25x</td>
+      <td>便宜</td>
+      <td>假设后续季度维持Q1水平（强假设）</td>
+    </tr>
+    <tr>
+      <td>按<strong>2026E机构一致预期</strong>（30-59亿）</td>
+      <td style="color:var(--green);">22-44x</td>
+      <td>合理偏便宜</td>
+      <td>国盛/华鑫/光大/中邮的预测区间</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card info">
+  <h3>🔍 关键问题：市场在按哪个框架估值？</h3>
+  <p>动态PE ~25倍（Q1年化）这个数字看起来便宜，但<strong>这个"便宜"建立在一个非常强的假设上：存储涨价会持续全年，海普存储会继续翻倍增长。</strong></p>
+  <p>更合理的思考方式是<strong>分拆估值</strong>：</p>
+  <table>
+    <tr><th>业务板块</th><th>2026E收入</th><th>2026E净利</th><th>合理PE</th><th>隐含市值</th></tr>
+    <tr>
+      <td>分销业务</td>
+      <td>~800-900亿</td>
+      <td>~8-12亿</td>
+      <td>8-15x（分销商常态）</td>
+      <td>64 – 180亿</td>
+    </tr>
+    <tr>
+      <td>海普存储</td>
+      <td>~160-220亿</td>
+      <td>~13-26亿</td>
+      <td>30-50x（产品公司）</td>
+      <td>390 – 1300亿</td>
+    </tr>
+    <tr style="font-weight:700;border-top:2px solid var(--border);">
+      <td>合计</td>
+      <td>~960-1120亿</td>
+      <td>~21-38亿</td>
+      <td>—</td>
+      <td>454 – 1480亿</td>
+    </tr>
+  </table>
+  <p>当前市值1,331亿，处于分拆估值区间的<strong>上沿</strong>。这意味着市场已经给了海普存储较高的估值溢价（接近对标大普微的水平）。如果存储周期在下半年见顶，分销利润回落，这个估值框架会迅速向下修正。</p>
+</div>
+
+<!-- ═══════════ SECTION 6: 证据链 ═══════════ -->
+<h2>5. 证据链：看多 vs 看空的硬证据</h2>
+
+<div class="card good">
+  <h3>✅ 支撑"稀缺卡位+业绩爆发"的证据</h3>
+  <div class="evidence-item">
+    <strong>① Q1 2026归母净利润13.27亿，同比+7835%</strong> <span class="tag tag-green">证据强度：强</span>
+    <p class="muted">来源：2026年一季报（已披露）。单季利润超过2025全年2.4倍。经营现金流26.43亿，利润质量高，不是应收账款堆出来的假利润。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>② 海普存储Q1单季营收近40亿，超过2025全年</strong> <span class="tag tag-green">证据强度：中强</span>
+    <p class="muted">来源：季报+券商推算。企业级SSD/DDR5产品已通过主流服务器平台认证，进入放量阶段。毛利率20-28%，远超分销的3-5%。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>③ SK海力士HBM全球市占率>50%，香农是其大陆企业级存储核心代理</strong> <span class="tag tag-green">证据强度：中强</span>
+    <p class="muted">来源：SK海力士公开数据+公司公告。HBM是当前AI芯片最紧的物理瓶颈之一（台积电CoWoS产能之外的第二大瓶颈），渠道价值在AI周期中被放大。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>④ 海普芯创——大陆唯一官方HBM封测与模组合作方</strong> <span class="tag tag-orange">证据强度：中</span>
+    <p class="muted">来源：公司披露+券商研报。2026全年产能已全部售罄。这个牌照的价值很难量化，但在HBM本地化封装趋势下极其稀缺。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>⑤ 存储供需为15年来最紧张</strong> <span class="tag tag-orange">证据强度：中</span>
+    <p class="muted">来源：高盛2026年存储行业报告。DRAM缺口4.9%、NAND缺口4.2%、HBM缺口5.1%。新产能最早2027-2028年才能大规模开出。这意味着涨价周期可能比以往更长。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>⑥ 经营现金流暴增，从"账面利润"变成了"真金白银"</strong> <span class="tag tag-green">证据强度：强</span>
+    <p class="muted">Q1经营现金流26.43亿，远超净利润13.27亿。2025全年现金流14.38亿。现金流/利润比>1，说明利润质量扎实。</p>
+  </div>
+</div>
+
+<div class="card warn">
+  <h3>⚠️ 需要警惕的反方证据</h3>
+  <div class="evidence-item">
+    <strong>① 60-70%收入依赖SK海力士一家供应商</strong> <span class="tag tag-red">严重程度：极高</span>
+    <p class="muted">代理权一年一签。SK海力士随时可以调整配额、增加代理商、或直接对接头部客户（"去渠道化"）。TI、ADI已经在前几年大规模削减代理商——原厂直销是行业趋势。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>② 存储周期是双刃剑——涨得有多猛，跌得就有多狠</strong> <span class="tag tag-red">严重程度：极高</span>
+    <p class="muted">当前DRAM合约价Q1单季+90%，这在存储历史上是极端水平。存储周期通常6-8个季度见顶。一旦价格反转，香农的库存（Q1末69.7亿）将面临巨额减值，利润可能断崖式下跌。这不是"会不会"的问题，是"什么时候"的问题。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>③ 分销业务常态毛利率仅3-5%</strong> <span class="tag tag-red">严重程度：高</span>
+    <p class="muted">Q1的9.1%毛利率是存储超级周期下的异常值，不是常态。当周期回归均值，分销业务将回到"千亿营收、十几亿利润"的窘境。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>④ 海普存储面临大普微(301666)的直接竞争</strong> <span class="tag tag-orange">严重程度：中高</span>
+    <p class="muted">大普微全栈自研主控芯片+固件，市值~3560亿（PE~240x）。海普存储与大普微客户群高度重叠（都是阿里/腾讯/字节），产品高度重叠（企业级eSSD/DDR5）。虽然当前"合作大于竞争"，但边界正在模糊。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>⑤ 资产负债率75.4%，库存69.7亿</strong> <span class="tag tag-orange">严重程度：中高</span>
+    <p class="muted">分销商天然高杠杆高库存。在涨价周期中库存是资产，在降价周期中库存是毒药。Q1库存环比增加了43.7亿，如果下半年存储价格松动，减值压力巨大。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>⑥ 公司近5日涨幅+39%，触发异动公告</strong> <span class="tag tag-orange">严重程度：中</span>
+    <p class="muted">6月22日因连续3日涨幅超30%触发异常波动公告。短期涨幅巨大，追高风险显著。</p>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 7: Serenity评分 ═══════════ -->
+<h2>6. Serenity 多维度评分</h2>
+
+<table>
+  <tr><th>维度</th><th>评分</th><th>权重</th><th>说明</th></tr>
+  <tr>
+    <td>🎯 产业链卡位</td>
+    <td><span style="color:var(--green);">8/10</span></td>
+    <td>20%</td>
+    <td>SK海力士HBM独家渠道+HBM封测唯一合作方，两张牌照都很稀缺</td>
+  </tr>
+  <tr>
+    <td>📊 证据质量</td>
+    <td><span style="color:var(--green);">8/10</span></td>
+    <td>20%</td>
+    <td>Q1季报数据硬，现金流扎实，业绩真实性高</td>
+  </tr>
+  <tr>
+    <td>📈 成长性（结构性）</td>
+    <td><span style="color:var(--accent);">7/10</span></td>
+    <td>15%</td>
+    <td>海普存储爆发式增长，但需剥离周期因素看"真成长"</td>
+  </tr>
+  <tr>
+    <td>🔄 周期风险</td>
+    <td><span style="color:var(--red);">3/10</span></td>
+    <td>15%</td>
+    <td>极度依赖存储周期。周期逆转时利润可能腰斩再腰斩</td>
+  </tr>
+  <tr>
+    <td>💰 估值合理性</td>
+    <td><span style="color:var(--accent);">6/10</span></td>
+    <td>15%</td>
+    <td>动态PE便宜但建立在强假设上；分拆估值处于区间上沿</td>
+  </tr>
+  <tr>
+    <td>🛡️ 护城河</td>
+    <td><span style="color:var(--orange);">5/10</span></td>
+    <td>10%</td>
+    <td>渠道壁垒真实但非永久；产品壁垒（海普）正在建立但尚浅</td>
+  </tr>
+  <tr>
+    <td>⚠️ 治理/风险</td>
+    <td><span style="color:var(--red);">4/10</span></td>
+    <td>5%</td>
+    <td>单一供应商依赖、高杠杆、高库存、代理权一年一签</td>
+  </tr>
+  <tr style="font-weight:700;border-top:2px solid var(--border);">
+    <td>综合加权</td>
+    <td><span style="color:var(--accent);">6.55/10</span></td>
+    <td>100%</td>
+    <td>AI存储周期中最具弹性的标的，但需时刻警惕周期拐点</td>
+  </tr>
+</table>
+
+<!-- ═══════════ SECTION 8: 周期定位 ═══════════ -->
+<h2>7. 最关键的问题：我们现在在存储周期的什么位置？</h2>
+
+<div class="card highlight">
+  <h3>📐 存储周期定位图</h3>
+  <div style="display:flex;align-items:center;gap:0;margin:20px 0;font-size:0.82em;">
+    <div style="flex:1;text-align:center;padding:10px;background:rgba(63,185,80,0.12);border-radius:8px 0 0 8px;">📉 谷底<br>2023</div>
+    <div style="flex:1;text-align:center;padding:10px;background:rgba(63,185,80,0.08);">📈 复苏<br>2024</div>
+    <div style="flex:1;text-align:center;padding:10px;background:rgba(210,153,29,0.15);border:2px solid var(--orange);border-radius:4px;font-weight:700;">🔥 加速<br>2025-Q1 2026<br><span class="muted">← 我们在这里</span></div>
+    <div style="flex:1;text-align:center;padding:10px;background:rgba(248,81,73,0.06);">⚠️ 高位<br>2026H2?</div>
+    <div style="flex:1;text-align:center;padding:10px;background:rgba(248,81,73,0.12);border-radius:0 8px 8px 0;">📉 回落<br>2027?</div>
+  </div>
+  <p><strong>当前信号：</strong></p>
+  <ul>
+    <li>DRAM合约价Q1+90%、Q2预计继续+58-63% → <strong style="color:var(--red);">加速赶顶的信号</strong></li>
+    <li>HBM缺口5.1% → 仍然紧张，但三星/美光正在疯狂扩产</li>
+    <li>新产能2027-2028年大量开出 → <strong style="color:var(--red);">2027年大概率供过于求</strong></li>
+    <li>库存已升至69.7亿（+43.7亿季度环比）→ <strong style="color:var(--orange);">主动补库还是被动积压？</strong>需要Q2验证</li>
+  </ul>
+  <p style="margin-bottom:0;"><strong>Serenity判断：</strong>我们可能处于存储周期的<strong>中后段</strong>。涨价还能持续2-4个季度，但斜率最高的时候可能已经过去（或是现在）。对香农芯创来说，这意味着<strong>2026年全年业绩可能非常亮眼，但2027年的业绩是巨大的未知数</strong>。</p>
+</div>
+
+<!-- ═══════════ SECTION 9: 竞争 ═══════════ -->
+<h2>8. 海普存储 vs 大普微：影子竞争</h2>
+
+<table>
+  <tr><th>维度</th><th>大普微 (301666)</th><th>海普存储 (香农体内)</th><th>谁更优？</th></tr>
+  <tr>
+    <td>主控芯片</td>
+    <td>全栈自研主控+固件</td>
+    <td>与大普微合作，可定制</td>
+    <td>大普微（技术自主性）</td>
+  </tr>
+  <tr>
+    <td>存储颗粒供应</td>
+    <td>多渠道采购，无独家绑定</td>
+    <td>SK海力士HBM独家分销+稳定颗粒</td>
+    <td><strong>海普（颗粒保障）</strong></td>
+  </tr>
+  <tr>
+    <td>HBM封测</td>
+    <td>无直接能力</td>
+    <td><strong>大陆唯一官方HBM封测合作</strong></td>
+    <td><strong>海普（稀缺牌照）</strong></td>
+  </tr>
+  <tr>
+    <td>客户渠道</td>
+    <td>直接触达互联网/AI巨头</td>
+    <td>依托香农分销网络，获客成本低</td>
+    <td>各有优势</td>
+  </tr>
+  <tr>
+    <td>2025年企业级存储营收</td>
+    <td>~22.89亿</td>
+    <td>16.58亿</td>
+    <td>旗鼓相当</td>
+  </tr>
+  <tr>
+    <td>盈利状态</td>
+    <td>整体净亏损</td>
+    <td><strong>已实现年度盈利</strong></td>
+    <td><strong>海普（盈利质量）</strong></td>
+  </tr>
+  <tr>
+    <td>当前市值</td>
+    <td>~3560亿 (PE~240x)</td>
+    <td>隐含于香农1331亿</td>
+    <td><strong>香农（估值更低）</strong></td>
+  </tr>
+</table>
+
+<p class="muted">如果海普存储单独上市，按大普微的估值水平（240x PE），海普值多少？按2026年中性20亿净利×60x = 1200亿——接近香农当前全部市值。这意味着市场当前给香农分销业务的估值几乎为零。这是一个有趣的"免费期权"视角。</p>
+
+<!-- ═══════════ SECTION 10: 风险 ═══════════ -->
+<h2>9. 什么情况说明这个判断错了？</h2>
+
+<div class="risk-grid">
+  <div class="card warn">
+    <h3>🔴 最大风险：存储周期在2026H2见顶回落</h3>
+    <p>如果DRAM价格在Q3-Q4开始松动（三星/美光新产能提前开出），香农的库存减值+分销利润下滑会同时出现。Q1的13亿利润可能在Q4变成1-2亿。这是投资香农最核心的"不能错"的变量。</p>
+  </div>
+  <div class="card warn">
+    <h3>🔴 SK海力士调整代理策略</h3>
+    <p>代理权一年一签。SK海力士可能增加代理商、削减配额、或直接对接阿里/腾讯等大客户。一旦渠道优势被削弱，香农的估值逻辑将发生根本性变化。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 海普存储增长不及预期</h3>
+    <p>Q1的近40亿营收中可能包含了"囤货"因素（客户在涨价预期下提前下单）。如果Q2-Q3增速大幅放缓，证明"成长"中掺杂了太多"周期"。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 大普微竞争升级</h3>
+    <p>当前"合作大于竞争"的关系可能演变。如果大普微自研主控优势扩大、拿到更多客户份额，海普存储可能被困在"高端贴牌"的定位上。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 高库存反噬</h3>
+    <p>Q1末库存69.7亿，远超历史水平。如果这是被动积压（而非主动备货），减值风险巨大。关注Q2库存变化。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 短期涨幅过大</h3>
+    <p>5个交易日涨39%，触发异动公告。短期情绪极度亢奋，任何负面消息都可能触发剧烈回调。</p>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 11: 下一步 ═══════════ -->
+<h2>10. 接下来要做哪些研究</h2>
+
+<div class="card">
+  <h3>📋 优先级研究清单</h3>
+  <table>
+    <tr><th>优先级</th><th>验证事项</th><th>怎么查</th><th>关键阈值</th></tr>
+    <tr>
+      <td><span class="tag tag-red">P0</span></td>
+      <td>DRAM合约价Q2-Q3走势</td>
+      <td>TrendForce/集邦咨询季度报告</td>
+      <td>如果Q2涨幅从58%收窄到<30%，是拐点信号</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-red">P0</span></td>
+      <td>Q2库存变化</td>
+      <td>等待2026半年报（8月）</td>
+      <td>库存不应继续大幅增加；若库存>80亿则危险</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-red">P0</span></td>
+      <td>SK海力士代理权续约情况</td>
+      <td>公司公告+投资者互动</td>
+      <td>任何代理范围缩小的信号都是致命利空</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-orange">P1</span></td>
+      <td>海普存储Q2独立营收及毛利率</td>
+      <td>半年报分部数据</td>
+      <td>营收>30亿、毛利率>18%为健康</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-orange">P1</span></td>
+      <td>三星/美光HBM扩产进度</td>
+      <td>行业新闻+SEMI数据</td>
+      <td>新产能提前=供给宽松=价格见顶</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-orange">P2</span></td>
+      <td>大普微(301666)竞争动态</td>
+      <td>大普微季报+行业调研</td>
+      <td>两家市场份额变化、客户重叠度</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-blue">P3</span></td>
+      <td>海普存储是否有分拆上市计划</td>
+      <td>公司公告+投行信息</td>
+      <td>分拆上市是最大的价值释放催化剂</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════ SECTION 12: 关键时间 ═══════════ -->
+<h2>11. 未来3个月关键时间节点</h2>
+
+<div class="card">
+  <table>
+    <tr><th>时间</th><th>事件</th><th>重要性</th></tr>
+    <tr>
+      <td>2026年7月</td>
+      <td>TrendForce Q2存储合约价报告</td>
+      <td><span class="tag tag-red">极高</span> 决定下半年景气度判断</td>
+    </tr>
+    <tr>
+      <td>2026年8月</td>
+      <td>2026年半年报披露</td>
+      <td><span class="tag tag-red">极高</span> 验证海普存储+库存+毛利率</td>
+    </tr>
+    <tr>
+      <td>2026年Q3</td>
+      <td>SK海力士HBM3E扩产进展</td>
+      <td><span class="tag tag-orange">高</span> 供给端关键变量</td>
+    </tr>
+    <tr>
+      <td>2026年Q3</td>
+      <td>阿里/腾讯/字节AI资本开支指引更新</td>
+      <td><span class="tag tag-orange">高</span> 需求端关键变量</td>
+    </tr>
+    <tr>
+      <td>2026年H2</td>
+      <td>海普存储分拆上市传闻/进展</td>
+      <td><span class="tag tag-orange">中</span> 重大催化剂</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════ 总结 ═══════════ -->
+<hr>
+
+<h2>📝 Serenity 最终判断</h2>
+
+<div class="verdict-box">
+  <p style="font-size:1.05em;">
+    <strong>香农芯创是当前A股半导体板块中最有趣的"周期+成长"复合体。</strong>
+    它的分销业务是存储超级周期中最直接、弹性最大的受益者（Q1净利+7835%就是证明），它的海普存储品牌正在从"故事"变成"现实"（Q1单季营收超2025全年）。
+  </p>
+
+  <p>但<strong style="color:var(--red);">核心矛盾非常尖锐</strong>：</p>
+  <ul style="padding-left:20px;">
+    <li><strong>好的一面：</strong>动态PE~25倍，在A股存储/半导体板块中是最便宜的梯队。经营现金流远超净利润，利润质量扎实。海普存储如果单独拿出来对标大普微，隐含价值可能超过香农当前市值——等于"分销业务白送"。</li>
+    <li><strong>坏的一面：</strong>25倍PE建立在"存储涨价全年持续"这个强假设上。如果2026H2存储价格松动，利润可能从Q1的13亿骤降到Q4的1-2亿。届时现在的25倍会变成100倍+。而且SK海力士代理权一年一签，这种"稀缺牌照"的脆弱性不容忽视。</li>
+  </ul>
+
+  <p><strong>Serenity 建议的观察姿势：</strong></p>
+  <ul style="padding-left:20px;">
+    <li><strong>不要在短期暴涨后追高</strong>——5天+39%后追进去，承受的回撤风险远大于潜在收益</li>
+    <li><strong>把2026年半年报作为最重要的决策节点</strong>——关注Q2营收环比是否继续高增、库存是否可控、毛利率趋势</li>
+    <li><strong>紧密跟踪DRAM/eSSD合约价</strong>——这是香农业绩的"天气预报"，比任何基本面分析都更前置</li>
+    <li><strong>如果确信存储涨价周期能持续到2027年+海普存储能保持翻倍增长</strong>——当前估值的赔率是吸引人的</li>
+    <li><strong>如果你认为存储周期在2026H2见顶</strong>——任何反弹都是减仓机会，而不是加仓</li>
+    <li><strong>最佳情景：</strong>存储价格温和回落（不是崩盘）+ 海普存储保持高增长 + 股价回调到200以下 → 届时风险收益比显著改善</li>
+  </ul>
+
+  <p style="margin-bottom:0;">
+    <span class="sig">—— Serenity Research · 2026.06.24</span><br>
+    <span class="muted">研究支持，不构成投资建议。交易决策请自行判断。</span>
+  </p>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<div class="footer">
+  <p><strong>数据来源：</strong>香农芯创2025年年报、2026年一季报、公司公告（2026年6月异动公告）、国盛证券/华鑫证券/中邮证券/光大证券研报、TrendForce存储合约价报告、高盛2026年存储行业报告、WSTS全球半导体预测、东方财富/同花顺F10。</p>
+  <p><strong>方法论：</strong>本报告使用 Serenity 供应链瓶颈研究框架 —— 从市场叙事出发，找到产业链中真正稀缺的环节（SK海力士HBM渠道+HBM封测牌照），用公开证据交叉验证，区分"周期红利"与"结构性成长"，明确列出可能推翻判断的关键风险。</p>
+  <p><strong>免责声明：</strong>本报告仅供研究参考，不构成任何投资建议。股票投资有风险，入市需谨慎。香农芯创属于高波动周期标的，亏损风险极大。作者不对任何基于本报告做出的投资决策承担责任。</p>
+</div>
+
+<script src="../nav.js"></script>
+</body>
+</html>

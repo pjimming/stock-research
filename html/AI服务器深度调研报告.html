@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 服务器深度调研报告 — Serenity Research</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --yellow: #d2991d;
+    --orange: #db6d28;
+    --red: #f85149;
+    --purple: #a371f7;
+    --cyan: #39d2c0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ---- Header ---- */
+  .report-header {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .report-header .badge {
+    display: inline-block;
+    background: var(--purple);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .report-header h1 {
+    font-size: 2.4em;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #f0f6fc;
+    margin-bottom: 8px;
+  }
+  .report-header .subtitle {
+    font-size: 1.1em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .report-header .meta {
+    font-size: 0.85em;
+    color: var(--text-muted);
+  }
+
+  /* ---- Section ---- */
+  section { margin-bottom: 48px; }
+  h2 {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #f0f6fc;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .num {
+    background: var(--accent);
+    color: #000;
+    font-size: 0.75em;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  h3 {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #e6edf3;
+    margin: 24px 0 10px;
+  }
+
+  /* ---- Insight Box ---- */
+  .insight {
+    background: var(--surface);
+    border-left: 4px solid var(--accent);
+    padding: 18px 22px;
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+    font-size: 1.02em;
+  }
+  .insight.verdict {
+    border-left-color: var(--purple);
+    background: #1b1525;
+  }
+  .insight.warning {
+    border-left-color: var(--orange);
+    background: #1f180f;
+  }
+  .insight strong { color: #f0f6fc; }
+
+  /* ---- Tables ---- */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 16px 0 24px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92em;
+  }
+  thead { background: #1c2129; }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:hover td { background: rgba(88,166,255,0.04); }
+
+  /* ---- Tags ---- */
+  .tag {
+    display: inline-block;
+    font-size: 0.78em;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  .tag-t1 { background: #da363320; color: #f85149; }
+  .tag-t2 { background: #d2991d20; color: var(--yellow); }
+  .tag-t3 { background: #3fb95020; color: var(--green); }
+  .tag-na { background: #8b949e20; color: var(--text-muted); }
+
+  /* ---- Rank card ---- */
+  .rank-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin: 16px 0;
+  }
+  .rank-card .rank-num {
+    font-size: 0.78em;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .rank-card .ticker {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #f0f6fc;
+  }
+  .rank-card .ticker .cn { font-size: 0.7em; color: var(--text-muted); margin-left: 8px; }
+  .rank-card .role {
+    font-size: 0.88em;
+    color: var(--text-muted);
+    margin: 4px 0 12px;
+  }
+  .rank-card .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    font-size: 0.88em;
+  }
+  .rank-card .grid .label { color: var(--text-muted); font-size: 0.8em; }
+  .rank-card .grid .val { color: #e6edf3; }
+
+  /* ---- Chain flow ---- */
+  .chain-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+    align-items: stretch;
+  }
+  .chain-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+  }
+  .chain-node .layer { font-size: 0.75em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .chain-node .name { font-weight: 700; color: #f0f6fc; margin: 6px 0 4px; }
+  .chain-node .players { font-size: 0.8em; color: var(--text-muted); }
+  .chain-arrow {
+    display: flex; align-items: center;
+    color: var(--text-muted);
+    font-size: 1.2em;
+    flex-shrink: 0;
+  }
+
+  /* ---- Risk grid ---- */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .risk-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .risk-item .cat {
+    font-size: 0.78em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .risk-item.demand .cat { color: var(--orange); }
+  .risk-item.supply .cat { color: var(--yellow); }
+  .risk-item.geo .cat { color: var(--red); }
+  .risk-item ul { font-size: 0.88em; padding-left: 18px; color: var(--text-muted); }
+  .risk-item ul li { margin-bottom: 4px; }
+
+  /* ---- Footer ---- */
+  .report-footer {
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+    padding-top: 28px;
+    text-align: center;
+    font-size: 0.82em;
+    color: var(--text-muted);
+  }
+  .report-footer p { margin-bottom: 6px; }
+
+  /* ---- Bar chart (CSS) ---- */
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 0.85em; }
+  .bar-label { width: 120px; text-align: right; color: var(--text-muted); flex-shrink: 0; }
+  .bar-track { flex: 1; background: #21262d; border-radius: 4px; height: 18px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-fill.hbm { background: #f85149; width: 95%; }
+  .bar-fill.cowos { background: #db6d28; width: 90%; }
+  .bar-fill.eml { background: #d2991d; width: 88%; }
+  .bar-fill.cooling { background: #a371f7; width: 82%; }
+  .bar-fill.power { background: #58a6ff; width: 78%; }
+  .bar-fill.cc { background: #39d2c0; width: 72%; }
+  .bar-fill.pcb { background: #3fb950; width: 65%; }
+  .bar-fill.odm { background: #8b949e; width: 40%; }
+
+  @media (max-width: 700px) {
+    .rank-card .grid { grid-template-columns: 1fr; }
+    .risk-grid { grid-template-columns: 1fr; }
+    .chain-flow { flex-direction: column; }
+    .chain-arrow { justify-content: center; transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== Header ====== -->
+<div class="report-header">
+  <div class="badge">Serenity Supply-Chain Research</div>
+  <h1>AI 服务器深度调研</h1>
+  <p class="subtitle">从系统变化 → 产业链层级 → 稀缺瓶颈 → 公司优先级</p>
+  <p class="meta">2026-06-24 &nbsp;·&nbsp; 方法论：Bottleneck Hunter &nbsp;·&nbsp; 信息来源：公开渠道（SEC/HKEX/年报/券商研报/TrendForce/DIGITIMES）</p>
+</div>
+
+<!-- ====== 1. 核心判断 ====== -->
+<section>
+  <h2><span class="num">1</span>核心判断</h2>
+
+  <div class="insight verdict">
+    <strong>AI 训练集群从"一柜几十 kW"走向"一柜 1MW+"，这不是线性升级，是一次物理基础设施的范式重置。</strong><br><br>
+    市场仍在盯着 GPU 出货量，但真正的瓶颈已经转移到了<strong>液冷散热、800V 供电、HBM4 内存、EML 光芯片和 M9 覆铜板</strong>——这些环节供应商不超过 3 家、扩产至少需要两年、客户认证比扩产更慢。谁控制这些被重写的物理层，谁就卡住了下一波扩产的脖子。
+  </div>
+
+  <div class="insight">
+    <strong>一句话结论：</strong>AI 服务器的投资机会已经从"买芯片"蔓延到"买基础设施"。最值得优先研究的不是 NVIDIA（已是全球共识），而是那些只有两三家能做、扩产慢、认证难的物理瓶颈环节上的公司。
+  </div>
+</section>
+
+<!-- ====== 2. 系统变化 ====== -->
+<section>
+  <h2><span class="num">2</span>系统变化：功耗爆炸迫使基础设施重写</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>芯片平台</th><th>时间</th><th>单 GPU TDP</th><th>单机柜功率</th><th>冷却方式</th><th>供电架构</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Hopper (H100)</td><td>2023</td><td>~700W</td><td>~40 kW</td><td>风冷（已达极限）</td><td>传统 54V DC</td></tr>
+        <tr><td>Blackwell B200</td><td>2025</td><td>~1,200W</td><td>120–140 kW</td><td><span class="tag tag-t1">液冷强制</span></td><td>54V → 450V AC</td></tr>
+        <tr><td>Blackwell Ultra (GB300)</td><td>2025H2</td><td>~1,400W</td><td>~140 kW</td><td><span class="tag tag-t1">Direct-to-Chip 液冷</span></td><td>450V AC</td></tr>
+        <tr><td>Vera Rubin (VR200)</td><td>2026H2</td><td>1,800–2,300W</td><td>250 kW+</td><td><span class="tag tag-t1">全液冷（无风扇）</span></td><td>800V HVDC 过渡</td></tr>
+        <tr><td>Kyber / Rubin Ultra</td><td>2027+</td><td>3,600W/封装</td><td>600 kW+</td><td><span class="tag tag-t1">浸没式/两相冷却</span></td><td><span class="tag tag-t1">800V HVDC 标配</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 8px;">
+    ▲ 从 Hopper 到 Kyber，机柜功耗增长 ~100 倍。空气冷却在 35-40kW/柜即达物理极限。
+  </p>
+</section>
+
+<!-- ====== 3. 产业链 ====== -->
+<section>
+  <h2><span class="num">3</span>产业链全景：从下游到上游逐层拆解</h2>
+
+  <div class="chain-flow">
+    <div class="chain-node">
+      <div class="layer">下游需求</div>
+      <div class="name">Cloud CSP</div>
+      <div class="players">微软/谷歌/Meta/亚马逊<br>xAI/字节/阿里/腾讯</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-node">
+      <div class="layer">系统集成</div>
+      <div class="name">ODM / EMS</div>
+      <div class="players">Foxconn / Quanta<br>Wistron / Wiwynn / SMCI</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-node">
+      <div class="layer">核心算力</div>
+      <div class="name">GPU / ASIC</div>
+      <div class="players">NVIDIA (80%+) / AMD<br>Google TPU / AWS Trainium</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-node" style="border-color: var(--purple);">
+      <div class="layer" style="color:var(--purple);">🔥 关键子系统</div>
+      <div class="name">液冷·电源·光模块</div>
+      <div class="players">Vertiv / 英维克 / 麦格米特<br>Lumentum / Coherent</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-node" style="border-color: var(--orange);">
+      <div class="layer" style="color:var(--orange);">🔥 先进封装 & 材料</div>
+      <div class="name">CoWoS·HBM·CCL</div>
+      <div class="players">TSMC / SK Hynix<br>台光電 / 生益科技</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-node">
+      <div class="layer">底层物理设施</div>
+      <div class="name">配电·冷水·电网</div>
+      <div class="players">维谛/施耐德/伊顿<br>核电 SMR</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 4. 稀缺层 ====== -->
+<section>
+  <h2><span class="num">4</span>找稀缺层：什么环节真正卡脖子？</h2>
+
+  <p style="margin-bottom: 16px;">三个维度打分：<strong>供应商集中度 / 扩产难度 / 被替代难度</strong>。排序从最卡脖子到相对宽松。</p>
+
+  <h3>🥇 第一梯队：物理上最难扩产的环节</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>层级</th><th>为什么卡</th><th>供应商数</th><th>扩产周期</th><th>2026 状态</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>HBM4 内存</strong></td>
+          <td>23% 全球 DRAM 产能已被 HBM 吃掉；1b/1c 良率是瓶颈</td>
+          <td>3 家<br><span style="color:var(--text-muted);font-size:0.8em;">SK Hynix 60-70%</span></td>
+          <td>3-4 年</td>
+          <td><span class="tag tag-t1">三家产能全部售罄</span></td>
+        </tr>
+        <tr>
+          <td><strong>CoWoS 先进封装</strong></td>
+          <td>NVIDIA 锁了 TSMC 60% 产能；AMD 和其他人被物理上限卡死</td>
+          <td>实质 TSMC 一家</td>
+          <td>2-3 年</td>
+          <td><span class="tag tag-t1">持续供不应求</span></td>
+        </tr>
+        <tr>
+          <td><strong>200G EML 激光器</strong></td>
+          <td>InP 晶圆产能全球仅几家；1.6T 光模块全靠这个</td>
+          <td>Lumentum > Coherent</td>
+          <td>3+ 年</td>
+          <td><span class="tag tag-t1">Lumentum 缺口 25-30%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>🥈 第二梯队：需求爆发式增长且供给刚性</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>层级</th><th>为什么卡</th><th>供应商数</th><th>扩产周期</th><th>2026 状态</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>液冷（机柜级）</strong></td>
+          <td>GPU 功耗突破迫使 100% 液冷；微通道冷板检测是量产瓶颈</td>
+          <td>Vertiv 23% / 英维克 42%（国内）</td>
+          <td>1-2 年</td>
+          <td><span class="tag tag-t2">Vertiv 积压 $150B+</span></td>
+        </tr>
+        <tr>
+          <td><strong>800V HVDC 电源</strong></td>
+          <td>供电架构从 54V → 800V 彻底重写；认证壁垒极高</td>
+          <td>台达 60%+ 麦格米特 5%</td>
+          <td>认证 2 年+</td>
+          <td><span class="tag tag-t2">Kyber 电源价值是 GB200 的 10x</span></td>
+        </tr>
+        <tr>
+          <td><strong>M9 级 CCL/PCB</strong></td>
+          <td>M9 供应商从 M8 的 8 家收敛到 6 家；HVLP4 铜箔产能有限</td>
+          <td>台光電/生益科技领先</td>
+          <td>1-2 年</td>
+          <td><span class="tag tag-t2">M9 价格是 M8 的 2.5x</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>稀缺度可视化</h3>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;max-width:560px;">
+    <div class="bar-row"><span class="bar-label">HBM4 内存</span><div class="bar-track"><div class="bar-fill hbm"></div></div><span style="color:#f85149;font-weight:700;">严重紧缺</span></div>
+    <div class="bar-row"><span class="bar-label">CoWoS 封装</span><div class="bar-track"><div class="bar-fill cowos"></div></div><span style="color:#db6d28;font-weight:700;">严重紧缺</span></div>
+    <div class="bar-row"><span class="bar-label">200G EML</span><div class="bar-track"><div class="bar-fill eml"></div></div><span style="color:#d2991d;font-weight:700;">严重紧缺</span></div>
+    <div class="bar-row"><span class="bar-label">机柜级液冷</span><div class="bar-track"><div class="bar-fill cooling"></div></div><span style="color:#a371f7;">紧张</span></div>
+    <div class="bar-row"><span class="bar-label">800V HVDC</span><div class="bar-track"><div class="bar-fill power"></div></div><span style="color:#58a6ff;">紧张</span></div>
+    <div class="bar-row"><span class="bar-label">M9 CCL</span><div class="bar-track"><div class="bar-fill cc"></div></div><span style="color:#39d2c0;">偏紧</span></div>
+    <div class="bar-row"><span class="bar-label">AI PCB</span><div class="bar-track"><div class="bar-fill pcb"></div></div><span style="color:#3fb950;">偏紧</span></div>
+    <div class="bar-row"><span class="bar-label">ODM 集成</span><div class="bar-track"><div class="bar-fill odm"></div></div><span style="color:#8b949e;">供给充足</span></div>
+  </div>
+</section>
+
+<!-- ====== 5. 公司排名 ====== -->
+<section>
+  <h2><span class="num">5</span>公司优先级排名</h2>
+
+  <p style="margin-bottom: 20px;">排序逻辑：<strong>产业链卡位价值 × 供应商集中度 × 扩产难度 × 市场认知差</strong></p>
+
+  <!-- Rank 1: SK Hynix -->
+  <div class="rank-card">
+    <div class="rank-num">🥇 第一优先</div>
+    <div class="ticker">SK Hynix <span class="cn">000660.KS</span></div>
+    <div class="role">HBM4 内存 — 没有它，NVIDIA Rubin 一颗都出不了</div>
+    <div class="grid">
+      <div><span class="label">卡住的环节</span><br><span class="val">HBM4 内存——AI 芯片的"供血系统"，BOM 占比从 5-10% → 25-30%</span></div>
+      <div><span class="label">市场地位</span><br><span class="val">全球 HBM4 份额 ~65%，良率领先三星 15pp，与 NVIDIA 签至 2030 年</span></div>
+      <div><span class="label">关键证据</span><br><span class="val">Q1 2026 经营利润率 72%；HBM 年营收 ~$270-300 亿；新 fab 投资 $150 亿</span></div>
+      <div><span class="label">主要风险</span><br><span class="val">三星 1c 良率突破 → HBM 供应快速缓解 → 超额利润收缩</span></div>
+    </div>
+  </div>
+
+  <!-- Rank 2: Vertiv -->
+  <div class="rank-card">
+    <div class="rank-num">🥇 第一优先</div>
+    <div class="ticker">Vertiv <span class="cn">VRT</span></div>
+    <div class="role">液冷基础设施全球龙头 — NVIDIA 官方指定合作伙伴</div>
+    <div class="grid">
+      <div><span class="label">卡住的环节</span><br><span class="val">AI 数据中心散热——无液冷，1400W+ 芯片即砖头；80% 营收来自数据中心</span></div>
+      <div><span class="label">市场地位</span><br><span class="val">全球精密冷却份额 23%，NVIDIA "Titan" 7MW 参考设计独家合作</span></div>
+      <div><span class="label">关键证据</span><br><span class="val">积压订单 $150B+；2026 营收指引 $135 亿 (+28%)；Q4 订单 +252% YoY</span></div>
+      <div><span class="label">主要风险</span><br><span class="val">Eaton $95 亿收购 Boyd 加剧竞争；当前估值较高（~$327）</span></div>
+    </div>
+  </div>
+
+  <!-- Rank 3: Lumentum -->
+  <div class="rank-card">
+    <div class="rank-num">🥇 第一优先</div>
+    <div class="ticker">Lumentum <span class="cn">LITE</span></div>
+    <div class="role">光互联隐形冠军 — 200G EML 全球 #1</div>
+    <div class="grid">
+      <div><span class="label">卡住的环节</span><br><span class="val">200G EML 激光器——1.6T 光模块核心引擎；每 GPU 需 4-8 个光模块</span></div>
+      <div><span class="label">市场地位</span><br><span class="val">全球最大 EML 供应商；产能缺口 25-30%，锁定至 2027</span></div>
+      <div><span class="label">关键证据</span><br><span class="val">Q3 FY2026 营收 $808M 创纪录；NVIDIA $2B 战略投资；OCS 积压 $400M+</span></div>
+      <div><span class="label">主要风险</span><br><span class="val">硅光 (SiPh) 对 EML 的长期替代；CPO 渗透节奏不确定</span></div>
+    </div>
+  </div>
+
+  <!-- Rank 4: 台光電 -->
+  <div class="rank-card">
+    <div class="rank-num">🥈 第二优先</div>
+    <div class="ticker">台光電 <span class="cn">2383.TW</span></div>
+    <div class="role">M9 覆铜板全球领先 — Rubin 平台高速背板基材</div>
+    <div class="grid">
+      <div><span class="label">卡住的环节</span><br><span class="val">M9 级 CCL——Rubin 平台无电缆背板的核心材料，M9 价格是 M8 的 2.5x</span></div>
+      <div><span class="label">市场地位</span><br><span class="val">全球 M9 规格领先；供应商从 8 家 → 6 家，壁垒提升</span></div>
+      <div><span class="label">关键证据</span><br><span class="val">2026H2 Rubin 放量驱动；高端 CCL 2024-2026 CAGR 26-28%</span></div>
+      <div><span class="label">主要风险</span><br><span class="val">台燿/生益科技追赶；扩产过快导致价格松动</span></div>
+    </div>
+  </div>
+
+  <!-- Rank 5: 麦格米特 -->
+  <div class="rank-card">
+    <div class="rank-num">🥈 第二优先</div>
+    <div class="ticker">麦格米特 <span class="cn">002851.SZ</span></div>
+    <div class="role">大陆唯一进入英伟达高功率电源白名单的企业</div>
+    <div class="grid">
+      <div><span class="label">卡住的环节</span><br><span class="val">AI 服务器 5.5kW→18.3kW 电源模块；800V HVDC 路线核心供应商</span></div>
+      <div><span class="label">市场地位</span><br><span class="val">当前 NV 体系 ~5% 份额；台达炸机+光宝走弱 → 份额转移窗口</span></div>
+      <div><span class="label">关键证据</span><br><span class="val">已获 GB300/Rubin 全系列订单；机构预测 2027 年份额可达 30%（150 亿订单）</span></div>
+      <div><span class="label">主要风险</span><br><span class="val">台达恢复；NV 认证壁垒被突破；交付执行力</span></div>
+    </div>
+  </div>
+
+  <!-- Rank 6: 英维克 -->
+  <div class="rank-card">
+    <div class="rank-num">🥈 第二优先</div>
+    <div class="ticker">英维克 <span class="cn">002837.SZ</span></div>
+    <div class="role">国内冷板式液冷龙头 — 国内市占率 42-50%</div>
+    <div class="grid">
+      <div><span class="label">卡住的环节</span><br><span class="val">国内数据中心冷板式液冷 CDU；国内唯一通过 NVIDIA NPN Tier 1 认证</span></div>
+      <div><span class="label">市场地位</span><br><span class="val">国内冷板液冷 #1；绑定字节/阿里/腾讯/华为；境外毛利率 53% vs 境内 24%</span></div>
+      <div><span class="label">关键证据</span><br><span class="val">在手订单 45 亿+；液冷营收 2025 +120%；海外订单 2026 有望 30 亿+</span></div>
+      <div><span class="label">主要风险</span><br><span class="val">Q1 2026 净利润暴跌 82%（坏账计提）；毛利率下行压力；竞争加剧</span></div>
+    </div>
+  </div>
+
+  <!-- Rank 7: Broadcom -->
+  <div class="rank-card">
+    <div class="rank-num">🥉 第三优先</div>
+    <div class="ticker">博通 Broadcom <span class="cn">AVGO</span></div>
+    <div class="role">ASIC 浪潮最大受益者 — Google TPU / Meta MTIA / OpenAI 背后的设计方</div>
+    <div class="grid">
+      <div><span class="label">卡住的环节</span><br><span class="val">定制 AI 芯片设计——若 ASIC 在 2027 出货量超 GPU，博通是最大赢家</span></div>
+      <div><span class="label">市场地位</span><br><span class="val">深度参与 Google TPU、Meta MTIA、OpenAI 自研芯片</span></div>
+      <div><span class="label">关键证据</span><br><span class="val">小摩预测 AI ASIC+网络营收 2026 $600 亿 → 2027 $1500 亿+</span></div>
+      <div><span class="label">主要风险</span><br><span class="val">ASIC 增长已被部分定价；CSP 自研能力提升后绕过；Marvell 竞争</span></div>
+    </div>
+  </div>
+
+  <!-- Alternative high-potential list -->
+  <div class="table-wrap" style="margin-top: 24px;">
+    <table>
+      <thead>
+        <tr><th>补充标的</th><th>市场</th><th>产业链位置</th><th>一句话逻辑</th><th>优先级</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>欧陆通 (300870)</td><td>A 股</td><td>AI 电源</td><td>谷歌 TPU 电源核心供应商，ASIC 链弹性标的</td><td><span class="tag tag-t2">中高</span></td></tr>
+        <tr><td>生益科技 (600183)</td><td>A 股</td><td>CCL</td><td>NVIDIA GB200/GB300 M8 CCL 主供，Rubin M9 预期保持领先</td><td><span class="tag tag-t2">中高</span></td></tr>
+        <tr><td>深南电路 (002916)</td><td>A 股</td><td>AI PCB</td><td>华为+谷歌核心 PCB 供应商，AI 加速卡/光模块/交换机全覆盖</td><td><span class="tag tag-t2">中</span></td></tr>
+        <tr><td>高澜股份 (300499)</td><td>A 股</td><td>液冷</td><td>冷板+浸没双路线；技术写入 GB300 设计规范；字节主供</td><td><span class="tag tag-t2">中</span></td></tr>
+        <tr><td>金像電 (2368.TW)</td><td>台股</td><td>AI PCB</td><td>AWS Trainium、Meta MTIA ASIC 服务器板核心供应商</td><td><span class="tag tag-t2">中</span></td></tr>
+        <tr><td>Coherent (COHR)</td><td>美股</td><td>光互联</td><td>唯一同时掌握 InP/SiPh/VCSEL 三平台；NVIDIA $2B 战略投资</td><td><span class="tag tag-t2">中</span></td></tr>
+        <tr><td>曙光数创 (872808)</td><td>A 股</td><td>液冷</td><td>浸没式液冷全球份额 60-65%；Q1 2026 营收 +783%</td><td><span class="tag tag-t3">中低（利润承压）</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ====== 6. 市场忽略 ====== -->
+<section>
+  <h2><span class="num">6</span>市场可能在忽略什么？</h2>
+
+  <h3>① "暖壳子"瓶颈比芯片瓶颈更真实</h3>
+  <div class="insight">
+    Microsoft CEO Nadella：<em>"I have a bunch of chips sitting in inventory that I cannot plug in... it's not a supply issue of chips. It's actually the fact that I don't have warm shells to plug into."</em><br><br>
+    市场还在盯 CoWoS 产能和 HBM 交期，但真正的瓶颈已转移到：<strong>有没有能接住 140kW+ 机柜的数据中心物理空间？有没有 800V 直流配电系统？有没有能带走 1MW 热量的液冷设施？</strong><br><br>
+    → 基础设施层的价值重估可能才刚刚开始。
+  </div>
+
+  <h3>② ASIC 供应链的机会被低估</h3>
+  <p>
+    小摩预测 ASIC 将在 2027 年出货量超过 GPU。如果成立，受益的不只是博通和 Marvell，还包括：<strong>为 ASIC 服务器做 PCB 的厂（单卡 $900+）、做液冷的厂（ASIC 同样需要液冷）、做电源的厂（欧陆通已在供谷歌 TPU 电源）。</strong>
+  </p>
+
+  <h3>③ 电源的"10 倍"故事</h3>
+  <p>
+    大摩预测 Kyber 机柜单柜电源方案价值是当前 GB200 的 <strong>10 倍以上</strong>。这不是"卖更多电源"——供电架构从 54V → 800V HVDC，整个配电拓扑被重写。<strong>麦格米特在这一升级中的卡位，市场还没有完全定价。</strong>
+  </p>
+
+  <h3>④ ODM 的"虚假繁荣"</h3>
+  <p>
+    台系 ODM 营收暴增（广达 +85%、纬颖 +149%），但毛利率持续压缩（广达 8.6%→6.9%）。GPU BOM 占比太高导致议价权有限——更像是 AI 基础设施的"包工头"，而非"卡脖子"方。市场可能高估了 ODM 的长期利润弹性。
+  </p>
+</section>
+
+<!-- ====== 7. 风险 ====== -->
+<section>
+  <h2><span class="num">7</span>反方风险：什么情况会推翻上述判断？</h2>
+
+  <div class="risk-grid">
+    <div class="risk-item demand">
+      <div class="cat">📉 需求侧风险</div>
+      <ul>
+        <li>CSP 资本开支见顶：若 2026H2 大厂开始缩减 AI CapEx，全链条砍单</li>
+        <li>推理 ROI 无法证明：CapEx 从"军备竞赛"转向"ROI 导向"，增速放缓</li>
+        <li>AI 训练边际收益递减：更大模型的经济回报不如预期</li>
+      </ul>
+    </div>
+    <div class="risk-item supply">
+      <div class="cat">🏭 供给侧风险</div>
+      <ul>
+        <li>三星 1c 良率突破 → HBM4 紧缺快速缓解</li>
+        <li>液冷产能过度扩张 → 价格战（曙光数创冷板毛利率已跌至 10%）</li>
+        <li>CPO 加速替代 → 传统 EML 可插拔光模块被颠覆</li>
+        <li>台达恢复+新进入者 → 麦格米特份额提升不及预期</li>
+      </ul>
+    </div>
+    <div class="risk-item geo">
+      <div class="cat">🌍 地缘政治风险</div>
+      <ul>
+        <li>对华出口进一步收紧 → 中国 AI 供应链算力获取受限</li>
+        <li>台海冲突风险 → TSMC + 台系 ODM（90%+ 份额）系统性中断</li>
+        <li>关税/供应链脱钩 → 全球 AI 硬件成本上升，需求抑制</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 8. 关键数字 ====== -->
+<section>
+  <h2><span class="num">8</span>关键数字速查</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>指标</th><th>数值</th><th>来源</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>全球前八大 CSP 2026 年资本支出</td><td>超 6000 亿美元 (+40% YoY)</td><td>TrendForce</td></tr>
+        <tr><td>NVIDIA AI 机柜出货量 (2026)</td><td>6 万+ 台（2025 年 2.8 万台）</td><td>摩根士丹利</td></tr>
+        <tr><td>Ver​a Rubin GPU TDP</td><td>最高 2,300W（单 GPU）/ 3,700W (CPX)</td><td>NVIDIA GTC 2026</td></tr>
+        <tr><td>Kyber 机柜功率</td><td>600 kW+</td><td>NVIDIA 路线图</td></tr>
+        <tr><td>GB300 NVL72 单柜液冷成本</td><td>$49,860（约 ¥36 万）</td><td>TechRadar / Vertiv</td></tr>
+        <tr><td>液冷渗透率</td><td>2024: 14% → 2026: ~40% → 2030: 70%+</td><td>行业综合</td></tr>
+        <tr><td>HBM 占 DRAM 晶圆产能</td><td>~23%（2026），持续上升</td><td>TrendForce</td></tr>
+        <tr><td>SK Hynix Q1 2026 经营利润率</td><td>72%</td><td>SK Hynix 财报</td></tr>
+        <tr><td>HBM4 占 Rubin BOM</td><td>25-30%（GB200 时仅 5-10%）</td><td>大摩 / TrendForce</td></tr>
+        <tr><td>1.6T 光模块出货量 (2026)</td><td>全球光模块出货 9200 万+ 颗（2023 年 2650 万）</td><td>TrendForce</td></tr>
+        <tr><td>Vertiv 2026 积压订单</td><td>$150B+</td><td>Vertiv 财报</td></tr>
+        <tr><td>M9 CCL 价格 vs M8</td><td>2.5x</td><td>汇丰 / 花旗研报</td></tr>
+        <tr><td>ASIC 占 AI 芯片出货 (2026→2027)</td><td>42% → 53%（首次超越 GPU）</td><td>摩根大通 2026.06</td></tr>
+        <tr><td>Kyber 单柜电源价值 vs GB200</td><td>10x+</td><td>摩根士丹利</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ====== 9. 下一步验证 ====== -->
+<section>
+  <h2><span class="num">9</span>下一步验证清单</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>验证事项</th><th>具体操作</th><th>重要性</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>CSP CapEx 跟踪</td><td>微软/谷歌/Meta/亚马逊下次财报 CapEx 指引变化——这是总开关</td><td><span class="tag tag-t1">关键</span></td></tr>
+        <tr><td>2</td><td>麦格米特 NV 份额验证</td><td>查阅互动易/年报，确认 800V HVDC 送测进度和 GB300 电源实际交付量</td><td><span class="tag tag-t1">关键</span></td></tr>
+        <tr><td>3</td><td>液冷毛利率是否企稳</td><td>英维克/高澜/曙光数创下份季报的在手订单和毛利率变化</td><td><span class="tag tag-t2">重要</span></td></tr>
+        <tr><td>4</td><td>HBM 供需拐点判断</td><td>DRAM 现货/合约价走势 + 三星 1c 良率进展</td><td><span class="tag tag-t2">重要</span></td></tr>
+        <tr><td>5</td><td>NVIDIA GTC 2027</td><td>下一代架构路线图，功耗是否继续飙升（决定液冷/电源长期逻辑）</td><td><span class="tag tag-t2">重要</span></td></tr>
+        <tr><td>6</td><td>ASIC 出货跟踪</td><td>Google TPU Ironwood / AWS Trainium 3 实际部署规模</td><td><span class="tag tag-t3">跟踪</span></td></tr>
+        <tr><td>7</td><td>台海地缘评估</td><td>台积电/台系 ODM 的地域分散化进展（AZ 工厂/日本/越南产能）</td><td><span class="tag tag-t3">跟踪</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ====== Footer ====== -->
+<div class="report-footer">
+  <p><strong>Serenity Supply-Chain Research</strong> — Bottleneck Hunter Methodology</p>
+  <p>本报告为产业链研究和逻辑推演，不构成任何投资建议。</p>
+  <p>所有数据来自公开渠道：TrendForce、DIGITIMES、摩根士丹利/摩根大通/国泰君安/国信证券研报、SEC/HKEX/交易所公司公告、NVIDIA GTC 2026。</p>
+  <p>最终交易决策由你自行判断。</p>
+</div>
+
+<script src="../nav.js"></script>
+</body>
+</html>

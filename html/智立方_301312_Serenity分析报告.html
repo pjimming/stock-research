@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智立方 (301312) · Serenity 深度分析</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --orange: #d2991d;
+    --purple: #a371f7;
+    --teal: #39d353;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.7;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+  h1 { font-size: 2em; margin-bottom: 4px; }
+  h2 {
+    font-size: 1.35em;
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    color: #f0f6fc;
+  }
+  h3 { font-size: 1.1em; margin: 24px 0 10px; color: #e6edf3; }
+  p { margin: 10px 0; }
+  .muted { color: var(--muted); font-size: 0.9em; }
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.82em;
+    font-weight: 600;
+    margin: 2px 4px 2px 0;
+  }
+  .tag-red { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-green { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-orange { background: rgba(210,153,29,0.15); color: var(--orange); }
+  .tag-blue { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .tag-purple { background: rgba(163,113,247,0.15); color: var(--purple); }
+
+  .hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 16px 0 28px;
+  }
+  .hero .price { font-size: 2.4em; font-weight: 700; }
+  .hero .change { font-size: 1.1em; margin-left: 8px; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .hero-grid .item { }
+  .hero-grid .item .label { font-size: 0.78em; color: var(--muted); }
+  .hero-grid .item .value { font-size: 1.05em; font-weight: 600; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .card.warn { border-left: 3px solid var(--red); }
+  .card.info { border-left: 3px solid var(--accent); }
+  .card.good { border-left: 3px solid var(--green); }
+  .card.highlight { border-left: 3px solid var(--orange); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.92em;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  th { color: var(--muted); font-weight: 600; font-size: 0.82em; text-transform: uppercase; }
+  tr:hover { background: rgba(255,255,255,0.02); }
+
+  .verdict-box {
+    background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(163,113,247,0.08));
+    border: 1px solid rgba(88,166,255,0.25);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .verdict-box h3 { margin-top: 0; }
+
+  .chain-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 16px 0;
+    font-size: 0.88em;
+  }
+  .chain-flow .node {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .chain-flow .arrow { color: var(--muted); font-size: 1.2em; }
+  .chain-flow .node.highlight-node {
+    border: 2px solid var(--orange);
+    background: rgba(210,153,29,0.1);
+  }
+
+  .score-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--border);
+    margin: 4px 0 8px;
+    overflow: hidden;
+  }
+  .score-bar .fill { height: 100%; border-radius: 4px; }
+  .fill-green { background: var(--green); }
+  .fill-orange { background: var(--orange); }
+  .fill-red { background: var(--red); }
+  .fill-blue { background: var(--accent); }
+
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 640px) { .risk-grid { grid-template-columns: 1fr; } }
+
+  .evidence-item {
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .evidence-item:last-child { border-bottom: none; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 0.82em;
+    color: var(--muted);
+  }
+
+  .sig { font-style: italic; color: var(--accent); }
+
+  .big-number {
+    font-size: 2em;
+    font-weight: 700;
+    color: #f0f6fc;
+  }
+</style>
+</head>
+<body>
+
+<h1>🔬 智立方 <span style="font-weight:400;color:var(--muted);">301312.SZ</span></h1>
+<p class="muted">Serenity 方法论深度分析 · 2026年6月24日 · 研究用途，不构成投资建议</p>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;">
+    <span class="price">¥107.00</span>
+    <span class="change" style="color:var(--red);">-2.74%</span>
+    <span class="tag tag-purple">创业板</span>
+    <span class="tag tag-blue">半导体设备</span>
+    <span class="tag tag-orange">CPO/光通信</span>
+  </div>
+  <div class="hero-grid">
+    <div class="item"><div class="label">总市值</div><div class="value">181.5 亿</div></div>
+    <div class="item"><div class="label">PE (TTM)</div><div class="value" style="color:var(--red);">~280x</div></div>
+    <div class="item"><div class="label">PB</div><div class="value">14.7x</div></div>
+    <div class="item"><div class="label">2025营收</div><div class="value">6.07 亿 <span style="color:var(--green);">+9.4%</span></div></div>
+    <div class="item"><div class="label">2025净利润</div><div class="value">7,538 万 <span style="color:var(--green);">+26.7%</span></div></div>
+    <div class="item"><div class="label">2026 YTD</div><div class="value" style="color:var(--green);">+126%</div></div>
+    <div class="item"><div class="label">52周区间</div><div class="value">23.42 – 153.90</div></div>
+    <div class="item"><div class="label">股息率</div><div class="value">0.27%</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 1: 一句话结论 ═══════════ -->
+<div class="verdict-box">
+  <h3>🎯 Serenity 一句话判断</h3>
+  <p style="font-size:1.1em;font-weight:600;">
+    智立方是中国光芯片/光模块制造设备领域<strong style="color:var(--orange);">最硬核的"卖铲人"之一</strong>——它在光芯片排Bar/拆Bar设备上拥有国内>90%的市占率、全球仅两家能供货的双寡头格局，CPO耦合机已获英伟达认证。
+  </p>
+  <p>
+    但当前<strong style="color:var(--red);">~280倍PE</strong>已经把2026-2027年最乐观的业绩预期定价了大半。实控人宣布减持3%、Q1利润同比-42%、半导体业务毛利率仅18%，这些信号说明：<strong>产业链卡位确实稀缺，但股价跑得比基本面快太多</strong>。
+  </p>
+  <p style="margin-bottom:0;">
+    <strong>Serenity 评级：产业链瓶颈层 · 优先研究</strong> —— 值得深入跟踪，但当前估值需要至少<strong>1-2个季度的业绩验证</strong>来消化。
+  </p>
+</div>
+
+<!-- ═══════════ SECTION 2: 市场叙事 → 系统变化 ═══════════ -->
+<h2>1. 市场叙事 → 系统变化</h2>
+
+<div class="card info">
+  <h3>市场在讲什么故事？</h3>
+  <p>AI算力爆发 → 数据中心光互连需求井喷 → 光模块从800G向1.6T/3.2T升级 → CPO/硅光成为标配 → 光芯片制造和封装需要全新的高精度自动化设备 → <strong>智立方是国内唯一能全链条供货的设备商</strong>。</p>
+</div>
+
+<h3>这个叙事里，什么物理约束真正变了？</h3>
+
+<table>
+  <tr><th>旧范式</th><th>新范式</th><th>物理约束变化</th></tr>
+  <tr>
+    <td>800G光模块，EML方案为主</td>
+    <td>1.6T/3.2T光模块，硅光+CPO为主流</td>
+    <td><strong>精度要求从微米级跃升到亚微米/纳米级</strong></td>
+  </tr>
+  <tr>
+    <td>光芯片制造设备依赖日本进口</td>
+    <td>国产替代+产能自主可控</td>
+    <td><strong>设备交期、服务响应、成本控制三重约束</strong></td>
+  </tr>
+  <tr>
+    <td>人工+半自动组装光模块</td>
+    <td>全自动产线，单件节拍12秒</td>
+    <td><strong>人工效率瓶颈→自动化刚需</strong></td>
+  </tr>
+  <tr>
+    <td>分立工序，多供应商拼凑</td>
+    <td>Wafer→Bar→Chip→COC→模块全链条</td>
+    <td><strong>工艺联调成为核心竞争力</strong></td>
+  </tr>
+</table>
+
+<p>关键推论：<strong style="color:var(--orange);">光模块扩产真正的瓶颈不在光模块厂本身，而在上游设备——尤其是光芯片制造段的高精度分选、排Bar/拆Bar和固晶设备。</strong>这些设备全球供应商极少，扩产周期长，客户认证壁垒高。这就是智立方卡位的地方。</p>
+
+<!-- ═══════════ SECTION 3: 产业链 ═══════════ -->
+<h2>2. 产业链地图：智立方卡在哪里？</h2>
+
+<div class="chain-flow">
+  <div class="node">AI算力需求<br><span class="muted">英伟达/谷歌/微软</span></div>
+  <div class="arrow">→</div>
+  <div class="node">光模块<br><span class="muted">中际旭创/菲尼萨/光迅</span></div>
+  <div class="arrow">→</div>
+  <div class="node">光器件/光芯片<br><span class="muted">源杰/长光华芯/海思</span></div>
+  <div class="arrow">→</div>
+  <div class="node highlight-node">🔑 制造设备<br><span class="muted" style="font-weight:700;">智立方 ← 我们在这里</span></div>
+  <div class="arrow">→</div>
+  <div class="node">核心零部件<br><span class="muted">Beckhoff/Cognex/SMC</span></div>
+</div>
+
+<div class="card highlight">
+  <h3>🔑 产业链卡点分析</h3>
+  <p>智立方的产业链位置：<strong>光芯片/光模块制造设备层</strong>。这一层的特点是：</p>
+  <ul style="padding-left:20px;margin:8px 0;">
+    <li><strong>供应商极度稀缺</strong>——排Bar/拆Bar机全球仅日本某企业+智立方两家能做</li>
+    <li><strong>认证壁垒极高</strong>——CPO耦合机需要英伟达认证，周期1-2年</li>
+    <li><strong>替换成本巨大</strong>——一旦进入产线，客户不会轻易换供应商（工艺绑定）</li>
+    <li><strong>毛利率有修复空间</strong>——当前半导体毛利率18%主要是因为量小+市场拓展期，规模效应后会向消费电子34%靠拢</li>
+  </ul>
+</div>
+
+<h3>智立方在产业链的五个切入层</h3>
+<table>
+  <tr><th>产业链层级</th><th>智立方产品</th><th>国内地位</th><th>稀缺性</th></tr>
+  <tr>
+    <td>光芯片制造（Bar段）</td>
+    <td>全自动排Bar机、拆Bar机</td>
+    <td><span class="tag tag-orange">市占率>90%</span></td>
+    <td>⭐⭐⭐⭐⭐ 全球双寡头</td>
+  </tr>
+  <tr>
+    <td>光芯片检测分选</td>
+    <td>AOI检测、硅光芯片分选机</td>
+    <td><span class="tag tag-blue">市占率>60%</span></td>
+    <td>⭐⭐⭐⭐ 99.99%挑选率</td>
+  </tr>
+  <tr>
+    <td>光器件封装</td>
+    <td>高精度固晶机、共晶设备</td>
+    <td><span class="tag tag-green">±1.5μm精度</span></td>
+    <td>⭐⭐⭐⭐ 已导入1.6T产线</td>
+  </tr>
+  <tr>
+    <td>CPO耦合</td>
+    <td>CPO耦合机（英伟达认证）</td>
+    <td><span class="tag tag-purple">全球首批</span></td>
+    <td>⭐⭐⭐⭐⭐ 纳米级对准</td>
+  </tr>
+  <tr>
+    <td>光模块组装</td>
+    <td>全自动组装线</td>
+    <td><span class="tag tag-green">效率提升6倍</span></td>
+    <td>⭐⭐⭐ 规模放量阶段</td>
+  </tr>
+</table>
+
+<!-- ═══════════ SECTION 4: 证据链 ═══════════ -->
+<h2>3. 证据链：事实 vs 叙事</h2>
+
+<div class="card good">
+  <h3>✅ 支撑"稀缺卡位"叙事的证据</h3>
+  <div class="evidence-item">
+    <strong>① 排Bar/拆Bar机国内市占率>90%</strong> <span class="tag tag-green">证据强度：中强</span>
+    <p class="muted">来源：OSIC 2026峰会公司公开披露。全球仅日本某企业+智立方两家供货，精度反超进口。这是最硬的护城河证据。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>② CPO耦合机获英伟达官方技术认证</strong> <span class="tag tag-green">证据强度：中强</span>
+    <p class="muted">来源：公司投资者关系记录表。适配GB200/Blackwell/1.6T-3.2T硅光模块。全球首批认证，认证周期1-2年=后来者短期内无法追赶。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>③ 半导体业务2025年同比+48.96%</strong> <span class="tag tag-green">证据强度：强</span>
+    <p class="muted">来源：2025年年报（审计）。营收从7000万→1.05亿，占比从12.7%→17.3%。扣非净利润+59.23%，主因就是半导体业务放量。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>④ 客户结构优质</strong> <span class="tag tag-green">证据强度：强</span>
+    <p class="muted">来源：年报+投资者互动。光通信客户：中际旭创、源杰科技、长光华芯、光迅科技、华为海思、菲尼萨、Lumentum。消费电子：苹果、Meta、立讯精密。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>⑤ 董事长明确2026年半导体收入有望首超消费电子</strong> <span class="tag tag-orange">证据强度：中</span>
+    <p class="muted">来源：2025年年报董事长致辞。这是一个重要的战略拐点信号，但需要后续季度数据验证。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>⑥ 2025年新签订单同比+156.95%</strong> <span class="tag tag-orange">证据强度：中</span>
+    <p class="muted">来源：公司披露+券商推算。订单是收入的前瞻指标，增速惊人，但具体订单结构和交付节奏需要进一步核实。</p>
+  </div>
+</div>
+
+<div class="card warn">
+  <h3>⚠️ 需要警惕的反方证据</h3>
+  <div class="evidence-item">
+    <strong>① Q1 2026 "增收不增利"：营收+20%，净利润-42%</strong> <span class="tag tag-red">严重程度：高</span>
+    <p class="muted">营收1.93亿（+19.97%），但归母净利润仅1441万（-42.15%）。公司解释为研发费用增加+汇兑损失+政府补助减少。但这也说明半导体业务尚在投入期，利润转化效率低。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>② 实控人宣布减持3%（约4.7亿元）</strong> <span class="tag tag-red">严重程度：高</span>
+    <p class="muted">2026年6月4日公告，三名实控人（合计持股65.82%）拟减持不超过509万股。减持期6月29日-9月28日。年初一致行动人已套现约9552万元。持续减持是最诚实的信号。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>③ 半导体业务毛利率仅18.42%</strong> <span class="tag tag-red">严重程度：中高</span>
+    <p class="muted">对比消费电子业务34.40%的毛利率，半导体业务还在"以价换量"阶段。如果规模效应无法兑现毛利率提升，估值逻辑将受到挑战。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>④ PE ~280倍，股价YTD +126%</strong> <span class="tag tag-red">严重程度：高</span>
+    <p class="muted">以2025年7538万净利润支撑181.5亿市值。就算2026年净利润翻倍到1.5亿，PE仍然超过120倍。市场已经定价了极其乐观的未来。</p>
+  </div>
+  <div class="evidence-item">
+    <strong>⑤ 消费电子仍占81%收入，苹果一家占37%</strong> <span class="tag tag-orange">严重程度：中</span>
+    <p class="muted">转型正在进行中，但尚未完成。消费电子业务的低增速（+1.55%）和客户集中度仍是拖累项。苹果订单的任何波动都会冲击整体业绩。</p>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 5: 估值 ═══════════ -->
+<h2>4. 估值：市场在为多远的未来买单？</h2>
+
+<div class="card">
+  <h3>情景分析</h3>
+  <table>
+    <tr><th>情景</th><th>2026E净利润</th><th>合理PE区间</th><th>对应市值</th><th>对应股价*</th></tr>
+    <tr>
+      <td>🐻 悲观：半导体订单不及预期，毛利率持续低迷</td>
+      <td>0.9 – 1.1亿</td>
+      <td>40 – 60x</td>
+      <td>36 – 66亿</td>
+      <td style="color:var(--red);">21 – 39元</td>
+    </tr>
+    <tr>
+      <td>😐 中性：半导体稳步增长，毛利率温和改善</td>
+      <td>1.4 – 1.6亿</td>
+      <td>55 – 80x</td>
+      <td>77 – 128亿</td>
+      <td style="color:var(--orange);">45 – 75元</td>
+    </tr>
+    <tr>
+      <td>🐂 乐观：半导体超预期，CPO设备放量，毛利率修复到30%+</td>
+      <td>1.8 – 2.2亿</td>
+      <td>70 – 100x</td>
+      <td>126 – 220亿</td>
+      <td style="color:var(--green);">74 – 129元</td>
+    </tr>
+  </table>
+  <p class="muted">* 按总股本1.70亿股（10转4后）计算。当前107元的股价，已经站在乐观情景的上沿。</p>
+</div>
+
+<div style="margin:16px 0;">
+  <p><strong>估值安全边际评估</strong></p>
+  <div style="display:flex;align-items:center;gap:10px;margin:8px 0;">
+    <span style="font-size:0.85em;width:60px;">安全边际</span>
+    <div class="score-bar" style="flex:1;"><div class="fill fill-red" style="width:12%;"></div></div>
+    <span style="font-size:0.85em;color:var(--red);font-weight:600;">极低 12%</span>
+  </div>
+  <p class="muted">当前股价已基本定价了最乐观情景。除非2026H1业绩大幅超预期（比如半导体收入增长>80%，毛利率突破25%），否则估值进一步扩张的空间非常有限。</p>
+</div>
+
+<!-- ═══════════ SECTION 6: Serenity评分卡 ═══════════ -->
+<h2>5. Serenity 多维度评分</h2>
+
+<table>
+  <tr><th>维度</th><th>评分</th><th>权重</th><th>说明</th></tr>
+  <tr>
+    <td>🎯 产业链卡位</td>
+    <td><span style="color:var(--green);">9/10</span></td>
+    <td>25%</td>
+    <td>排Bar/拆Bar机全球双寡头，CPO设备英伟达认证，全链条覆盖</td>
+  </tr>
+  <tr>
+    <td>📊 证据质量</td>
+    <td><span style="color:var(--accent);">7/10</span></td>
+    <td>20%</td>
+    <td>年报+公告+客户验证构成中强证据链，但Q1利润下滑削弱说服力</td>
+  </tr>
+  <tr>
+    <td>📈 成长性</td>
+    <td><span style="color:var(--green);">8/10</span></td>
+    <td>20%</td>
+    <td>半导体+49%，订单+157%，市场空间大。但基数仍小（1亿→？）</td>
+  </tr>
+  <tr>
+    <td>💰 估值合理性</td>
+    <td><span style="color:var(--red);">2/10</span></td>
+    <td>15%</td>
+    <td>PE 280x，PB 14.7x，定价了2027+的乐观预期</td>
+  </tr>
+  <tr>
+    <td>🛡️ 护城河</td>
+    <td><span style="color:var(--green);">8/10</span></td>
+    <td>10%</td>
+    <td>认证壁垒+客户粘性+技术精度，但需持续高研发维持</td>
+  </tr>
+  <tr>
+    <td>⚠️ 风险/治理</td>
+    <td><span style="color:var(--red);">3/10</span></td>
+    <td>10%</td>
+    <td>实控人减持、客户集中度、Q1利润恶化、汇率风险</td>
+  </tr>
+  <tr style="font-weight:700;border-top:2px solid var(--border);">
+    <td>综合加权</td>
+    <td><span style="color:var(--orange);">6.35/10</span></td>
+    <td>100%</td>
+    <td>产业链稀缺标的，但当前价格需要2-3个季度消化</td>
+  </tr>
+</table>
+
+<!-- ═══════════ SECTION 7: 市场可能没看清的地方 ═══════════ -->
+<h2>6. 市场可能没看清的地方</h2>
+
+<div class="card info">
+  <h3>🔍 三个被低估的角度</h3>
+
+  <p><strong>① 设备"铲子"的杠杆效应被低估。</strong></p>
+  <p>市场把智立方跟光模块厂（中际旭创、光迅科技）放在一起对标，但它其实是光模块厂的<strong>上游设备供应商</strong>。光模块扩产周期中，设备先行——当旭创宣布扩产1.6T产线时，第一笔钱是付给智立方的。这意味着<strong>智立方的订单增速会领先于光模块厂的营收增速</strong>。2025年新签订单+157%就是这个逻辑的验证。</p>
+
+  <p><strong>② 从"苹果链代工厂"到"半导体平台公司"的估值体系切换还没完成。</strong></p>
+  <p>当前估值虽然已经很高，但市场可能仍在用消费电子设备商的框架来估值（看重毛利率、客户集中度），而没有完全按<strong>半导体设备平台型公司</strong>来重估（看重卡位、全流程能力、平台扩展性）。如果2026年半导体收入真的超过消费电子，会触发一波估值体系切换。</p>
+
+  <p><strong>③ CPO不仅仅是一个产品，它是一条新的设备赛道。</strong></p>
+  <p>CPO（共封装光学）是光模块的下一代技术路线。英伟达的CPO耦合机认证意味着智立方拿到了<strong>下一代技术路线的入场券</strong>。这不仅仅是卖几台设备的问题，而是锁定了未来3-5年CPO扩产周期的设备份额。CPO从2026年才开始小批量，真正的放量在2027-2028年。</p>
+</div>
+
+<!-- ═══════════ SECTION 8: 风险 ═══════════ -->
+<h2>7. 什么情况说明这个判断错了？</h2>
+
+<div class="risk-grid">
+  <div class="card warn">
+    <h3>🔴 最大风险：估值回归</h3>
+    <p>如果2026H1半导体业务增速低于60%，或毛利率无明显改善（仍<20%），280x PE将面临剧烈收缩。这是当前价位最危险的场景。</p>
+  </div>
+  <div class="card warn">
+    <h3>🔴 实控人减持</h3>
+    <p>6月29日起进入减持窗口期，三名实控人可减持最多3%股份。在股价处于历史高位区间时，内部人减持是强烈的负信号。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 竞争加剧</h3>
+    <p>光模块设备的高毛利前景会吸引更多国内玩家进入。虽然认证壁垒高，但如果有新进入者拿到关键客户认证，智立方的"稀缺性"叙事会松动。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 消费电子拖累</h3>
+    <p>苹果业务仍占营收37%。如果苹果削减订单或转移供应商（地缘政治驱动的供应链多元化），会直接冲击智立方的现金流基本盘。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 技术路线风险</h3>
+    <p>CPO虽然前景好，但技术路线仍在演进（NPO/LPO/CPO之争）。如果CPO渗透不及预期，智立方的CPO设备投入可能回报周期拉长。</p>
+  </div>
+  <div class="card warn">
+    <h3>🟡 汇率/地缘政治</h3>
+    <p>境外收入占41%，Q1已因汇率波动产生财务费用。在中美博弈背景下，设备出口可能面临更多合规和关税不确定性。</p>
+  </div>
+</div>
+
+<!-- ═══════════ SECTION 9: 同层对比 ═══════════ -->
+<h2>8. 同一产业链层的参照对比</h2>
+
+<table>
+  <tr><th>公司</th><th>聚焦领域</th><th>市值</th><th>PE(TTM)</th><th>产业链位置</th><th>与智立方的关系</th></tr>
+  <tr>
+    <td><strong>智立方 301312</strong></td>
+    <td>光芯片/光模块制造设备</td>
+    <td>181亿</td>
+    <td>~280x</td>
+    <td>设备层·光通信</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>罗博特科 300757</td>
+    <td>光模块自动化设备</td>
+    <td>~200亿</td>
+    <td>~150x</td>
+    <td>设备层·光通信</td>
+    <td>直接竞对（部分重叠）</td>
+  </tr>
+  <tr>
+    <td>长川科技 300604</td>
+    <td>半导体测试分选</td>
+    <td>~500亿</td>
+    <td>~80x</td>
+    <td>设备层·封测</td>
+    <td>参考标的（模式类似）</td>
+  </tr>
+  <tr>
+    <td>华峰测控 688200</td>
+    <td>半导体测试机</td>
+    <td>~300亿</td>
+    <td>~90x</td>
+    <td>设备层·测试</td>
+    <td>参考标的（估值锚）</td>
+  </tr>
+  <tr>
+    <td>中际旭创 300308</td>
+    <td>光模块制造</td>
+    <td>~2000亿</td>
+    <td>~30x</td>
+    <td>模块层</td>
+    <td><strong>智立方的客户</strong></td>
+  </tr>
+</table>
+
+<p class="muted">对比关键发现：智立方的PE远远高于同层的长川科技（80x）和华峰测控（90x），甚至高于直接竞对罗博特科（150x）。这要么意味着市场给了它远超同行的成长溢价，要么意味着当前定价存在泡沫。</p>
+
+<!-- ═══════════ SECTION 10: 下一步 ═══════════ -->
+<h2>9. 接下来要做哪些研究</h2>
+
+<div class="card">
+  <h3>📋 优先级研究清单</h3>
+  <table>
+    <tr><th>优先级</th><th>验证事项</th><th>怎么查</th><th>关键阈值</th></tr>
+    <tr>
+      <td><span class="tag tag-red">P0</span></td>
+      <td>2026Q2半导体业务收入及毛利率</td>
+      <td>等待2026半年报（预计8月）</td>
+      <td>半导体收入>8000万，毛利率>22%</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-red">P0</span></td>
+      <td>实控人减持进展</td>
+      <td>关注大宗交易+集中竞价公告</td>
+      <td>减持节奏和价格区间</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-orange">P1</span></td>
+      <td>CPO设备订单及交付情况</td>
+      <td>互动易提问、产业链交叉验证</td>
+      <td>是否有明确的CPO订单公告</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-orange">P1</span></td>
+      <td>罗博特科竞争动态</td>
+      <td>对比罗博特科光模块设备业务进展</td>
+      <td>两家在客户+产品上的重叠程度</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-orange">P2</span></td>
+      <td>Lumentum/海外客户订单落地</td>
+      <td>跟踪海外客户资本开支指引</td>
+      <td>海外收入占比是否提升</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-orange">P2</span></td>
+      <td>苹果Vision Pro平价版设备需求</td>
+      <td>跟踪苹果供应链消息</td>
+      <td>是否有新增设备订单</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-blue">P3</span></td>
+      <td>先进封装设备（Wafer to Panel）进展</td>
+      <td>SEMI展会后续、公司公告</td>
+      <td>是否有客户验证通过</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════ SECTION 11: 关键时间节点 ═══════════ -->
+<h2>10. 未来3个月关键时间节点</h2>
+
+<div class="card">
+  <table>
+    <tr><th>时间</th><th>事件</th><th>重要性</th></tr>
+    <tr>
+      <td>2026年6月29日</td>
+      <td>实控人减持窗口开启</td>
+      <td><span class="tag tag-red">高</span> 内部人信号</td>
+    </tr>
+    <tr>
+      <td>2026年7月-8月</td>
+      <td>2026年半年报披露</td>
+      <td><span class="tag tag-red">极高</span> 验证半导体增长成色</td>
+    </tr>
+    <tr>
+      <td>2026年9月28日</td>
+      <td>实控人减持窗口关闭</td>
+      <td><span class="tag tag-orange">中</span> 减持压力释放</td>
+    </tr>
+    <tr>
+      <td>2026年Q3</td>
+      <td>英伟达Blackwell/GB200量产爬坡</td>
+      <td><span class="tag tag-orange">中</span> CPO设备间接需求</td>
+    </tr>
+    <tr>
+      <td>2026年H2</td>
+      <td>中际旭创1.6T扩产进展</td>
+      <td><span class="tag tag-orange">中</span> 核心客户设备采购</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════ SECTION 12: 总结 ═══════════ -->
+<hr>
+
+<h2>📝 Serenity 最终判断</h2>
+
+<div class="verdict-box">
+  <p style="font-size:1.05em;">
+    <strong>智立方是中国光芯片设备领域最值得研究的标的之一。</strong>它在产业链最紧的环节（光芯片排Bar/拆Bar、CPO耦合）有真实且稀缺的卡位，客户覆盖光通信全产业链头部玩家，半导体业务正在经历从0到1→从1到10的关键拐点。
+  </p>
+
+  <p>但<strong style="color:var(--red);">好公司不等于好价格</strong>。当前~280倍PE已经把2027年的乐观预期都定价了。实控人选择在这个位置减持，是最值得重视的信号之一。</p>
+
+  <p><strong>Serenity 建议的观察姿势：</strong></p>
+  <ul style="padding-left:20px;">
+    <li><strong>不急于在当前位置建仓</strong>——估值没有安全边际</li>
+    <li><strong>把2026年半年报作为最重要的验证节点</strong>——看半导体收入是否继续>50%增长、毛利率是否开始爬升</li>
+    <li><strong>关注减持实际执行情况</strong>——如果股价在减持窗口期明显承压，可能提供更好的入场时机</li>
+    <li><strong>把罗博特科作为最重要的参照物</strong>——两个"铲子股"的估值差和业务进展对比会告诉你很多</li>
+    <li><strong>如果半年报验证了半导体增长逻辑+股价回调到60-80区间</strong>——届时风险收益比会显著改善</li>
+  </ul>
+
+  <p style="margin-bottom:0;">
+    <span class="sig">—— Serenity Research · 2026.06.24</span><br>
+    <span class="muted">研究支持，不构成投资建议。交易决策请自行判断。</span>
+  </p>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<div class="footer">
+  <p><strong>数据来源：</strong>智立方2025年年报、2026年一季报、投资者关系活动记录表（2026.05.08）、OSIC 2026峰会公开演讲、东方财富/同花顺F10、SEMI行业数据、Lightcounting光模块市场报告。</p>
+  <p><strong>方法论：</strong>本报告使用 Serenity 供应链瓶颈研究框架 —— 从市场叙事出发，遍历产业链各层，找到真实物理约束最紧的环节，用公开证据交叉验证，并明确列出可能推翻判断的关键风险。</p>
+  <p><strong>免责声明：</strong>本报告仅供研究参考，不构成任何投资建议。股票投资有风险，入市需谨慎。作者不对任何基于本报告做出的投资决策承担责任。</p>
+</div>
+
+<script src="../nav.js"></script>
+</body>
+</html>

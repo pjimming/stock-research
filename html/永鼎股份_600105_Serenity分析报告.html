@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>永鼎股份 (600105) · Serenity 供应链瓶颈分析</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card-bg: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --orange: #d2991d;
+    --purple: #a371f7;
+    --cyan: #39d2c0;
+    --pink: #db61a2;
+    --headline: #f0f6fc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .header .badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+
+  .badge-serenity {
+    background: rgba(88,166,255,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(88,166,255,0.3);
+  }
+
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--headline);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .header .ticker {
+    font-size: 18px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .header .meta {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .header .price-tag {
+    display: inline-flex;
+    gap: 24px;
+    margin-top: 20px;
+    padding: 16px 28px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+  }
+
+  .price-tag .val {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--headline);
+  }
+
+  .price-tag .item {
+    text-align: center;
+  }
+
+  .price-tag .item .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--headline);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title .icon {
+    font-size: 24px;
+  }
+
+  .section-subtitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--headline);
+    margin: 28px 0 12px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+
+  .card-accent {
+    border-left: 4px solid var(--accent);
+  }
+
+  .card-green {
+    border-left: 4px solid var(--green);
+  }
+
+  .card-red {
+    border-left: 4px solid var(--red);
+  }
+
+  .card-orange {
+    border-left: 4px solid var(--orange);
+  }
+
+  .card-purple {
+    border-left: 4px solid var(--purple);
+  }
+
+  /* Judgment box */
+  .judgment {
+    background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(163,113,247,0.08));
+    border: 1px solid rgba(88,166,255,0.25);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+
+  .judgment .lead {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--headline);
+    margin-bottom: 12px;
+  }
+
+  .judgment .body {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.8;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+  }
+
+  thead th {
+    background: rgba(48,54,61,0.6);
+    color: var(--headline);
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tbody tr:hover {
+    background: rgba(88,166,255,0.04);
+  }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-high { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-mid  { background: rgba(210,153,29,0.15); color: var(--orange); }
+  .tag-low  { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-info { background: rgba(88,166,255,0.12); color: var(--accent); }
+  .tag-purple { background: rgba(163,113,247,0.15); color: var(--purple); }
+  .tag-cyan { background: rgba(57,210,192,0.12); color: var(--cyan); }
+
+  /* Chain flow */
+  .chain-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  .chain-node {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    text-align: center;
+    font-weight: 600;
+    color: var(--headline);
+  }
+
+  .chain-node.weak {
+    opacity: 0.5;
+  }
+
+  .chain-node.strong {
+    border-color: var(--accent);
+    background: rgba(88,166,255,0.08);
+  }
+
+  .chain-arrow {
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  /* Evidence */
+  .evidence-item {
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: rgba(48,54,61,0.3);
+    border: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .evidence-item .src {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .evidence-item .strength {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* Risk grid */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .risk-grid { grid-template-columns: 1fr; }
+  }
+
+  .risk-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .risk-card .risk-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--headline);
+    margin-bottom: 8px;
+  }
+
+  /* Scoring bar */
+  .score-bar-wrap {
+    margin: 8px 0;
+  }
+
+  .score-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .score-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(48,54,61,0.6);
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .fill-red    { background: var(--red); }
+  .fill-orange { background: var(--orange); }
+  .fill-green  { background: var(--green); }
+  .fill-blue   { background: var(--accent); }
+  .fill-purple { background: var(--purple); }
+
+  /* Footer */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  .footer strong {
+    color: var(--text);
+  }
+
+  /* Pills row */
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .pill {
+    padding: 4px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    background: rgba(48,54,61,0.5);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  /* Layer rank */
+  .layer-rank {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+  }
+
+  .layer-rank .rank-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .layer-rank .layer-info {
+    flex: 1;
+  }
+
+  .layer-rank .layer-name {
+    font-weight: 700;
+    color: var(--headline);
+    font-size: 15px;
+  }
+
+  .layer-rank .layer-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Quote */
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 10px 20px;
+    margin: 16px 0;
+    background: rgba(88,166,255,0.05);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  /* KPI mini cards */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .kpi-card .kpi-val {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--headline);
+  }
+
+  .kpi-card .kpi-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .kpi-card .kpi-change {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .up   { color: var(--green); }
+  .down { color: var(--red); }
+  .warn { color: var(--orange); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ====== HEADER ====== -->
+<div class="header">
+  <div class="badge badge-serenity">🔬 Serenity · 供应链瓶颈分析</div>
+  <h1>永鼎股份</h1>
+  <div class="ticker">600105.SH · 上交所主板</div>
+  <div class="meta">报告日期：2026年6月25日 &nbsp;|&nbsp; 方法论：Serenity Bottleneck Hunter</div>
+  <div class="price-tag">
+    <div class="item"><div class="val">68.74</div><div class="label">股价 (元)</div></div>
+    <div class="item"><div class="val">1,005亿</div><div class="label">总市值</div></div>
+    <div class="item"><div class="val">158x</div><div class="label">动态PE</div></div>
+    <div class="item"><div class="val">30.3x</div><div class="label">市净率</div></div>
+  </div>
+</div>
+
+<!-- ====== 核心判断 ====== -->
+<div class="section">
+  <div class="judgment">
+    <div class="lead">🔑 核心判断：市场给永鼎同时定价了三个故事——光纤光缆周期、光芯片国产替代、超导核聚变。但它真正控制卡点的只有一个半。</div>
+    <div class="body">
+      <strong>超导带材</strong>是国内唯一 IBAD+MOCVD 路线的量产玩家，卡的是可控核聚变装置最上游的材料环节——这是真卡点。<br>
+      <strong>光芯片 (100G EML)</strong> 是 IDM 模式，已进入批量供货，但规模远小于源杰科技，属于"卡点上的人但不是卡点本身"。<br>
+      <strong>光纤光缆/光棒</strong> 是当前行业最暴利的环节——但永鼎是第三梯队，主要外购光棒，这一轮光棒暴涨的最大受益者是长飞、亨通、中天。<br><br>
+      <strong>当前的千亿市值和 158 倍 PE，已经把 2028 年的乐观预期折现到了今天。</strong>如果任何一个故事兑现不及预期，估值压缩的空间远大于业绩上修的空间。
+    </div>
+  </div>
+</div>
+
+<!-- ====== 一、市场故事 → 系统变化 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📡</span>一、市场故事 → 系统变化</div>
+
+  <p>永鼎身上叠加了三个叙事，每一个都在2025-2026年进入了加速阶段：</p>
+
+  <table>
+    <thead>
+      <tr><th style="width:18%">叙事</th><th style="width:35%">系统变化</th><th style="width:25%">物理约束</th><th style="width:22%">永鼎的位置</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>AI 光纤光缆</strong></td>
+        <td>AI 数据中心内部互联光纤用量是传统 DC 的 5-10 倍；全球数据中心光纤需求 2025 年同比 +75.9%，2026 年预计再 +32%</td>
+        <td>光棒扩产周期 18-24 个月，2026 年全球供给缺口率 ~16.4%，中国光棒产能利用率 84%+</td>
+        <td><span class="tag tag-low">第三梯队</span> 光棒产能 150-450 吨，主要外购</td>
+      </tr>
+      <tr>
+        <td><strong>高速光芯片</strong></td>
+        <td>800G/1.6T 光模块放量驱动 100G EML/CW 光源需求；Lumentum 2027 年产能已被全额锁定，缺口延续到 2026 年底</td>
+        <td>III-V 族化合物半导体的 IDM 制造能力稀缺；25G 以上光芯片国产化率仅 ~5%</td>
+        <td><span class="tag tag-mid">追赶者</span> 鼎芯光电 IDM，100G EML 月出货 5 万颗</td>
+      </tr>
+      <tr>
+        <td><strong>可控核聚变超导</strong></td>
+        <td>"十五五"规划将核聚变列为战略科技方向；BEST、环流三号/四号、星环聚能等密集采购 REBCO 带材</td>
+        <td>全球仅 ~5 家企业能量产千米级 REBCO 带材；IBAD+MOCVD 设备自研，know-how 壁垒极高</td>
+        <td><span class="tag tag-high">唯一玩家</span> 国内独有 IBAD+MOCVD 路线，千米级量产</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    三个故事对应三个不同时间维度的系统变化：光纤是 2 年内的供给缺口，光芯片是 3-5 年的国产替代窗口，超导是 10 年以上的能源系统变革。市场目前的定价把它们都压成了"现在就要兑现"。
+  </blockquote>
+</div>
+
+<!-- ====== 二、产业链地图 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🔗</span>二、产业链地图 & 卡点识别</div>
+
+  <p style="margin-bottom: 12px; color: var(--text-muted);">永鼎横跨三条产业链。逐条分析它在每个链条中的真实位置：</p>
+
+  <!-- Chain 1: 光纤光缆 -->
+  <div class="card card-accent">
+    <div class="section-subtitle" style="margin-top:0;">🔌 产业链一：光纤光缆（AI 算力基础设施）</div>
+    <div class="chain-flow">
+      <span class="chain-node">高纯 SiCl₄ / GeCl₄</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node strong">光棒<br><small style="font-weight:400;color:var(--orange)">★ 核心卡点</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">拉丝 / 光纤</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">成缆</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">数据中心 / 运营商</span>
+    </div>
+
+    <p style="font-size:14px; margin-top: 12px;">
+      <strong>卡点判断：光棒是产业链最紧张的环节。</strong>占光纤成本 ~70%，扩产需 18-24 个月，全球合格供应商仅十余家。<br>
+      <strong>永鼎真实位置：</strong>光棒年产能 150-450 吨（第三梯队），自给率存疑，大量外购。光纤产能约 3,600 万芯公里（有一定规模），但在光棒暴利环节分不到大头。<br>
+      <span style="color: var(--orange);">⚠ 这个链条上的真正赢家是长飞光纤（光棒产能 4,000-5,600 吨）、亨通光电（2,800-3,400 吨）、中天科技（2,100-3,200 吨）。</span>
+    </p>
+
+    <div class="layer-rank">
+      <div class="rank-num">#4</div>
+      <div class="layer-info">
+        <div class="layer-name">永鼎在光纤链的卡点控制力：弱</div>
+        <div class="layer-detail">不是光棒的核心玩家。光纤光缆的涨价利好更多是"跟随受益"而非"定价权持有者"。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chain 2: 光芯片 -->
+  <div class="card card-purple">
+    <div class="section-subtitle" style="margin-top:0;">💡 产业链二：高速光芯片（AI 光模块核心器件）</div>
+    <div class="chain-flow">
+      <span class="chain-node">衬底 (InP/GaAs)</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node strong">外延 / 晶圆<br><small style="font-weight:400;color:var(--orange)">★ 卡点</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">芯片设计</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">封装测试</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">光模块 (800G/1.6T)</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">AI 集群 / 交换机</span>
+    </div>
+
+    <p style="font-size:14px; margin-top: 12px;">
+      <strong>卡点判断：100G EML 芯片全球供给缺口持续。</strong>Lumentum、住友、Coherent 等主导，国产化率极低。IDM 模式（自己设计+自己制造）是稀缺能力。<br>
+      <strong>永鼎真实位置：</strong>鼎芯光电 IDM 覆盖芯片设计→晶体生长→晶圆工艺→测试封装全流程。100G EML 良率 87%，接近国际一线。单月出货 5 万颗，规划年产能 7,000 万颗。<br>
+      <span style="color: var(--accent);">但源杰科技已切入英伟达 GB300 供应链，技术领先一步。永鼎是追赶者而非领先者。</span>
+    </p>
+
+    <div class="layer-rank">
+      <div class="rank-num">#3</div>
+      <div class="layer-info">
+        <div class="layer-name">永鼎在光芯片链的卡点控制力：中等偏弱</div>
+        <div class="layer-detail">IDM 能力是稀缺的，但规模尚小。在源杰科技、长光华芯、仕佳光子的竞争中，目前属于第二梯队。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chain 3: 超导 -->
+  <div class="card card-green">
+    <div class="section-subtitle" style="margin-top:0;">🧲 产业链三：高温超导带材（可控核聚变材料）</div>
+    <div class="chain-flow">
+      <span class="chain-node">稀土 / 金属基带</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node strong">IBAD 缓冲层<br><small style="font-weight:400;color:var(--green)">★ 独有工艺</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node strong">MOCVD 超导层<br><small style="font-weight:400;color:var(--green)">★ 核心卡点</small></span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">超导带材 (km级)</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">磁体绕制</span>
+      <span class="chain-arrow">→</span>
+      <span class="chain-node">托卡马克 / 聚变堆</span>
+    </div>
+
+    <p style="font-size:14px; margin-top: 12px;">
+      <strong>卡点判断：千米级高性能 REBCO 带材是全球核聚变装置最上游的材料瓶颈。</strong>全球仅 SuperOx、SuperPower (Furukawa)、Supercon (Bruker)、THEVA 等少数企业能量产。国内永鼎是唯一能量产的企业。<br>
+      <strong>永鼎真实位置：</strong>IBAD+MOCVD 国内独有路线，154 项授权专利，良率突破 90%。HF1200 系列 20K/20T 下临界电流达 1,299-1,340A——已发表文献中可批量化制备的最好水平。累计核聚变相关订单超 41 亿元。<br>
+      <span style="color: var(--green);">这是永鼎最独特的卡点位置。国内核聚变装置（BEST、环流三号、星环聚能、能量奇点等）的 REBCO 需求，永鼎几乎是唯一国产供应商。</span>
+    </p>
+
+    <div class="layer-rank">
+      <div class="rank-num">#1</div>
+      <div class="layer-info">
+        <div class="layer-name">永鼎在超导链的卡点控制力：强</div>
+        <div class="layer-detail">国内独有技术路线，千米级量产能力，核心客户全覆盖。这是真正的"产业链卡点"位置。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 三、卡点层级排序 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🎯</span>三、卡点层级排序（先排层级，再排公司）</div>
+
+  <p style="margin-bottom: 16px;">从产业链约束强度和永鼎的实际控制力两个维度，交叉评估三个业务线：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>排序</th>
+        <th>业务线</th>
+        <th>产业链约束强度</th>
+        <th>永鼎的实际控制力</th>
+        <th>综合判断</th>
+        <th>时间维度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>🥇 1</strong></td>
+        <td>高温超导带材</td>
+        <td><span class="tag tag-high">极高</span> 全球仅~5家量产</td>
+        <td><span class="tag tag-high">强</span> 国内独有路线</td>
+        <td><strong style="color:var(--green);">真卡点 · 最独特的价值</strong></td>
+        <td><span class="tag tag-purple">10年+</span></td>
+      </tr>
+      <tr>
+        <td><strong>🥈 2</strong></td>
+        <td>高速光芯片</td>
+        <td><span class="tag tag-high">高</span> 全球供给缺口持续</td>
+        <td><span class="tag tag-mid">中等</span> 第二梯队追赶者</td>
+        <td><strong style="color:var(--orange);">在卡点上但不是卡点本身</strong></td>
+        <td><span class="tag tag-info">3-5年</span></td>
+      </tr>
+      <tr>
+        <td><strong>🥉 3</strong></td>
+        <td>光纤光缆</td>
+        <td><span class="tag tag-mid">中等</span> 光棒紧张但非独家</td>
+        <td><span class="tag tag-low">弱</span> 第三梯队</td>
+        <td><strong style="color:var(--red);">卡点存在但不属于永鼎</strong></td>
+        <td><span class="tag tag-info">1-2年</span></td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>汽车线束</td>
+        <td><span class="tag tag-low">低</span> 充分竞争</td>
+        <td><span class="tag tag-low">弱</span> 低毛利跟随者</td>
+        <td>稳定现金流但非主题</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    先排产业链层级，再排公司。结论很清晰：<strong>永鼎真正的差异化在于超导带材的稀缺性，其次是光芯片的国产替代故事。光纤光缆的故事虽然当前最暴利，但它的主要受益者是长飞、亨通、中天，不是永鼎。</strong>市场把三个故事都定价在了永鼎身上——这是一个需要警惕的信号。
+  </blockquote>
+</div>
+
+<!-- ====== 四、证据评估 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📋</span>四、关键证据链条</div>
+
+  <div class="section-subtitle">超导带材（核心卡点）</div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>技术性能：</strong>HF1200 系列千米级带材，20K/20T 下临界电流 1,299-1,340A——已发表文献中可批量化 REBCO 带材的最好水平。
+    <div class="src">来源：公司年报、学术文献</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>客户突破：</strong>已供货中科院等离子所、西物院、星环聚能、能量奇点、ITER二期。累计核聚变相关订单超 41 亿元。
+    <div class="src">来源：公司公告、东方财富 2026.01.14</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--green);">[强证据]</span>
+    <strong>产能扩张：</strong>2025 年产能 ~5,000 km/年 → 2026 年目标 1.5 万 km/年 → 远期 2 万 km/年；高温超导业务营收同比 +43.63%。
+    <div class="src">来源：公司年报、券商研报（浙商证券、天风证券）</div>
+  </div>
+
+  <div class="section-subtitle">光芯片（追赶位置）</div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--orange);">[中等证据]</span>
+    <strong>100G EML 量产：</strong>良率 87%，已通过华为、中兴验证。2025 年 6 月单月出货 5 万颗，Q4 月产能目标 20 万颗。
+    <div class="src">来源：公司公告、互动易</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--orange);">[中等证据]</span>
+    <strong>战略合作：</strong>2025 年 12 月引入剑桥科技等 7 家战略投资者增资 5,500 万元，打通光芯片-光模块产业链。
+    <div class="src">来源：公司公告</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--red);">[待验证]</span>
+    <strong>产能兑现：</strong>宣布扩产至年产能 7,000 万颗高速光芯片，但项目尚在早期，具体爬坡时间线不明。
+    <div class="src">来源：项目备案信息</div>
+  </div>
+
+  <div class="section-subtitle">光纤光缆（跟随受益）</div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--red);">[弱证据/与永鼎关联弱]</span>
+    <strong>光棒产能争议：</strong>不同信源光棒产能数据从 150 吨到 950 吨差异极大。CRU/中商产业研究院将其列为第三梯队，定义为"基本外购"。
+    <div class="src">来源：CRU、中商产业研究院、雪球多方信源交叉比对</div>
+  </div>
+  <div class="evidence-item">
+    <span class="strength" style="color:var(--red);">[弱证据]</span>
+    <strong>光通信营收下滑：</strong>2025 年光通信业务营收同比下滑 10.45%（尽管光纤价格暴涨），与其在光棒环节缺乏定价权一致。
+    <div class="src">来源：2025 年年报</div>
+  </div>
+</div>
+
+<!-- ====== 五、财务质量 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">💰</span>五、财务质量检查</div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">52.87亿</div>
+      <div class="kpi-label">2025 年营收</div>
+      <div class="kpi-change up">+28.6% YoY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">2.34亿</div>
+      <div class="kpi-label">2025 年归母净利润</div>
+      <div class="kpi-change up">+280.4% YoY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">2.27亿</div>
+      <div class="kpi-label">2025 年扣非净利润</div>
+      <div class="kpi-change up">+398.6% YoY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">13.89%</div>
+      <div class="kpi-label">综合毛利率</div>
+      <div class="kpi-change down">-2.71pp</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">61.89%</div>
+      <div class="kpi-label">资产负债率</div>
+      <div class="kpi-change warn">偏高</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">3.12亿</div>
+      <div class="kpi-label">经营现金流</div>
+      <div class="kpi-change up">由负转正</div>
+    </div>
+  </div>
+
+  <div class="card card-red">
+    <div class="section-subtitle" style="margin-top:0;">⚠ 利润质量警示</div>
+    <table>
+      <thead><tr><th>项目</th><th>2025年</th><th>2024年</th><th>点评</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>归母净利润</td><td>2.34亿</td><td>0.61亿</td><td>表面大增</td>
+        </tr>
+        <tr>
+          <td>其中：东昌投资处置收益</td><td><strong style="color:var(--red);">~2.85亿</strong></td><td>—</td><td>一次性房地产处置收益，不具持续性</td>
+        </tr>
+        <tr>
+          <td>扣除一次性收益后</td><td><strong style="color:var(--red);">约 -0.51亿</strong></td><td>0.46亿</td><td>主业实际亏损</td>
+        </tr>
+        <tr>
+          <td>东部超导净利润 (H1)</td><td><strong style="color:var(--orange);">-0.22亿</strong></td><td>—</td><td>超导业务仍在投入期</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px; color: var(--text-muted); margin-top: 8px;">
+      2025 年归母净利润 2.34 亿中约 2.85 亿来自联营企业东昌投资的房地产处置收益。扣除后主业实际微亏。<br>
+      市场交易的却是 2028 年 41 亿净利润的远期预期——从亏损到 41 亿的跨度需要极强的证据支撑。
+    </p>
+  </div>
+</div>
+
+<!-- ====== 六、竞争格局对比 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">⚔️</span>六、竞争格局对比</div>
+
+  <div class="section-subtitle">光纤光缆：永鼎 vs 头部玩家</div>
+  <table>
+    <thead>
+      <tr><th>公司</th><th>光棒产能 (吨/年)</th><th>自给率</th><th>2026Q1 净利润增速</th><th>光棒定价权</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>长飞光纤</strong></td><td>4,000-5,600</td><td>100%</td><td class="up">+226.4%</td><td><span class="tag tag-high">极强</span></td>
+      </tr>
+      <tr>
+        <td><strong>亨通光电</strong></td><td>2,800-3,400</td><td>90%+</td><td class="up">+98.5%</td><td><span class="tag tag-high">强</span></td>
+      </tr>
+      <tr>
+        <td><strong>中天科技</strong></td><td>2,100-3,200</td><td>85%+</td><td class="up">+46.4%</td><td><span class="tag tag-high">强</span></td>
+      </tr>
+      <tr style="background: rgba(88,166,255,0.06);">
+        <td><strong>永鼎股份</strong></td><td>150-450</td><td>存疑</td><td class="down">-45.2%</td><td><span class="tag tag-low">弱</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-subtitle">光芯片：鼎芯光电 vs 竞争对手</div>
+  <table>
+    <thead>
+      <tr><th>公司</th><th>100G EML 状态</th><th>200G EML</th><th>关键客户</th><th>核心优势</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>源杰科技</strong></td><td>已量产，规模最大</td><td>已送样</td><td>英伟达 GB300 供应链</td><td>技术领先，最先进入国际供应链</td>
+      </tr>
+      <tr>
+        <td><strong>长光华芯</strong></td><td>已量产，良率 ~72%</td><td>实验室阶段</td><td>国内光模块厂</td><td>IDM 平台型布局</td>
+      </tr>
+      <tr style="background: rgba(88,166,255,0.06);">
+        <td><strong>永鼎 (鼎芯光电)</strong></td><td>已量产，良率 87%</td><td>研发中</td><td>华为、中兴</td><td>IDM + 光缆/光模块垂直协同</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ====== 七、估值压力测试 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">⚡</span>七、估值压力测试：市场在定价什么？</div>
+
+  <div class="card card-orange">
+    <p style="font-size:15px; margin-bottom: 16px;">
+      当前市值 <strong>1,005 亿</strong>，机构预测 2026E 净利润 <strong>4.73 亿</strong>，对应 <strong>PE ~213x</strong>。<br>
+      即使按最乐观的 2028E 净利润 <strong>41 亿</strong>（机构一致预期），当前价格对应 <strong>2028 年 PE ~24.5x</strong>。
+    </p>
+
+    <p style="font-size:14px; color: var(--text-muted);">
+      这意味着：<strong>当前价格已经把 2028 年的乐观预期完全折现了。</strong>如果 2028 年真能做到 41 亿利润，今天买入的人拿到的也就是一个正常估值。如果做不到——哪怕做到 20 亿——估值就要腰斩。
+    </p>
+  </div>
+
+  <div class="section-subtitle">情景分析</div>
+  <table>
+    <thead>
+      <tr><th>情景</th><th>2028E 净利润假设</th><th>给 30x PE 对应市值</th><th> vs 当前 1,005 亿</th><th>隐含涨跌幅</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🚀 极度乐观（超预期）</td><td>60 亿</td><td>1,800 亿</td><td>+79%</td><td class="up"><strong>+79%</strong></td>
+      </tr>
+      <tr>
+        <td>👍 乐观（机构一致预期）</td><td>41 亿</td><td>1,230 亿</td><td>+22%</td><td class="up">+22%</td>
+      </tr>
+      <tr style="background: rgba(210,153,29,0.08);">
+        <td>📌 基准（部分兑现）</td><td>20 亿</td><td>600 亿</td><td>-40%</td><td class="down"><strong>-40%</strong></td>
+      </tr>
+      <tr style="background: rgba(248,81,73,0.06);">
+        <td>📉 悲观（低于预期）</td><td>10 亿</td><td>300 亿</td><td>-70%</td><td class="down"><strong>-70%</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <blockquote>
+    极度乐观情景才给 79% 的上行空间，基准情景下行 40%，悲观情景下行 70%。当前价位的风险回报比极度不对称。
+  </blockquote>
+</div>
+
+<!-- ====== 八、市场可能没看清的地方 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🔍</span>八、市场可能没看清的地方</div>
+
+  <div class="card card-accent">
+    <ol style="padding-left: 20px; font-size: 15px; line-height: 2.2;">
+      <li><strong>光棒故事不属于永鼎。</strong>市场在交易"光纤光缆超级周期"时把永鼎和长飞/亨通/中天绑在一起定价，但永鼎在光棒环节的产能和自给率与头部玩家不在一个量级。2025 年光通信营收同比下滑 10.45% 是最直接的证据。</li>
+      <li><strong>2025 年利润暴增是"假增长"。</strong>2.85 亿来自联营企业的房地产处置收益，是一次性的。扣除后主业实际亏损。市场用这个"增长"去线性外推 2026-2028 的 41 亿利润，基础不牢。</li>
+      <li><strong>超导是一个 2035 年的故事，但股价在 2026 年就定价了。</strong>可控核聚变商业化预计在 2035 年前后。超导业务 2025H1 仍在亏损。41 亿的累计订单听起来大，但交付周期极长，短期对利润的贡献微乎其微。</li>
+      <li><strong>光芯片竞争格局并不友好。</strong>源杰科技已率先切入英伟达供应链，长光华芯有完整 IDM 平台。永鼎的鼎芯光电虽然在追赶，但在最关键的"进入国际一线客户供应链"这个节点上落后了。</li>
+      <li><strong>千亿市值 + 30x PB 的估值已经没有容错空间。</strong>任何一个故事的兑现节奏慢于市场预期，估值压缩的幅度都会远远超过业绩上修的幅度。</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ====== 九、风险矩阵 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🛡️</span>九、什么情况说明这个判断错了（反方理由）</div>
+
+  <div class="risk-grid">
+    <div class="risk-card">
+      <div class="risk-title">🔴 第一大风险：估值极端，安全边际为零</div>
+      <p style="font-size:14px; color: var(--text-muted);">158x PE / 30x PB / 千亿市值。即使最乐观的 2028 年 41 亿利润兑现，现在买入的资金年化回报也不过个位数。任何一个季度不及预期都可能导致 30-50% 的回撤。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟠 第二大风险：主业盈利薄弱，利润靠一次性收益</div>
+      <p style="font-size:14px; color: var(--text-muted);">2025 年扣除一次性投资收益后主业微亏。光通信营收同比下滑。汽车线束毛利率承压。如果 2026 年主业仍不能证明盈利拐点，高估值将快速崩塌。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟡 第三大风险：光芯片竞争加剧，国产替代节奏不确定</div>
+      <p style="font-size:14px; color: var(--text-muted);">源杰科技已卡位英伟达供应链。Lumentum 等也在扩产。如果全球光芯片供给缺口收窄快于预期，国产厂商的价格和份额都将面临压力。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟠 第四大风险：超导商业化周期远长于市场预期</div>
+      <p style="font-size:14px; color: var(--text-muted);">即使订单在手，核聚变装置的建设和交付周期以 5-10 年计。超导业务的利润贡献可能要到 2030 年以后才能体现。市场目前的定价已经包含了 2028 年就大量贡献利润的假设。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟡 第五大风险：财务杠杆偏高</div>
+      <p style="font-size:14px; color: var(--text-muted);">资产负债率 61.89%，短期偿债压力大。如果融资环境收紧或业务扩张需要大量资本开支，可能面临股权稀释或财务成本上升的压力。</p>
+    </div>
+    <div class="risk-card">
+      <div class="risk-title">🟢 第六大风险：技术路线替代</div>
+      <p style="font-size:14px; color: var(--text-muted);">硅光技术如果快速成熟，可能减少对传统 III-V 族 EML 芯片的依赖。超导领域如果铁基超导或其他新路线突破，永鼎的 IBAD+MOCVD 路线可能面临竞争。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 十、Serenity 评分卡 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📊</span>十、Serenity 多维评分卡</div>
+
+  <table>
+    <thead>
+      <tr><th>维度</th><th>评分 (1-10)</th><th>说明</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>产业链卡点强度</td>
+        <td><strong>6</strong></td>
+        <td>超导带材是真卡点（9分），但光芯片是追赶者（5分），光棒不是主要玩家（2分）。综合取超导权重最大。</td>
+      </tr>
+      <tr>
+        <td>竞争壁垒 / 可替代性</td>
+        <td><strong>7</strong></td>
+        <td>超导: IBAD+MOCVD 国内独有路线，壁垒高。光芯片: IDM 模式有壁垒但面临多家竞争。</td>
+      </tr>
+      <tr>
+        <td>证据质量</td>
+        <td><strong>5</strong></td>
+        <td>超导有较强的技术和订单证据。光芯片量产数据有限。光纤光缆的卡点控制力证据薄弱。</td>
+      </tr>
+      <tr>
+        <td>盈利质量</td>
+        <td><strong>3</strong></td>
+        <td>主业盈利薄弱，2025 年利润依赖一次性收益。超导仍在亏损。经营现金流刚转正。</td>
+      </tr>
+      <tr>
+        <td>估值合理性</td>
+        <td><strong>2</strong></td>
+        <td>158x PE / 30x PB，已将 2028 年乐观预期完全折现。风险回报严重不对称。</td>
+      </tr>
+      <tr>
+        <td>时间催化节奏</td>
+        <td><strong>5</strong></td>
+        <td>短期有光纤涨价、光芯片出货催化；中期有核聚变订单催化。但超导主线是长期故事。</td>
+      </tr>
+      <tr>
+        <td>财务安全性</td>
+        <td><strong>4</strong></td>
+        <td>负债率 61.89%，短期偿债压力较大。需关注融资和现金流改善节奏。</td>
+      </tr>
+      <tr style="background: rgba(88,166,255,0.06);">
+        <td><strong>综合评分</strong></td>
+        <td><strong style="font-size: 18px; color: var(--orange);">4.6 / 10</strong></td>
+        <td><strong>在研究优先级中属于"高波动弹性标的"，卡点价值真实但估值严重超前。</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="score-bar-wrap" style="margin-top: 20px;">
+    <div class="score-bar-label"><span>综合得分</span><span style="color:var(--orange); font-weight:700;">4.6 / 10</span></div>
+    <div class="score-bar"><div class="score-bar-fill fill-orange" style="width: 46%;"></div></div>
+  </div>
+</div>
+
+<!-- ====== 十一、下一步研究行动 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">📝</span>十一、下一步优先研究行动</div>
+
+  <div class="card">
+    <ol style="padding-left: 20px; font-size: 15px; line-height: 2.4;">
+      <li><strong>验证光棒自给率。</strong>直接查阅 2025 年年报中"光棒"相关产能和采购数据。确认自产光棒的实际产能和成本。这是判断永鼎能否从光纤超级周期中真正受益的核心数据。</li>
+      <li><strong>跟踪鼎芯光电月度出货数据。</strong>100G EML 的月出货量是最直接的光芯片业务验证指标。如果月出货从 5 万颗爬升到 20 万颗以上，则国产替代故事获得强支撑。</li>
+      <li><strong>拆解 2025 年利润结构。</strong>仔细阅读年报附注，确认扣除东昌投资收益后的主业真实利润，以及各业务分部的盈亏状况。</li>
+      <li><strong>跟踪核聚变订单交付节奏。</strong>41 亿累计订单中，2025 年实际确认了多少收入？订单的交付周期是 1 年、3 年还是 5 年？这决定了超导业务何时能开始贡献利润。</li>
+      <li><strong>与头部光棒企业做估值比较。</strong>当前永鼎 1,005 亿市值 vs 长飞/亨通/中天的估值水平。如果永鼎的估值已经显著高于光棒龙头，说明市场在定价超导和光芯片的额外溢价。</li>
+      <li><strong>监控 Q2 2026 业绩。</strong>2026Q1 净利润同比下降 45%，需关注 Q2 能否企稳。如果连续两个季度主业利润不及预期，高估值将面临巨大压力。</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ====== 十二、总结 ====== -->
+<div class="section">
+  <div class="section-title"><span class="icon">🎯</span>十二、Serenity 视角总结</div>
+
+  <div class="judgment">
+    <div class="lead">永鼎股份是一个"卡点真实存在，但估值已经跑到卡点前面去了"的典型案例。</div>
+    <div class="body">
+      <p style="margin-bottom: 12px;">
+        <strong>用 Serenity 的方法拆开看：</strong>
+      </p>
+      <p style="margin-bottom: 8px;">
+        1️⃣ <strong>先排产业链层级：</strong>超导带材 &gt; 高速光芯片 &gt; 光纤光缆。真正稀缺的、有定价权的位置只有超导带材。光芯片是在卡点上但规模尚小。光纤光缆的卡点（光棒）不属于永鼎。
+      </p>
+      <p style="margin-bottom: 8px;">
+        2️⃣ <strong>证据强度：</strong>超导有强证据（技术性能 + 核心客户 + 订单），光芯片有中等证据（量产 + 验证），光棒控制力证据薄弱（产能数据矛盾 + 光通信营收下滑）。
+      </p>
+      <p style="margin-bottom: 8px;">
+        3️⃣ <strong>估值与基本面错配：</strong>千亿市值已经把 2028 年最乐观的场景定价了。但 2025 年的真实主业是微亏的，超导仍在投入期。市场在用一个 2035 年的故事支撑 2026 年的股价。
+      </p>
+      <p style="margin-bottom: 8px;">
+        4️⃣ <strong>风险回报不对称：</strong>极度乐观情景 +79%，基准情景 -40%，悲观情景 -70%。赔率不站在长期投资者这边。
+      </p>
+      <p>
+        5️⃣ <strong>Serenity 建议：</strong>超导带材是值得长期跟踪的供应链卡点，永鼎在这个卡点上确实有独特性。但当前估值已严重透支，<strong>研究优先级排在"等待更好的入场时机"</strong>。如果回调到合理估值区间（如 20x 2026E PE），且主业盈利出现拐点信号，才是重新评估的时机。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<div class="footer">
+  <p><strong>Serenity · Supply-Chain Bottleneck Hunter</strong></p>
+  <p>方法论：市场故事 → 系统变化 → 产业链层级 → 稀缺卡点 → 公开证据 → 市场可能没看清的地方 → 反方理由 → 下一步研究行动</p>
+  <p style="margin-top: 8px;">
+    ⚠️ <strong>免责声明：</strong>本报告仅供研究参考，不构成任何投资建议。所有数据来源于公开信息（公司年报、公告、券商研报、行业数据提供方 CRU、公开媒体报道）。<br>
+    投资决策请基于独立判断，风险自担。报告中的观点可能随时间变化而失效。保持交易决策权在你自己手中。
+  </p>
+  <p style="margin-top: 12px;">生成时间：2026-06-25 &nbsp;|&nbsp; 工具：Claude Code + Serenity Skill &nbsp;|&nbsp; 目标公司：永鼎股份 (600105.SH)</p>
+</div>
+
+</div>
+
+<script src="../nav.js"></script>
+</body>
+</html>

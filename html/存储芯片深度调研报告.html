@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>存储芯片深度调研报告 — 2026年6月</title>
+<style>
+  @page {
+    size: A4;
+    margin: 2cm 2.2cm;
+    @top-center {
+      content: "存储芯片深度调研报告";
+      font-size: 9pt;
+      color: #888;
+    }
+    @bottom-center {
+      content: "第 " counter(page) " 页";
+      font-size: 9pt;
+      color: #888;
+    }
+  }
+
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+    font-size: 11pt;
+    line-height: 1.75;
+    color: #1a1a1a;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+  }
+
+  h1 {
+    font-size: 22pt;
+    text-align: center;
+    margin: 40px 0 8px 0;
+    color: #111;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 10pt;
+    margin-bottom: 30px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 3px double #333;
+    margin: 20px 0 30px 0;
+  }
+
+  h2 {
+    font-size: 15pt;
+    margin: 36px 0 14px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #2c3e50;
+    color: #2c3e50;
+  }
+
+  h3 {
+    font-size: 12.5pt;
+    margin: 24px 0 10px 0;
+    color: #34495e;
+  }
+
+  h4 {
+    font-size: 11.5pt;
+    margin: 20px 0 8px 0;
+    color: #555;
+  }
+
+  p {
+    margin: 8px 0;
+    text-align: justify;
+  }
+
+  blockquote {
+    margin: 16px 0;
+    padding: 12px 18px;
+    background: #f7f9fb;
+    border-left: 4px solid #2c3e50;
+    color: #333;
+    font-size: 11pt;
+  }
+
+  blockquote p {
+    margin: 4px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 9.5pt;
+  }
+
+  th {
+    background: #2c3e50;
+    color: white;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+  }
+
+  tr:nth-child(even) td {
+    background: #f8f9fa;
+  }
+
+  code {
+    font-family: "Fira Code", "Consolas", monospace;
+    font-size: 9.5pt;
+    background: #f0f0f0;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  pre {
+    background: #f4f5f7;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-size: 9.5pt;
+    line-height: 1.5;
+    margin: 12px 0;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+  }
+
+  strong {
+    color: #1a1a1a;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 30px 0;
+  }
+
+  ul, ol {
+    margin: 8px 0;
+    padding-left: 22px;
+  }
+
+  li {
+    margin: 4px 0;
+  }
+
+  .highlight-box {
+    background: linear-gradient(135deg, #fffdf0, #fff9e0);
+    border: 1px solid #e8d5a0;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+
+  .risk-box {
+    background: linear-gradient(135deg, #fff5f5, #ffeaea);
+    border: 1px solid #e0b0b0;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+
+  .disclaimer {
+    margin-top: 40px;
+    padding: 16px;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 9pt;
+    color: #888;
+    text-align: center;
+  }
+
+  .toc {
+    background: #fafbfc;
+    border: 1px solid #e0e4e8;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 10.5pt;
+  }
+
+  .toc h3 {
+    margin-top: 0;
+  }
+
+  .toc ol {
+    columns: 2;
+    column-gap: 30px;
+  }
+
+  @media print {
+    body { font-size: 10pt; }
+    h1 { font-size: 20pt; }
+    h2 { font-size: 14pt; page-break-after: avoid; }
+    h3 { font-size: 12pt; page-break-after: avoid; }
+    table { page-break-inside: avoid; }
+    blockquote { page-break-inside: avoid; }
+    pre { page-break-inside: avoid; }
+    .no-print { display: none; }
+    .page-break { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<h1>存储芯片深度调研报告</h1>
+<p class="subtitle">2026 年 6 月 22 日 &nbsp;|&nbsp; 覆盖市场：A 股 / 港股 / 美股 / 韩国 / 台湾 &nbsp;|&nbsp; 研究方法：Serenity 供应链瓶颈分析</p>
+<hr class="divider">
+
+<div class="toc">
+<h3>📑 目录</h3>
+<ol>
+  <li>核心判断</li>
+  <li>产业链层级排序</li>
+  <li>为什么设备层排第一？</li>
+  <li>供需格局：超级上行周期</li>
+  <li>HBM 技术路线图</li>
+  <li>优先研究名单——公司详细分析</li>
+  <li>中国存储产业进展：CXMT 与 YMTC</li>
+  <li>设备/材料国产化关键数据</li>
+  <li>利基存储：NOR Flash &amp; SLC NAND</li>
+  <li>存储模组厂对比</li>
+  <li>热门方向降级分析</li>
+  <li>什么情况说明判断错了？</li>
+  <li>下一步研究清单</li>
+  <li>附录：全球存储芯片产业链图谱</li>
+</ol>
+</div>
+
+<!-- ===== 一、核心判断 ===== -->
+<h2>一、核心判断</h2>
+
+<blockquote>
+<p><strong>存储芯片正经历一轮"不是周期的周期"——AI 驱动的 HBM 结构性短缺正在把整个存储价值链撕成两个市场：高端（HBM/DDR5/高堆叠 NAND）供不应求至少到 2028 年，利基（DDR4/NOR Flash/SLC NAND）因大厂退出产能而被动涨价。</strong></p>
+<p><strong>产业链最值得优先研究的不是存储原厂本身，而是上游的设备与材料层——特别是刻蚀、薄膜沉积、混合键合设备，以及 HBM 专用前驱体材料。这些环节更接近真实扩产约束，供应商更集中，国产替代的故事也更确定。</strong></p>
+</blockquote>
+
+<!-- ===== 二、产业链层级排序 ===== -->
+<h2>二、产业链层级排序</h2>
+<p>按"谁离扩产约束更近"排序：</p>
+
+<table>
+<tr><th>优先级</th><th>层级</th><th>核心逻辑</th><th>稀缺程度</th></tr>
+<tr><td>🥇 第 1 层</td><td><strong>前端设备（刻蚀/薄膜沉积）</strong></td><td>存储扩产的第一约束就是设备。高深宽比刻蚀机、3D NAND 堆叠 PECVD 全球仅 3-5 家能供，交期 12-18 个月。中国被出口管制卡脖子</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td>🥈 第 2 层</td><td><strong>先进封装设备（混合键合/TCB）</strong></td><td>HBM 堆叠的核心瓶颈。Besi 垄断 91% 混合键合。HBM4 从 12 层升 16 层，键合难度指数级上升</td><td>⭐⭐⭐⭐⭐</td></tr>
+<tr><td>🥉 第 3 层</td><td><strong>HBM 专用材料（前驱体/EMC/热界面）</strong></td><td>HBM 堆叠对材料纯度、热稳定性要求极高。每片晶圆材料价值量比标准 DRAM 高 3-5 倍</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td>第 4 层</td><td><strong>内存接口芯片（RCD/MRCD/Retimer）</strong></td><td>DDR5 渗透 + MRDIMM 在 AI 服务器放量。澜起科技全球市占率 36.8%，毛利率 71.5%</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td>第 5 层</td><td><strong>HBM/DRAM 原厂</strong></td><td>三星/SK海力士/美光三家寡头，HBM 2026 年已全部售罄。高 capex 和高估值是双刃剑</td><td>⭐⭐⭐</td></tr>
+<tr><td>第 6 层</td><td><strong>NAND 原厂</strong></td><td>YMTC 受设备制裁压制产能上限，但技术已追到 270+ 层。四家控产，涨价超预期</td><td>⭐⭐⭐</td></tr>
+<tr><td>第 7 层</td><td><strong>存储模组厂</strong></td><td>涨价周期中库存升值、毛利率扩张。但商业模式本质是"搬箱子"，抗周期能力最弱</td><td>⭐⭐</td></tr>
+<tr><td>第 8 层</td><td><strong>NOR Flash/利基存储设计</strong></td><td>大厂退出带来结构性机会，但技术壁垒相对低，长期竞争格局可能恶化</td><td>⭐⭐</td></tr>
+</table>
+
+<!-- ===== 三、为什么设备层排第一？ ===== -->
+<h2>三、为什么设备层排第一？</h2>
+
+<p>一个简单的逻辑链：</p>
+
+<pre><code>AI 训练集群需要更多 GPU →
+每颗 GPU 需要更多 HBM（Rubin 时代 8 颗 HBM4e/GPU → 高达 576GB）→
+HBM 消耗 3 倍晶圆产能（vs 标准 DDR5）→
+三星/SK海力士/美光拼命建新产线 →
+新产线需要刻蚀机、薄膜沉积设备 →
+但能供应高深宽比刻蚀和 300+ 层 NAND 堆叠设备的全球就 AMAT/Lam/TEL/中微/北方华创几家 →
+交期 12-18 个月，订单排到 2027 年</code></pre>
+
+<p><strong>设备是扩产的"硬通货"</strong>。没有设备，再多资本开支都是纸面数字。</p>
+
+<p>而对于中国存储产业（CXMT、YMTC），设备层还有一个额外的逻辑：<strong>美国出口管制越收越紧，国产设备的替代紧迫性越高</strong>。2025 年国产设备化率从 25% 跳到 35%，新建产线传闻要求 ≥50% 国产设备采购——这就是"政策驱动的确定性需求"。</p>
+
+<!-- ===== 四、供需格局 ===== -->
+<h2>四、供需格局：超级上行周期</h2>
+
+<h3>4.1 价格走势</h3>
+
+<table>
+<tr><th>品类</th><th>2025 年涨幅（现货）</th><th>2026 Q1 涨幅（合约）</th><th>2026 Q2 预估</th><th>2026 全年预估</th></tr>
+<tr><td><strong>DRAM</strong></td><td>DDR4 +324~896%<br>DDR5 +374~377%</td><td>环比 +90~95%</td><td>环比 +58~63%</td><td>均价 +88%（花旗）</td></tr>
+<tr><td><strong>NAND</strong></td><td>+207~282%</td><td>环比 +55~60%</td><td>环比 +70~75%</td><td>均价 +74%（花旗）</td></tr>
+<tr><td><strong>HBM</strong></td><td>同比 +200%</td><td>已全部预售</td><td>—</td><td>持续紧缺至 2028</td></tr>
+</table>
+
+<h3>4.2 供需缺口</h3>
+
+<table>
+<tr><th>指标</th><th>DRAM</th><th>NAND</th></tr>
+<tr><td>2026 年需求增速</td><td>45%（IDC）</td><td>38%（IDC）</td></tr>
+<tr><td>2026 年供给增速</td><td>16%（IDC）/ 7.5%（群智）</td><td>17%（IDC）/ 6.0%（群智）</td></tr>
+<tr><td>原厂库存</td><td>3-5 周（极度紧张）</td><td>3-5 周</td></tr>
+<tr><td>美光客户满足率</td><td>55-60%</td><td>—</td></tr>
+<tr><td>缺口持续时间</td><td>至少至 2027 年（TrendForce）</td><td>至少至 2026 年底（中信）</td></tr>
+</table>
+
+<h3>4.3 结构性特征——与以往周期不同的三个理由</h3>
+
+<ol>
+<li><strong>HBM 挤出效应</strong>：1GB HBM 消耗相当于 3 倍标准 DRAM 晶圆产能。三大原厂将 80%+ 先进产能转向 HBM，DDR4/DDR3 等成熟产品产能大幅缩减</li>
+<li><strong>供给纪律</strong>：三大巨头吸取上轮暴跌教训，拒绝激进扩产，维持高价获取创纪录利润</li>
+<li><strong>地缘政治撕裂</strong>：中美出口管制制造区域性定价分化，中国国产替代加速推进</li>
+</ol>
+
+<!-- ===== 五、HBM 技术路线图 ===== -->
+<h2>五、HBM 技术路线图</h2>
+
+<table>
+<tr><th>代际</th><th>量产时间</th><th>接口位宽</th><th>单堆栈带宽</th><th>堆叠层数</th><th>单堆栈容量</th><th>关键技术</th></tr>
+<tr><td>HBM3E</td><td>2024（主力至 2026 H1）</td><td>1024-bit</td><td>~1.2 TB/s</td><td>8-Hi / 12-Hi</td><td>24-36 GB</td><td>MR-MUF / TC-NCF</td></tr>
+<tr><td><strong>HBM4</strong></td><td><strong>2026 Q2（量产爬坡）</strong></td><td><strong>2048-bit</strong></td><td><strong>>2.0 TB/s</strong></td><td><strong>12-Hi → 16-Hi</strong></td><td><strong>48-64 GB</strong></td><td>混合键合（三星先行）</td></tr>
+<tr><td>HBM4E</td><td>2028</td><td>2048-bit</td><td>—</td><td>16-Hi → 20-Hi</td><td>—</td><td>全面混合键合</td></tr>
+<tr><td>HBM5</td><td>2028+</td><td>—</td><td>—</td><td>20-Hi+</td><td>—</td><td>仅混合键合 + PiM</td></tr>
+</table>
+
+<h3>三大原厂 HBM 战略对比</h3>
+
+<table>
+<tr><th>维度</th><th>SK 海力士（~57% 份额）</th><th>三星（~22%）</th><th>美光（~21%）</th></tr>
+<tr><td>HBM3E</td><td>NVIDIA 约 90% 供应</td><td>认证延迟，份额流失</td><td>功率最低（-30% vs 竞品）</td></tr>
+<tr><td>HBM4 节点</td><td>12nm 逻辑 die（台积电代工）</td><td>4nm 自有逻辑 die（交钥匙）</td><td>1-beta DRAM 工艺</td></tr>
+<tr><td>封装路线</td><td>MR-MUF → HBM4E 转混合键合</td><td>直接跨越至 16 层混合键合</td><td>混合键合专利最多（621 件）</td></tr>
+<tr><td>2026 产能</td><td><strong>全部售罄</strong></td><td>追回 HBM3E 认证</td><td><strong>全部售罄</strong></td></tr>
+</table>
+
+<!-- ===== 六、优先研究名单 ===== -->
+<div class="page-break"></div>
+<h2>六、优先研究名单——公司详细分析</h2>
+
+<h3>第一梯队：设备层（国产替代确定性最高）</h3>
+
+<h4>1. 中微公司（688012.SH）— 刻蚀设备，存储敞口最大</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>3D NAND 高深宽比刻蚀、DRAM 电容孔刻蚀——存储制造中最难替代的工艺步骤</td></tr>
+<tr><td>产业链位置</td><td>前端晶圆制造设备，存储营收占比 60%+</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2025 年报营收 123.85 亿（+36.6%），CCP 刻蚀进入 5nm 及 3D NAND 200+ 层验证；超高深宽比刻蚀机 300+ 台量产；卖方预估 2026 年订单 200 亿+</td></tr>
+<tr><td>排序原因</td><td>更靠近扩产硬约束；刻蚀设备价值量占 WFE 的 20%+，是存储产线最大的单类设备投资</td></tr>
+<tr><td>主要风险</td><td>估值 ~50-55 倍 PE，市场预期已较高；美系设备如果制裁松动，国产替代紧迫性会下降</td></tr>
+</table>
+
+<h4>2. 北方华创（002371.SZ）— 平台型设备龙头</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>刻蚀 + 薄膜沉积 + 炉管 + 清洗——国内唯一覆盖多工艺环节的平台型设备商</td></tr>
+<tr><td>产业链位置</td><td>前端晶圆制造设备，存储+逻辑双线受益</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2025 年营收 ~393 亿（+35%+），订单排至 2027 年 Q1；炉管设备在中芯国际 28nm 产线市占率超 60%；卖方预估 2026 年订单 600 亿+</td></tr>
+<tr><td>排序原因</td><td>平台型公司的优势在于"一站式"供应——客户采购粘性更强，周期性更弱</td></tr>
+<tr><td>主要风险</td><td>增收不增利（2025 年利润微降），规模扩张期的毛利率压力；估值 46 倍 PE</td></tr>
+</table>
+
+<h4>3. 拓荆科技（688072.SH）— PECVD 国内唯一量产，弹性最大</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>3D NAND 堆叠薄膜沉积——YMTC 的 Xtacking 架构对 PECVD 需求尤其大</td></tr>
+<tr><td>产业链位置</td><td>前端晶圆制造设备，存储营收占比 60%+</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2025 年营收 65.19 亿（+58.9%），扣非利润 +103.8%；PECVD 在 YMTC 装 200 台，份额从 15%→30%；卖方预估 2026 年订单 120 亿+</td></tr>
+<tr><td>排序原因</td><td>细分垄断（国内唯一 PECVD 量产）+ 低基数高弹性，营收增速在三巨头中最高</td></tr>
+<tr><td>主要风险</td><td>市值较小，流动性低于北方华创/中微；PECVD 技术路线若被新工艺替代</td></tr>
+</table>
+
+<h3>第二梯队：先进封装设备</h3>
+
+<h4>4. Besi（BESI.AS 荷兰上市）— 混合键合全球垄断者</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>HBM4/HBM4e 堆叠的混合键合——芯片到晶圆（D2W）键合市占率 91%</td></tr>
+<tr><td>产业链位置</td><td>后端先进封装设备</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2026 年 Q1 订单同比翻倍，混合键合订单创历史新高；三大存储原厂均持有评估设备；2025-2030 年累计装机 960-2000 台；Applied Materials 持股 9%</td></tr>
+<tr><td>排序原因</td><td>近乎垄断的位置 + HBM 每一代升级都需要更多键合步骤 + 2030 年 HBM5 将只使用混合键合</td></tr>
+<tr><td>主要风险</td><td>估值不便宜（~40 倍 PE）；台积电 SoIC 自研设备可能分流；良率仍是挑战（目前 ~10%）</td></tr>
+</table>
+
+<h3>第三梯队：A 股存储产业链核心标的</h3>
+
+<h4>5. 澜起科技（688008.SH）— 内存接口芯片全球第一</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>DDR5 RCD（寄存时钟驱动器）——每根 DDR5 内存条必须有一颗，是内存与 CPU 通信的"收费站"</td></tr>
+<tr><td>产业链位置</td><td>存储芯片设计——介于 CPU 和 DRAM 之间的互连层</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2025 年报营收 54.6 亿（+50%），净利润 22.4 亿（+58%）；2026 Q1 净利润 +61.3%，互连芯片毛利率升至 71.5%；全球市占率 36.8% 第一；MRCD/MDB 随 MRDIMM 在 AI 服务器加速放量；PCIe Retimer 全球第二</td></tr>
+<tr><td>排序原因</td><td>商业模式最优——不承担晶圆制造风险，毛利率 70%+；DDR5 渗透率提升 + 子代迭代 ASP 上行</td></tr>
+<tr><td>主要风险</td><td>估值较高（~55-60 倍 2026E PE）；Rambus 竞争；若 DDR5 渗透速度不及预期</td></tr>
+</table>
+
+<h4>6. 兆易创新（603986.SH）— NOR Flash 国内龙头 + DRAM 分销</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>NOR Flash 全球第二（市占率 ~18.5%），在中国 IoT/汽车/工业市场拥有定价权</td></tr>
+<tr><td>产业链位置</td><td>存储芯片设计 + 长鑫 DRAM 分销</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2026 Q1 营收 41.88 亿（+119.4%），净利润 14.61 亿（+522.8%），毛利率 57.08%（环比 +12.17pct）；2026 年从长鑫采购代工 DRAM 约 57 亿元（2025 年仅 11.8 亿）</td></tr>
+<tr><td>排序原因</td><td>产品线最全的存储设计公司（NOR + SLC NAND + DRAM），涨价周期中所有品类受益</td></tr>
+<tr><td>主要风险</td><td>NOR Flash 竞争格局不如内存接口芯片集中；2027 年新增产能释放后价格可能回落</td></tr>
+</table>
+
+<h4>7. 佰维存储（688525.SH）— 存储模组弹性王</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>不卡任何环节——模组厂本质是"组装+渠道"生意</td></tr>
+<tr><td>产业链位置</td><td>存储模组 + 封测，AI 端侧（眼镜/手表）存储器</td></tr>
+<tr><td>证据强度</td><td><strong>中强</strong></td></tr>
+<tr><td>关键数据</td><td>2026 年 1-2 月净利润 15-18 亿≈2025 全年 2 倍；Q1 净利率 42.22%；AI 眼镜收入 9.6 亿（2024 年仅 1.06 亿）；松山湖晶圆级封装 2026 年底贡献收入</td></tr>
+<tr><td>排序原因</td><td>涨价周期的最大弹性标的——库存升值 + 毛利率扩张 + AI 端侧增量</td></tr>
+<tr><td>主要风险</td><td>存货 120.69 亿（占总资产 43%），价格一旦反转即利润黑洞；不控制稀缺层</td></tr>
+</table>
+
+<h4>8. 雅克科技（002409.SZ）— HBM 前驱体材料</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>HBM 堆叠用 High-K 前驱体——先进 DRAM 电容介质材料的核心原料</td></tr>
+<tr><td>产业链位置</td><td>半导体材料（前驱体/SOD/光刻胶）</td></tr>
+<tr><td>证据强度</td><td><strong>中强</strong></td></tr>
+<tr><td>关键数据</td><td>前驱体产品进入 SK 海力士 HBM 供应链；长鑫科技核心一级材料供应商（按价值量排序第一）</td></tr>
+<tr><td>排序原因</td><td>HBM 材料国产化最纯正的 A 股标的；绑定 SK 海力士+长鑫双引擎</td></tr>
+<tr><td>主要风险</td><td>材料价值量不如设备高，营收体量有限；技术迭代风险（新材料替代）</td></tr>
+</table>
+
+<h3>第四梯队：美股/韩国 — 直接投稀缺层</h3>
+
+<h4>9. SK Hynix（000660.KS）— HBM 绝对王者</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>HBM 全球 57-62% 份额，NVIDIA 约 90% 的 HBM 由 SK 海力士供应</td></tr>
+<tr><td>产业链位置</td><td>DRAM/HBM 原厂</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2026 年 HBM 产能已全部售罄；超越三星成为 DRAM 市占率第一；已开发出全球首款 HBM4；2026E PE 仅 ~6x</td></tr>
+<tr><td>排序原因</td><td>HBM 稀缺性最纯粹的股权表达；估值在三大原厂中最便宜</td></tr>
+<tr><td>主要风险</td><td>地缘政治（韩国在中美之间）；三星 HBM4 追赶；2027-2028 年产能释放后可能供需反转</td></tr>
+</table>
+
+<h4>10. Applied Materials（AMAT.US）— 半导体设备之王</h4>
+<table>
+<tr><th style="width:120px">维度</th><th>内容</th></tr>
+<tr><td><strong>卡住的环节</strong></td><td>沉积、刻蚀、离子注入、CMP 全平台设备——一个 Fab 离开 AMAT 几乎无法运行</td></tr>
+<tr><td>产业链位置</td><td>前端 WFE 全球龙头，DRAM 敞口最高</td></tr>
+<tr><td>证据强度</td><td><strong>强</strong></td></tr>
+<tr><td>关键数据</td><td>2025 财年创纪录营收；2026 年设备增长展望 >30%；Morgan Stanley 上调至 Overweight；全球 DRAM 设备投资 2026 年预计 $35B</td></tr>
+<tr><td>排序原因</td><td>无论谁扩产都得买 AMAT 的设备；DRAM capex 的高 beta 标签</td></tr>
+<tr><td>主要风险</td><td>中国营收占比 ~30% 面临出口管制下降；半导体设备周期性</td></tr>
+</table>
+
+<!-- ===== 七、中国存储产业 ===== -->
+<div class="page-break"></div>
+<h2>七、中国存储产业进展：CXMT 与 YMTC</h2>
+
+<h3>CXMT（长鑫存储）— 国产 DRAM 唯一 IDM</h3>
+<table>
+<tr><th>指标</th><th>数据</th></tr>
+<tr><td>全球 DRAM 市占率（2025）</td><td>~5-7%（第四，仅次于三星/SK海力士/美光）</td></tr>
+<tr><td>2025 年营收</td><td>~617 亿人民币（+130~140% YoY）</td></tr>
+<tr><td>2026 Q1 营收</td><td>~508 亿人民币（+>700% YoY）</td></tr>
+<tr><td>首次年度盈利</td><td>2025 年实现</td></tr>
+<tr><td>产能（2025 年末）</td><td>~29 万片/月（合肥 + 北京）</td></tr>
+<tr><td>技术节点</td><td>16nm-class（DDR4/LPDDR4X 量产；DDR5/LPDDR5X 2026 爬坡）</td></tr>
+<tr><td>与领先者差距</td><td>~3 年（商品 DRAM），~4 年（HBM）</td></tr>
+<tr><td>IPO 状态</td><td>科创板过会，拟募资 295 亿人民币，估值 >2 万亿人民币</td></tr>
+<tr><td>长期目标</td><td>2030 年全球 DRAM 份额 20%，超越美光居第三</td></tr>
+</table>
+
+<p>CXMT 抓住了三星/SK海力士/美光将产能转向 HBM 和 DDR5 的窗口，在 LPDDR4X 领域成为全球最大供应商。但技术差距仍存在，HBM 量产目标定在 2026 年底，面临设备和人才的巨大挑战。</p>
+
+<h3>YMTC（长江存储）— 国产 3D NAND 唯一 IDM</h3>
+<table>
+<tr><th>指标</th><th>数据</th></tr>
+<tr><td>全球 NAND 市占率（2025）</td><td>~8-9%，目标 2026 年达 15%</td></tr>
+<tr><td>技术节点</td><td>294 层（Xtacking 3.0）量产；下一代 300+ 层（Xtacking 4.0）研发中</td></tr>
+<tr><td>产能（2024 年末）</td><td>~13 万片/月</td></tr>
+<tr><td>关键突破</td><td>独创 Xtacking 架构（混合键合技术），专利超 11,000 件；三星向其购买了 400 层以上混合键合专利</td></tr>
+<tr><td>三期项目</td><td>武汉三期 2025 年 9 月动工，2026 年下半年试产</td></tr>
+<tr><td>国产化率</td><td>~45%（摩根士丹利估计），远超中芯国际（~18-22%）和长鑫（~20%）</td></tr>
+<tr><td>IPO 状态</td><td>2026 年 5 月启动科创板上市辅导，估值约 3000 亿人民币</td></tr>
+</table>
+
+<p>YMTC 的技术进展快于市场预期——270+ 层 NAND 技术已接近三星（286 层）和 SK 海力士（321 层）。但受美国实体清单限制，无法获取 AMAT/Lam/KLA 的先进设备，产能扩张严重受限。三期工厂的成败取决于国产设备能否在 2026-2027 年达到量产级别的良率和稳定性。</p>
+
+<!-- ===== 八、国产化数据 ===== -->
+<h2>八、设备/材料国产化关键数据</h2>
+
+<table>
+<tr><th>指标</th><th>2024 年</th><th>2025 年</th><th>2026 年目标</th></tr>
+<tr><td>半导体设备整体国产化率</td><td>25%</td><td><strong>35%</strong></td><td>—</td></tr>
+<tr><td>刻蚀设备国产化率</td><td>—</td><td>突破 40%</td><td>—</td></tr>
+<tr><td>薄膜沉积设备国产化率</td><td>—</td><td>突破 40%</td><td>—</td></tr>
+<tr><td>新建产能国产设备采购要求</td><td>—</td><td>传闻 ≥50%</td><td>—</td></tr>
+<tr><td>全行业设备订单增速</td><td>—</td><td>同比 +80%</td><td>预估 +30-50%</td></tr>
+</table>
+
+<h3>全球 WFE 市场预测（SEMI）</h3>
+<table>
+<tr><th>年份</th><th>总 WFE 销售额</th><th>同比</th><th>DRAM WFE</th><th>NAND WFE</th></tr>
+<tr><td>2025</td><td>$115.7B</td><td>+11.0%</td><td>$22.5B</td><td>$14.0B</td></tr>
+<tr><td>2026</td><td>$126.2B</td><td>+9.0%</td><td>$25.9B</td><td>$15.7B</td></tr>
+<tr><td>2027</td><td>$135.2B</td><td>+7.3%</td><td>$27.9B</td><td>$16.9B</td></tr>
+</table>
+
+<!-- ===== 九、利基存储 ===== -->
+<h2>九、利基存储：NOR Flash &amp; SLC NAND</h2>
+
+<h3>行业规模（弗若斯特沙利文 2025 年估算）</h3>
+<table>
+<tr><th>品类</th><th>规模</th><th>涨价逻辑</th><th>代表性 A 股标的</th></tr>
+<tr><td>利基型 DRAM</td><td>99 亿美元</td><td>三大厂退出产能</td><td>兆易创新、北京君正</td></tr>
+<tr><td>NOR Flash</td><td>31 亿美元</td><td>端侧 AI + 汽车电子</td><td>兆易创新（全球第二）、普冉股份（全球第六）</td></tr>
+<tr><td>SLC NAND Flash</td><td>27 亿美元</td><td>三星 2025 Q1 停产 2D NAND</td><td>东芯股份、普冉股份</td></tr>
+</table>
+
+<h3>四家 NOR Flash/SLC NAND 标的对比</h3>
+<table>
+<tr><th>公司</th><th>2026 Q1 营收 YoY</th><th>2026 Q1 净利 YoY</th><th>一年股价涨幅</th><th>核心看点</th></tr>
+<tr><td>兆易创新</td><td>+119.4%</td><td>+522.8%</td><td>+325%</td><td>NOR 全球第二，产品线最全，已登 H 股</td></tr>
+<tr><td>普冉股份</td><td>—</td><td>—</td><td><strong>+557%</strong></td><td>NOR 全球第六，"存储+"战略，收购 SHM</td></tr>
+<tr><td>东芯股份</td><td>—</td><td>—</td><td>+304%</td><td>SLC NAND 专精，投资 GPU 第二曲线</td></tr>
+<tr><td>北京君正</td><td>—</td><td>—</td><td>—</td><td>车载存储全球第二（~19%），特斯拉/英伟达适配</td></tr>
+</table>
+
+<!-- ===== 十、模组厂 ===== -->
+<h2>十、存储模组厂对比</h2>
+
+<table>
+<tr><th>公司</th><th>2025 年营收</th><th>2025 年净利 YoY</th><th>存货/总资产</th><th>存货跌价计提</th><th>核心看点</th></tr>
+<tr><td>江波龙</td><td>~228 亿</td><td>+151~211%</td><td>43.68%</td><td>1.75%</td><td>自研主控累计超 1 亿颗</td></tr>
+<tr><td>佰维存储</td><td>~113 亿</td><td><strong>+429%</strong></td><td>43%</td><td>5.05%</td><td>AI 端侧 + 先进封装</td></tr>
+<tr><td>德明利</td><td>~108 亿</td><td>+96%</td><td><strong>65.05%</strong></td><td><strong>仅 0.5%</strong></td><td>弹性最大但杠杆最高</td></tr>
+</table>
+
+<div class="risk-box">
+<p>⚠️ <strong>德明利</strong>经营现金流持续为负（2025 年 -22.41 亿 vs 净利润 6.88 亿），存货跌价仅计提 0.5%，是三家之中对"涨价持续"押注最极端的。价格一旦反转，利润回吐速度会远超市场预期。</p>
+</div>
+
+<!-- ===== 十一、降级分析 ===== -->
+<h2>十一、热门方向降级分析</h2>
+
+<h3>❌ 降级：存储模组厂（江波龙/德明利/香农芯创）— 仅受益于涨价，不控制稀缺层</h3>
+<p>模组厂的模式是：从原厂进货 → 组装/测试 → 加价卖出。涨价周期中库存升值 → 毛利率扩张 → 利润暴增，但这是<strong>周期红利</strong>，不是<strong>结构性护城河</strong>。</p>
+<p>德明利存货占总资产 65%，经营现金流持续为负，存货跌价仅计提 0.5%——这是赌涨价持续到 2027 年的极端押注。</p>
+
+<h3>❌ 降级：纯 NOR Flash 设计（恒烁股份等小市值）— 竞争格局不如集中度高</h3>
+<p>NOR Flash 虽然是涨价受益者，但全球供应商 5-6 家（华邦/旺宏/兆易/普冉/英飞凌/美光），并不像 HBM（3 家）或内存接口芯片（2-3 家）那样供给极度集中。长期看，产能释放后的竞争格局可能恶化。</p>
+
+<!-- ===== 十二、判断错误条件 ===== -->
+<h2>十二、什么情况说明判断错了？</h2>
+
+<ol>
+<li><strong>AI 资本开支拐头向下</strong>：如果 2026 年下半年云厂商 capex 增速从 40%+ 降至个位数，HBM 需求预期会快速修正——这是最大的单点风险</li>
+<li><strong>三大原厂 HBM 产能超预期释放</strong>：如果三星 HBM4 良率提前突破 + SK 海力士新 Fab 提前投产 + 美光良率追上，2027 年 HBM 可能出现供过于求</li>
+<li><strong>中美制裁突然松动</strong>：如果美国解除对华设备出口管制（小概率），YMTC/CXMT 可以快速采购 AMAT/Lam 设备扩产，国产设备的"替代逻辑"就会被削弱</li>
+<li><strong>DDR5 迁移速度不及预期</strong>：如果 DDR4 在消费市场存续时间更长，澜起科技的 DDR5 RCD 放量节奏会受到影响</li>
+<li><strong>混合键合技术路线被替代</strong>：如果 JEDEC 放宽 HBM 封装厚度标准（允许 >775μm），传统 TCB 可能推迟混合键合的导入时点——Besi 的成长逻辑会延迟</li>
+<li><strong>中国存储产能过剩</strong>：如果 CXMT/YMTC 的激进扩产 + 全球三大原厂的新产能同时在 2027-2028 年释放，利基存储可能从"涨价去库存"切换为"杀价抢份额"</li>
+</ol>
+
+<!-- ===== 十三、下一步 ===== -->
+<h2>十三、下一步研究清单</h2>
+
+<p>按优先级排列：</p>
+<ol>
+<li><strong>查长鑫科技 IPO 招股书</strong>（科创板已过会）→ 确认设备采购清单和国产化率目标，交叉验证设备公司的订单敞口</li>
+<li><strong>查澜起科技 2025 年年报和 2026 年 Q1 季报全文</strong>→ 分产品线拆解营收（RCD vs MRCD/MDB vs Retimer vs CXL），确认第二增长曲线斜率</li>
+<li><strong>查中微公司/拓荆科技的年报订单数据</strong>→ 分客户（CXMT vs YMTC vs SMIC）拆分，判断存储敞口占比</li>
+<li><strong>跟踪 SK 海力士/三星/美光 2026 Q2 季报</strong>→ capex 指引是否继续上修，HBM 份额变化</li>
+<li><strong>查 YMTC 三期设备国产化清单</strong>→ 哪些国产设备公司实际进入了 300+ 层 NAND 产线</li>
+<li><strong>交叉验证</strong>：兆易创新从长鑫采购 57 亿 DRAM（2026 年）→ 对应长鑫产能爬坡节奏是否匹配</li>
+<li><strong>估值对比</strong>：中微 vs 北方华创 vs 拓荆 vs AMAT vs Lam——当前估值是否已充分反映存储 capex 超级周期</li>
+<li><strong>跟踪 MATCH 法案进展</strong>→ 如果通过，DUV 浸入式光刻机对华出口被禁，CXMT/YMTC 扩产将受多大影响</li>
+<li><strong>查 Besi 2026 Q2 季报</strong>→ HBM 混合键合订单是否加速</li>
+<li><strong>对比三大原厂 capex vs 折旧</strong>→ 判断 2027-2028 年产能释放后是否会出现严重过剩</li>
+</ol>
+
+<!-- ===== 附录 ===== -->
+<div class="page-break"></div>
+<h2>附录：全球存储芯片产业链图谱</h2>
+
+<pre><code>下游需求
+  ├── AI 数据中心（NVIDIA/AMD GPU、Google TPU、AWS Trainium）
+  ├── 服务器/云计算（DDR5、企业级 SSD）
+  ├── 消费电子（手机 LPDDR5X、PC DDR5、SSD）
+  └── 汽车/工业（车载 DRAM、NOR Flash、SLC NAND）
+        ↓
+系统集成商
+  ├── NVIDIA、AMD、Intel（AI 加速器）
+  ├── 联想、DELL、HPE（服务器）
+  └── 苹果、三星、小米、OPPO/vivo、比亚迪（终端设备）
+        ↓
+模组/子系统
+  ├── 存储模组厂：江波龙、佰维存储、德明利、金士顿
+  └── 内存接口芯片：澜起科技（RCD/MRCD）、Rambus
+        ↓
+芯片/器件（原厂）
+  ├── HBM/DRAM：SK 海力士（57%）、三星（22%）、美光（21%）、CXMT（~7%）
+  ├── NAND：三星、SK 海力士、铠侠、西部数据、美光、YMTC（~9%）
+  └── NOR Flash：华邦、旺宏、兆易创新、普冉股份、英飞凌
+        ↓
+制造/封装/测试
+  ├── 先进封装：台积电 CoWoS/SoIC、三星 I-Cube、SK 海力士 MR-MUF
+  ├── 封测厂：长电科技、深科技、Amkor
+  └── 混合键合：Besi（91% D2W 份额）、ASMPT、Hanmi
+        ↓
+设备（WFE）
+  ├── 刻蚀：Lam Research、东京电子、中微公司、Applied Materials
+  ├── 薄膜沉积：Applied Materials、Lam、东京电子、拓荆科技
+  ├── 光刻：ASML（EUV/DUV）、尼康、佳能
+  ├── CMP：Applied Materials、华海清科
+  ├── 量测：KLA、中科飞测
+  └── 测试：Advantest、Teradyne、精智达
+        ↓
+材料/耗材
+  ├── 前驱体：雅克科技、Merck、Soulbrain
+  ├── CMP 抛光液/垫：安集科技、鼎龙股份、Cabot、Fujimi
+  ├── 光刻胶：JSR、TOK、彤程新材、晶瑞电材
+  ├── 特种气体：华特气体、Air Liquide、Linde
+  └── 靶材：江丰电子、Honeywell、日矿金属</code></pre>
+
+<hr>
+
+<div class="disclaimer">
+<p><strong>免责声明</strong>：本报告仅供研究参考，不构成任何投资建议。投资决策由读者自行承担。存储行业具有强周期性特征，历史涨幅不预示未来表现。报告中涉及的估值数据来自公开信息，可能因市场变化而调整。</p>
+<p><strong>数据来源</strong>：TrendForce、SEMI、Bloomberg、Morgan Stanley、Citi、Counterpoint Research、Yole Group、IDC、群智咨询、中信证券、中泰证券、开源证券、天风证券、公司年报/季报/招股书、MK、Chosun、Korea Times、Tom's Hardware、Electronics Weekly 等 40+ 来源</p>
+</div>
+
+<p class="no-print" style="text-align:center; margin-top:30px; color:#888; font-size:9pt;">
+💡 提示：在浏览器中打开此文件，按 <strong>Ctrl+P</strong> 选择"另存为 PDF"即可导出为 PDF 文件
+</p>
+
+<script src="../nav.js"></script>
+</body>
+</html>

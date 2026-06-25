@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A股CPO深度调研 — 2026-06-23</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --gold: #d2991d;
+    --red: #f85149;
+    --green: #3fb950;
+    --purple: #a371f7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  h1 { font-size: 1.8rem; color: #fff; margin-bottom: .25rem; border-bottom: 2px solid var(--border); padding-bottom: .5rem; }
+  h2 { font-size: 1.35rem; color: #f0f6fc; margin: 2.5rem 0 .75rem; padding-left: .5rem; border-left: 3px solid var(--accent); }
+  h3 { font-size: 1.1rem; color: #e6edf3; margin: 1.5rem 0 .5rem; }
+  p { margin-bottom: .85rem; }
+  strong { color: #f0f6fc; }
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: .6rem 1rem;
+    margin: 1rem 0;
+    background: var(--surface);
+    border-radius: 0 6px 6px 0;
+    color: var(--muted);
+    font-style: italic;
+  }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: .85rem;
+    line-height: 1.6;
+    margin: 1rem 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 1.5rem;
+    font-size: .88rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: .5rem .7rem;
+    text-align: left;
+  }
+  th {
+    background: var(--surface);
+    color: #f0f6fc;
+    font-weight: 600;
+  }
+  tr:nth-child(even) { background: #0d1117; }
+  .meta { color: var(--muted); font-size: .85rem; margin-bottom: 2rem; }
+  .tag {
+    display: inline-block;
+    padding: .15rem .55rem;
+    border-radius: 12px;
+    font-size: .75rem;
+    font-weight: 600;
+  }
+  .tag-strong { background: #1a3a2a; color: var(--green); }
+  .tag-medium { background: #2a2a1a; color: var(--gold); }
+  .tag-weak   { background: #3a1a1a; color: var(--red); }
+  .judgment {
+    background: linear-gradient(135deg, #1a2332 0%, #161b22 100%);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+  }
+  .judgment p { margin-bottom: .5rem; }
+  .judgment p:last-child { margin-bottom: 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+  }
+  .card h3 { margin-top: 0; display: flex; align-items: center; gap: .5rem; }
+  .rank { font-size: 1.4rem; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: .85rem; }
+  li { margin-bottom: .25rem; }
+  .stars { color: var(--gold); letter-spacing: 2px; }
+  .risk { color: var(--red); }
+  .highlight { background: rgba(88,166,255,.12); padding: .1rem .3rem; border-radius: 3px; }
+  .disclaimer {
+    background: #1a1a2e;
+    border: 1px solid #30304d;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-top: 3rem;
+    color: var(--muted);
+    font-size: .85rem;
+  }
+  a { color: var(--accent); }
+  .toc a { color: var(--text); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  .toc { margin: 1rem 0 2rem; }
+  .toc ol { list-style: decimal; }
+  .toc li { margin-bottom: .35rem; }
+</style>
+</head>
+<body>
+
+<h1>🔬 A 股 CPO：先排产业链层级，再排公司</h1>
+<p class="meta">调研日期：2026-06-23 &nbsp;|&nbsp; 方法：Serenity 供应链瓶颈研究 &nbsp;|&nbsp; 市场：A 股</p>
+
+<div class="toc">
+<strong>目录</strong>
+<ol>
+  <li><a href="#judgment">核心判断</a></li>
+  <li><a href="#system">系统变化</a></li>
+  <li><a href="#layers">产业链层级排序</a></li>
+  <li><a href="#universe">候选公司全景（20+ 家）</a></li>
+  <li><a href="#top7">优先研究名单（Top 7）</a></li>
+  <li><a href="#downgrade">热门但排后面的方向</a></li>
+  <li><a href="#risks">什么情况说明这个判断错了</a></li>
+  <li><a href="#next">下一步查什么</a></li>
+</ol>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== 核心判断 ==================== -->
+<h2 id="judgment">核心判断</h2>
+
+<div class="judgment">
+<p><strong>CPO 方向没有问题，但时间表和卡点位置跟市场主流叙事有显著偏差。</strong></p>
+</div>
+
+<p>三个关键判断：</p>
+
+<ol>
+  <li><strong>CPO 大规模放量从 2027 推迟到 2028-2029 年。</strong> 2026 年只是小批量验证，不是规模商用元年。TSMC COUPE 良率 50-60%，下游组装良率 20-50%，综合良率只有 10-30%，这个数字不支持"元年"叙事。</li>
+  <li><strong>真正的卡点不在 CPO 封装本身，而在更上游：磷化铟衬底（缺口 70%+）和 CW/EML 激光器芯片（产能被英伟达锁死）。</strong> 就算 CPO 封装良率明天解决了，你也拿不到足够的光芯片。</li>
+  <li><strong>CPO 推迟不等于光互连需求消失。</strong> 钱只是换了口袋——流进了可插拔光模块、LPO 和 NPO。2026-2028 的过渡期赢家是能同时吃可插拔存量 + CPO 卡位 + NPO 弹性的公司。</li>
+</ol>
+
+<!-- ==================== 系统变化 ==================== -->
+<h2 id="system">一、先把故事翻译成系统变化</h2>
+
+<pre>AI 集群规模扩张 → 带宽和功耗压力 → 铜互连到极限 → 光互连必须更靠近交换芯片
+→ 可插拔光模块能耗/信号损耗太大 → CPO 是物理必然
+→ 但良率、成本、可维护性三个问题同时卡住 → 量产推迟 → NPO 作为折中加速</pre>
+
+<p>核心物理约束：<strong>功耗（每端口从 ~30W 降到 ~9W）和信号完整性（损耗从 ~22dB 降到 ~4dB）</strong>。这不是"要不要"的问题，是"什么时候做得出来"的问题。</p>
+
+<!-- ==================== 产业链层级排序 ==================== -->
+<h2 id="layers">二、产业链层级排序</h2>
+
+<p>先排层级，再排名公司。这是 Serenity 方式的核心——找到真正稀缺的环节。</p>
+
+<table>
+  <thead>
+    <tr><th style="width:30px">排序</th><th>产业链层级</th><th style="width:80px">稀缺程度</th><th>核心逻辑</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1</strong></td>
+      <td><strong>磷化铟衬底 + 外延</strong></td>
+      <td><span class="stars">★★★★★</span></td>
+      <td>缺口 70%+，日美垄断 90%+，扩产需 18-36 个月，是所有光芯片的物理基础</td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td><strong>CW/EML 激光器芯片</strong></td>
+      <td><span class="stars">★★★★★</span></td>
+      <td>产能被英伟达/AMD 锁死，与 EML 共用产线进一步挤压供给，国内仅源杰批量供货</td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td><strong>CPO 封装耦合设备</strong></td>
+      <td><span class="stars">★★★★</span></td>
+      <td>ficonTEC 是博通 CPO 耦合设备唯一供应商，5nm 精度，国产替代刚起步</td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td>
+      <td><strong>微纳光学 + 高密度连接</strong></td>
+      <td><span class="stars">★★★★</span></td>
+      <td>FAU、MPO、透镜阵列——CPO 架构下的"必需品"，供应商少，认证周期长</td>
+    </tr>
+    <tr>
+      <td><strong>5</strong></td>
+      <td><strong>光模块（可插拔 + CPO）</strong></td>
+      <td><span class="stars">★★★</span></td>
+      <td>集中度高、订单能见度好，但估值已反映、扩产在加速、价格压力隐现</td>
+    </tr>
+    <tr>
+      <td><strong>6</strong></td>
+      <td><strong>PCB / 组装 / 被动元件</strong></td>
+      <td><span class="stars">★★</span></td>
+      <td>门槛低、可替代性强、价值量薄</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>为什么把衬底和光芯片排在 CPO 封装前面？</strong> 因为这两层决定了所有人能跑多快。英伟达各投 20 亿美元锁定 Lumentum 和 Coherent 的激光器产能，这个动作本身就告诉你上游有多紧。市场在炒"CPO 概念股"，但真正卡住整个产业脖子的是磷化铟和 CW 激光器。</p>
+
+<p><strong>热门但我会降级的层：</strong> PCB/CCL（一博科技、迅捷兴、生益科技）。CPO 整机 PCB 是真实需求，但这是一个充分竞争的环节，没有稀缺性溢价，毛利率天花板低。</p>
+
+<!-- ==================== 候选公司全景 ==================== -->
+<h2 id="universe">三、候选公司全景（20+ 家）</h2>
+
+<p>按层级分类，不按市值排序：</p>
+
+<h3>层级 1：磷化铟衬底 / 外延</h3>
+<ul>
+  <li><strong>云南锗业 (002428)</strong> — 国内唯一 6 英寸 InP 衬底量产，华为哈勃持股 23.91%</li>
+  <li><strong>三安光电 (600703)</strong> — 国内唯一 InP 全链 IDM，800G EML 小批量</li>
+  <li><strong>有研新材 (600206)</strong> — 6 英寸衬底小批量，7N 高纯铟</li>
+</ul>
+
+<h3>层级 2：光芯片（CW/EML/硅光）</h3>
+<ul>
+  <li><strong>源杰科技 (688498)</strong> — CW 光源核心供应商，100G EML 国内唯一量产</li>
+  <li><strong>长光华芯 (688048)</strong> — 200G EML 突破，100G EML 良率 92%</li>
+  <li><strong>仕佳光子 (688313)</strong> — AWG 芯片全球市占率 30%+，CPO 专用 AWG</li>
+  <li><strong>光迅科技 (002281)</strong> — 全链 IDM，1.6T 芯片 100% 自供</li>
+</ul>
+
+<h3>层级 3：CPO 封装 / 测试设备</h3>
+<ul>
+  <li><strong>罗博特科 (300757)</strong> — 收购 ficonTEC，A 股唯一高精度光电子封测设备标的</li>
+  <li><strong>广立微 (301095)</strong> — 硅光芯片量产检测</li>
+</ul>
+
+<h3>层级 4：微纳光学 / 高密度连接</h3>
+<ul>
+  <li><strong>炬光科技 (688167)</strong> — MPLA、V 型槽阵列、OCS 透镜阵列，卡位 CPO 四大环节</li>
+  <li><strong>天孚通信 (300394)</strong> — FAU 核心供应商，英伟达 CPO 供应链确定性强</li>
+  <li><strong>太辰光 (300570)</strong> — MPO 全球龙头，通过康宁切入英伟达 CPO</li>
+</ul>
+
+<h3>层级 5：光模块（可插拔 + CPO + NPO）</h3>
+<ul>
+  <li><strong>中际旭创 (300308)</strong> — 800G/1.6T 全球第一，1.6T CPO 量产良率 95%</li>
+  <li><strong>新易盛 (300502)</strong> — LPO 全球首家量产，硅光全系列，12.8T XPO</li>
+  <li><strong>华工科技 (000988)</strong> — NPO 商品化，液冷 CPO 光引擎</li>
+  <li><strong>剑桥科技 (603083)</strong> — 1.6T 小批量，NPO/CPO 研发中</li>
+  <li><strong>亨通光电 (600487)</strong> — 多芯光缆，单纤传输容量 5 倍</li>
+</ul>
+
+<h3>层级 6：封装 / 组装 / PCB</h3>
+<ul>
+  <li><strong>环旭电子 (601231)</strong> — 日月光协同，进入英伟达 CPO 交换机供应链</li>
+  <li><strong>通富微电 / 长电科技 / 华天科技</strong> — 硅光芯片封装</li>
+</ul>
+
+<h3>层级 7：材料 / 原料</h3>
+<ul>
+  <li><strong>锡业股份 (000960)</strong> — 全球铟储量/产量第一</li>
+  <li><strong>南大光电 (300346)</strong> — 国内唯一 6N 级磷烷量产</li>
+  <li><strong>天通股份 (600330)</strong> — 薄膜铌酸锂 6 英寸量产</li>
+  <li><strong>晶盛机电 (300316)</strong> — 国内唯一 6 英寸 InP 单晶炉</li>
+</ul>
+
+<!-- ==================== 优先研究名单 ==================== -->
+<h2 id="top7">四、优先研究名单（Top 7）</h2>
+
+<p>按 <strong>稀缺性 × 证据强度 × 市场认知差</strong> 排序。</p>
+
+<!-- Card 1: 源杰科技 -->
+<div class="card">
+<h3><span class="rank">🥇</span> 源杰科技 (688498)</h3>
+<p><strong>卡住的环节：CW 大功率激光器芯片——硅光模块和 CPO 光引擎的"心脏"</strong></p>
+<table>
+  <tr><td style="width:90px"><strong>产业链位置</strong></td><td>上游光芯片，CW 光源国内核心供应商</td></tr>
+  <tr><td><strong>排序原因</strong></td><td>CW 激光器是硅光方案（CPO 主流路线）的必需光源，目前严重供不应求。英伟达向 Lumentum/Coherent 各投 $20 亿锁定产能，说明上游卡到了什么程度。国内能批量交付 CW 70mW/100mW 的仅有源杰</td></tr>
+  <tr><td><strong>关键证据</strong></td><td><span class="tag tag-strong">强</span> — 2025 年报：营收 6.01 亿 (+138.5%)，数据中心收入 +719%，毛利率 58%；2026Q1：营收 +321%，净利 +1153%，毛利率飙至 <strong>77.81%</strong>；CW 300mW 已送样 CPO/NPO 客户；拟投 12.51 亿建二期扩产基地</td></tr>
+  <tr><td><strong>市场可能没看清的</strong></td><td>CW 芯片毛利率 72%，且随良率提升还在往上走。这不是一个"概念"，是有真实利润弹性的稀缺资产</td></tr>
+  <tr><td><strong>主要风险</strong></td><td>200G EML 仍在验证阶段，与 Lumentum/Coherent 差距明显；如果 EML 路线（而非硅光 CW）在 CPO 中占比超预期，源杰的 CW 优势会被稀释</td></tr>
+  <tr><td><strong>证据等级</strong></td><td><span class="tag tag-strong">强</span> — 年报/季报数据清晰，券商多份深度研报交叉验证</td></tr>
+</table>
+</div>
+
+<!-- Card 2: 天孚通信 -->
+<div class="card">
+<h3><span class="rank">🥈</span> 天孚通信 (300394)</h3>
+<p><strong>卡住的环节：FAU 光纤阵列 + ELS 模组——CPO 交换机里光引擎和光纤之间的"精密接头"</strong></p>
+<table>
+  <tr><td style="width:90px"><strong>产业链位置</strong></td><td>中游光器件，CPO 配套 FAU/ELS 核心供应商</td></tr>
+  <tr><td><strong>排序原因</strong></td><td>被英伟达 GTC 列为光纤/连接器/微光学核心合作伙伴。Semianalysis 判断其为英伟达 X800 CPO 交换机 FAU 核心供应商。CPO 每增加一个光端口，就需要一套 FAU，量价齐升逻辑清晰</td></tr>
+  <tr><td><strong>关键证据</strong></td><td><span class="tag tag-strong">强</span> — 2025 年营收 51.63 亿 (+59%)，净利 20.17 亿 (+50%)；有源光器件收入 +81%（1.6T 光引擎放量）；FAU/ELS 稳定交付；CPO 交换机配套 FAU + 光引擎封测 + ELS 三大能力</td></tr>
+  <tr><td><strong>市场可能没看清的</strong></td><td>市场把它当光器件公司看，但它在英伟达 CPO 供应链里的位置比"器件供应商"更核心——FAU 是 CPO 交换机里不可绕过的精密组件</td></tr>
+  <tr><td><strong>主要风险</strong></td><td>第一大客户 (Fabrinet) 占比 63.31%，客户集中度极高；200G EML 短缺限制光引擎出货；泰国工厂爬坡拖累毛利率</td></tr>
+  <tr><td><strong>证据等级</strong></td><td><span class="tag tag-strong">强</span> — 年报数据清晰，英伟达 GTC 官方合作伙伴名单确认，Semianalysis 独立验证</td></tr>
+</table>
+</div>
+
+<!-- Card 3: 中际旭创 -->
+<div class="card">
+<h3><span class="rank">🥉</span> 中际旭创 (300308)</h3>
+<p><strong>卡住的环节：1.6T 光模块全球产能——它是英伟达 CPO 交换机里光引擎的主力供应商</strong></p>
+<table>
+  <tr><td style="width:90px"><strong>产业链位置</strong></td><td>中游光模块，全球份额第一（800G &gt;40%，1.6T 50-70%）</td></tr>
+  <tr><td><strong>排序原因</strong></td><td>1.6T CPO 已量产且良率 95%（超行业均值 20pct），3.2T 原型机已送英伟达。在 CPO 推迟的背景下，它的可插拔 1.6T 继续吃满需求，同时 CPO 卡位不输任何人</td></tr>
+  <tr><td><strong>关键证据</strong></td><td><span class="tag tag-strong">强</span> — 2025 年营收 382 亿 (+60%)，净利 108 亿 (+109%)；经营现金流 109 亿；1.6T 订单排至 2026Q3 以后；子公司 TeraHop 是 Open CPX/XPO MSA 核心创始成员</td></tr>
+  <tr><td><strong>市场可能没看清的</strong></td><td>CPO 推迟反而利好旭创——可插拔 1.6T 的生命周期被拉长，它在可插拔的统治地位能多赚 1-2 年钱，同时 CPO 卡位领先对手</td></tr>
+  <tr><td><strong>主要风险</strong></td><td>存货 126.8 亿 (+80%)，存货周转率下降——如果需求拐点出现会很难受；前五大客户占 76%；汇率波动（2025 年汇兑损失 3.18 亿）；估值已在百倍以上</td></tr>
+  <tr><td><strong>证据等级</strong></td><td><span class="tag tag-strong">强</span> — 年报数据充分，全球份额数据经 LightCounting/Cignal AI 交叉验证</td></tr>
+</table>
+</div>
+
+<!-- Card 4: 云南锗业 -->
+<div class="card">
+<h3>4️⃣ 云南锗业 (002428)</h3>
+<p><strong>卡住的环节：磷化铟衬底——所有光芯片的物理基础，国内唯一量产</strong></p>
+<table>
+  <tr><td style="width:90px"><strong>产业链位置</strong></td><td>最上游衬底材料，InP 衬底国内市占率 80%+</td></tr>
+  <tr><td><strong>排序原因</strong></td><td>全球 InP 衬底缺口 70%+，日本住友和美国 AXT 垄断 90%+ 供给，扩产周期 18-36 个月。国内能规模化量产的只有云南锗业。华为哈勃持股 23.91% 并锁定 53% 产能，预付款 40%，这是用钱投票</td></tr>
+  <tr><td><strong>关键证据</strong></td><td><span class="tag tag-medium">中</span> — 2025 年化合物半导体营收 1.38 亿，占比 12.93%；产能 15 万片/年→扩至 45 万片；6 英寸良率 70-75%；满产满销，订单排至 2027 年</td></tr>
+  <tr><td><strong>市场可能没看清的</strong></td><td>市场把它当"锗矿股"看，但它手里真正值钱的是磷化铟衬底。AI 算力需求越往上走，InP 衬底越不够用。上游缺口的确定性比下游 CPO 量产的确定性更高</td></tr>
+  <tr><td><strong>主要风险</strong></td><td>2025 年净利仅 0.2 亿（同比-62%），盈利能力差；6 英寸产能爬坡不确定；锗业务周期性强干扰整体业绩；InP 收入占比太少，弹性释放需要时间</td></tr>
+  <tr><td><strong>证据等级</strong></td><td><span class="tag tag-medium">中</span> — 产能数据有多个来源支持，但年报利润数据存在口径矛盾，需以正式年报为准</td></tr>
+</table>
+</div>
+
+<!-- Card 5: 三安光电 -->
+<div class="card">
+<h3>5️⃣ 三安光电 (600703)</h3>
+<p><strong>卡住的环节：InP 外延 + 光芯片——国内唯一全链 IDM，是国产替代的"承重墙"</strong></p>
+<table>
+  <tr><td style="width:90px"><strong>产业链位置</strong></td><td>上游 InP 外延 + 光芯片制造，国内唯一衬底→外延→芯片→封装全链</td></tr>
+  <tr><td><strong>排序原因</strong></td><td>6 英寸 InP 外延产能 6000 片/月（国内第一、全球前三），800G EML 月产 5 万+颗。已通过华为海思、中际旭创、新易盛、光迅科技全认证，英伟达/谷歌/AMD 导入中</td></tr>
+  <tr><td><strong>关键证据</strong></td><td><span class="tag tag-medium">中</span> — 累计投入 ~95 亿元；外延良率 65%+（目标 75%+）；PD 探测器国内市占率 55%，VCSEL 30%；2026 年 InP 业务营收预计 50-70 亿</td></tr>
+  <tr><td><strong>市场可能没看清的</strong></td><td>市场给三安光电的定价主要在 LED 和化合物半导体，InP 光通信业务的重新定价才刚刚开始。它是整个国产光芯片供应链的"底仓"</td></tr>
+  <tr><td><strong>主要风险</strong></td><td>外延良率 65% vs 国际一流 &gt;85%，代差明显；MOCVD 设备依赖爱思强/Veeco；LED 主业拖累整体估值；"全链 IDM"听上去好但意味着每个环节都要烧钱</td></tr>
+  <tr><td><strong>证据等级</strong></td><td><span class="tag tag-medium">中</span> — 券商深度研报覆盖充分，产品验证路径清晰，但高端 EML 外延仍落后</td></tr>
+</table>
+</div>
+
+<!-- Card 6: 炬光科技 -->
+<div class="card">
+<h3>6️⃣ 炬光科技 (688167)</h3>
+<p><strong>卡住的环节：微纳光学器件——CPO 光路里不可或缺的"精密镜头"</strong></p>
+<table>
+  <tr><td style="width:90px"><strong>产业链位置</strong></td><td>上游微纳光学，CPO/硅光模块配套 MPLA、V 型槽、ELSFP 准直透镜</td></tr>
+  <tr><td><strong>排序原因</strong></td><td>通过收购 SMO 和 Heptagon，掌握了晶圆级微纳光学全工艺链。CPO 需要更精密的透镜阵列来做光路耦合，炬光是 A 股唯一能批量做的。N×N OCS 透镜阵列已小批量出货给谷歌</td></tr>
+  <tr><td><strong>关键证据</strong></td><td><span class="tag tag-medium">中</span> — 光通信业务 2025 年收入 6603 万 (+134%)，2026Q1 继续 +218%；毛利率 43.2%；CPO 客户"供不应求，排期紧张"</td></tr>
+  <tr><td><strong>市场可能没看清的</strong></td><td>市值才几十亿，市场还在纠结它什么时候扭亏。但它在 CPO/OCS 微纳光学的位置非常独特——不是"能做"，而是"几乎只有它做"。一旦光通信收入从 6600 万跳到 2-3 亿，弹性会很大</td></tr>
+  <tr><td><strong>主要风险</strong></td><td>2025 年仍在亏损 (-0.32~-0.42 亿)；产能利用率接近饱和，扩产是最大瓶颈；瑞士/韶关基地整合存在执行风险；光通信收入绝对值太小</td></tr>
+  <tr><td><strong>证据等级</strong></td><td><span class="tag tag-weak">中偏弱</span> — 产品进展有券商和公司公告支撑，但收入体量太小，尚无大额订单公告</td></tr>
+</table>
+</div>
+
+<!-- Card 7: 罗博特科 -->
+<div class="card">
+<h3>7️⃣ 罗博特科 (300757)</h3>
+<p><strong>卡住的环节：CPO 封装耦合设备——博通 CPO 耦合唯一供应商，A 股独苗</strong></p>
+<table>
+  <tr><td style="width:90px"><strong>产业链位置</strong></td><td>上游设备，硅光/CPO 芯片的高精度耦合封装和测试</td></tr>
+  <tr><td><strong>排序原因</strong></td><td>收购的 ficonTEC 是博通 CPO 产品耦合设备唯一供应商，5nm 精度。CPO 要放量，耦合设备必须先到位。2024 年底在手订单 ~4800 万欧元，已获 OCS 整线设备订单两条</td></tr>
+  <tr><td><strong>关键证据</strong></td><td><span class="tag tag-medium">中</span> — 深交所 2025 年首单并购重组过会；华为为重要合作客户；已获华工科技、驿路通订单；其他头部光模块企业打样中</td></tr>
+  <tr><td><strong>市场可能没看清的</strong></td><td>市场对 ficonTEC 的稀缺性认知可能还不够。CPO 量产级别的耦合精度要求（亚微米级）远超传统光模块封装，能做这个设备的全球就几家——ficonTEC 是领头羊</td></tr>
+  <tr><td><strong>主要风险</strong></td><td>并购整合风险；从订单到收入的转化进度不确定；设备交付周期长；国内替代品（如杰普特等）可能追赶</td></tr>
+  <tr><td><strong>证据等级</strong></td><td><span class="tag tag-medium">中</span> — 并购已过会，客户名单经公司确认，但收入贡献的时间线和规模需持续跟踪</td></tr>
+</table>
+</div>
+
+<!-- ==================== 热门但排后面 ==================== -->
+<h2 id="downgrade">五、热门但排后面的方向</h2>
+
+<p><strong>新易盛 (300502)</strong>：公司质地很好——LPO 全球首家量产，硅光全系列，2025 年净利 95 亿 (+236%)。排在后面不是因为差，是因为：</p>
+<ul>
+  <li>它是模块层的 #3 玩家（排旭创和 Coherent 之后），模块层的稀缺性不如上游光芯片</li>
+  <li>CPO 推迟的好处理论上利好 LPO，但市场已经给了较高估值</li>
+  <li>2026Q1 净利增速 (+77%) 低于市场预期 (预期 ~+130%)，说明预期打得太满</li>
+  <li>它仍然值得研究，但在 Serenity 框架里，<strong>上游卡点 &gt; 下游份额</strong></li>
+</ul>
+
+<p><strong>剑桥科技 (603083)</strong>：NPO/CPO 光引擎研发 + 1.6T 小批量供货。故事有，但规模和证据都不够。排在前面需要有更强的财务或订单证据。</p>
+
+<p><strong>PCB 标的（一博科技、迅捷兴、兴森科技）</strong>：CPO 整机 PCB 是真实需求，但这是一个充分竞争的环节。没有稀缺性，自然排序靠后。</p>
+
+<!-- ==================== 风险 ==================== -->
+<h2 id="risks">六、什么情况说明这个判断错了</h2>
+
+<p>按杀伤力从大到小排列：</p>
+
+<ol>
+  <li><strong>CPO 良率突破比预期快。</strong> 如果 TSMC COUPE 良率在 2026 年内从 50-60% 跳到 80%+，CPO 大规模放量可能提前到 2027 年。这会让上游光芯片更加供不应求（利好源杰/三安），但会加速可插拔光模块的替代（利空中际旭创/新易盛的估值逻辑）。</li>
+  <li><strong>NPO 吃掉 CPO 的大部分 TAM。</strong> SemiAnalysis 明确指出 NPO 在加速推进。如果超大规模云厂商最终选择 NPO 而非 CPO 作为主力架构，那么 CPO 专属配套（如 FAU 的高端版本、CPO 专用透镜阵列）的需求会大打折扣。</li>
+  <li><strong>AI 资本开支周期见顶。</strong> 这是所有光通信标的的共同风险。如果 2027 年 CSP 资本开支增速放缓，整个产业链从衬底到模块都会一起压缩。</li>
+  <li><strong>磷化铟衬底国产突破超预期。</strong> 如果云南锗业/三安光电的 InP 衬底产能释放远超预期，全球缺口收窄，衬底价格从 $2,500 回落，上游的稀缺性溢价会消失。</li>
+  <li><strong>可插拔光模块价格战。</strong> 2026 年上半年可能出现供需平衡拐点，800G/1.6T 价格如果断崖式下跌，模块层公司的毛利率会承压。</li>
+</ol>
+
+<!-- ==================== 下一步 ==================== -->
+<h2 id="next">七、下一步查什么</h2>
+
+<table>
+  <thead>
+    <tr><th>查什么</th><th>为什么重要</th><th>怎么查</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>源杰科技 CW 300mW 客户验证进展</td><td>决定它能否切入 CPO/NPO 供应链</td><td>互动易提问、下一季报"研发进展"章节</td></tr>
+    <tr><td>天孚通信泰国二期产能利用率</td><td>决定 2026 年毛利率能否回升</td><td>中报"在建工程"和"产能利用率"数据</td></tr>
+    <tr><td>中际旭创 2026H1 存货周转天数</td><td>判断存货压力是否缓解</td><td>2026 年中报</td></tr>
+    <tr><td>云南锗业 30 万片扩产项目环评进度</td><td>产能释放节奏的核心领先指标</td><td>地方环保部门网站 / 公司公告</td></tr>
+    <tr><td>英伟达 Spectrum-X CPO 交换机 2026H2 实际交付量</td><td>验证"CPO 商用元年"的真实进度</td><td>产业链调研、OFC 2026 后续报道</td></tr>
+    <tr><td>三安光电 1.6T EML 2026Q3 试产结果</td><td>判断国产高端 EML 能否破局</td><td>公司公告 / 券商后续调研</td></tr>
+    <tr><td>AMD CW 激光器采购谈判结果</td><td>第二巨头入局会进一步收紧激光器供给</td><td>产业链媒体 (LightCounting, 集邦)</td></tr>
+  </tbody>
+</table>
+
+<hr class="divider">
+
+<h2>主要信息来源</h2>
+<ul>
+  <li>公司年报/季报/公告（源杰科技、天孚通信、中际旭创、新易盛、云南锗业、太辰光等）</li>
+  <li>英伟达 GTC 2025/2026 官方发布及合作伙伴名单</li>
+  <li>台积电 COUPE 平台路线图</li>
+  <li>SemiAnalysis CPO 延迟分析报告（2026.06）</li>
+  <li>摩根士丹利 CPO 出货量预测</li>
+  <li>LightCounting / Cignal AI / TrendForce 市场数据</li>
+  <li>华泰证券、中金公司、国金证券、东吴证券、西部证券、山西证券等券商研报</li>
+  <li>OFC 2026 展会技术发布</li>
+  <li>深交所并购重组公告（罗博特科/ficonTEC）</li>
+</ul>
+
+<hr class="divider">
+
+<blockquote>
+<strong>一句话总结：CPO 方向没问题，但时间表往后推了两年。真正稀缺的不是"谁会做 CPO 封装"，而是"谁能拿到光芯片和 InP 衬底"。顺着这个逻辑，先看上游（源杰、天孚、云南锗业、三安、炬光），再看下游（旭创、新易盛）。CPO 推迟不是灾难——它只是让真正的稀缺层更加稀缺。</strong>
+</blockquote>
+
+<div class="disclaimer">
+⚠️ 以上内容为产业链研究和研究优先级排序，不构成任何投资建议。最终交易决策由你自行判断。
+</div>
+
+<script src="../nav.js"></script>
+</body>
+</html>
